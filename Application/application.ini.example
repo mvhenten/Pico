@@ -1,0 +1,8 @@
+[BASIC DEFAULTS]
+; username
+user      = "admin"
+; password: put an md5("string")!
+password   = ""
+; secret is used for captcha!
+secret     = "Lorem Ipsum Sit Amet"
+blogTitle  = "A blog in 150 lines of PHP"
