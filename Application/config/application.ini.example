@@ -1,11 +1,22 @@
-[config]
-; username
-user      = "admin"
-; password: put an md5("string")!
-password   = ""
-; secret is used for captcha!
-secret     = "Lorem Ipsum Sit Amet"
-blogTitle  = "A blog in 150 lines of PHP"
+[admin]
+username   = "admin"
+password   = "3af2aebda9543f71a714925f8716f4f0"
+
+[database]
+dsn = "mysql:dbname=pico;host=127.0.0.1"
+username = pico
+password = pico
+
+[layout]
+default.base      = APPLICATION_PATH
+default.path      = "Application/view"
+default.layout    = "layout.phtml"
+default.structure = "/:controller/:action.phtml"
+
+admin.base      = APPLICATION_PATH
+admin.path      = "Application/modules/Admin/view"
+admin.layout    = "layout.phtml"
+admin.structure = "/:controller/:action.phtml"
 
 [route]
 thumb.route   = "/image/thumb/:id"
@@ -20,7 +31,7 @@ image.defaults.action     = "view"
 
 admin.route   = "/admin/:controller/:action/:id"
 admin.defaults.module     = "admin"
-admin.defaults.controller = "user"
+admin.defaults.controller = "index"
 admin.defaults.action     = "login"
 
 default.route = "/:controller/:id"
