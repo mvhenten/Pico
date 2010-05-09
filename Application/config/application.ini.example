@@ -32,9 +32,14 @@ image.defaults.action     = "view"
 admin.route   = "/admin/:controller/:action/:id"
 admin.defaults.module     = "admin"
 admin.defaults.controller = "index"
-admin.defaults.action     = "login"
+admin.defaults.action     = "index"
 
 default.route = "/:controller/:id"
 default.module = ""
 default.defaults.controller = "index"
 default.defaults.action = "index"
+
+[modules]
+admin.image = true
+admin.page  = true
+admin.label = true
