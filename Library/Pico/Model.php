@@ -153,7 +153,7 @@ abstract class Pico_Model{
     protected function getMapper(){
         if( $this->mapper === null ){
             if( null !== $this->tableName ){
-                $mapper = new Slicr_Model_Mapper( $this->tableName );
+                $mapper = new Nano_Db_Mapper( $this->tableName );
             }
             else{
                 $mapperName = get_class( $this ) . 'Mapper';
