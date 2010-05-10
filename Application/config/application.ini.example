@@ -19,16 +19,6 @@ admin.layout    = "layout.phtml"
 admin.structure = "/:controller/:action.phtml"
 
 [route]
-thumb.route   = "/image/thumb/:id"
-thumb.defaults.controller = "image"
-thumb.defaults.action     = "view"
-thumb.defaults.format     = "thumbnail"
-
-image.route   = "/image/:id"
-image.defaults.controller = "image"
-image.defaults.action     = "view"
-
-
 admin.route   = "/admin/:controller/:action/:id"
 admin.defaults.module     = "admin"
 admin.defaults.controller = "index"
@@ -40,6 +30,6 @@ default.defaults.controller = "index"
 default.defaults.action = "index"
 
 [modules]
-admin.image = true
-admin.page  = true
-admin.label = true
+admin.image = "Images"
+admin.page  = "Pages"
+admin.label = "Labels"

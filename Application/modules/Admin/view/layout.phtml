@@ -7,6 +7,14 @@
 </head>
 <body>
     <div id="main">
+        <?php if( Nano_Session::session()->auth == true ): ?>
+        <div id="main-menu">
+            <?php echo $this->modules() ?>
+        </div>
+        <div>
+            <?php echo $this->linkList( $this->actions ) ?>
+        </div>
+        <?php endif; ?>
         <div class="reps">
         <?php echo $this->getView() ?>
         <!-- Insert your content here -->
