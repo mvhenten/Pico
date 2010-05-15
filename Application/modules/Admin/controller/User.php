@@ -1,5 +1,5 @@
 <?php
-class Controller_User extends Nano_Controller{
+class Controller_Admin_User extends Nano_Controller{
     public function indexAction(){
         if( ! Nano_Session::session()->auth ){
             $this->_redirect( '/admin/user/login' );

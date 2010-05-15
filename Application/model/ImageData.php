@@ -2,6 +2,7 @@
 class Model_ImageData extends Pico_Model{
     protected $_id;
     protected $_imageId;
+    protected $_size;
     protected $_width;
     protected $_height;
     protected $_type;
