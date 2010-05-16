@@ -29,14 +29,21 @@ class Pico_AdminController extends Nano_Controller{
                 'value' => $item->type,
             ),
             'name' => array(
-                'type'  => 'text',
-                'value' => $item->name,
-                'label' => 'Title'
+                'type'          => 'text',
+                'value'         => $item->name,
+                'label'         => 'Title',
+                'validators'    => array(
+                    array('stringLength', array(1, 64), false )
+                ),
+                'required'      => true
             ),
             'description'   => array(
                 'type'  => 'textarea',
                 'value' => $item->description,
-                'label' => 'Description'
+                'label' => 'Description',
+                'validators'    => array(
+                    array('stringLength', array(1, 254), false )
+                ),
             ),
             'visible'   => array(
                 'type'  => 'checkbox',
