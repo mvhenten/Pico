@@ -5,6 +5,11 @@ class Controller_Admin_Page extends Pico_AdminController{
     }
 
     protected  function listAction(){
+        $items = new Model_Item( array('type'=>self::ITEM_TYPE_PAGE));
+
+        $items = $items->search();
+
+        $this->getView()->items = $items;
 
     }
 
@@ -21,28 +26,16 @@ class Controller_Admin_Page extends Pico_AdminController{
 
         if( $request->isPost() ){
             $post = $request->getPost();
+            $form->validate( $post );
 
-            foreach( $form->getChildren() as $child ){
-                $name = $child->getAttribute('name');
+            if( ! $form->hasErrors() ){
+                $page->name = $post->name;
+                $page->description = $post->description;
+                $page->visible     = (bool) $post->visible;
 
-                if( $name == 'submit' ){
-                    continue;
-                }
-                else if( $name == 'visible' && null !== $post->$name){
-                    $page->$name = 1;
-                }
-                else{
-                    $page->$name = $post->$name;
-                }
+                $page->save();
+                $this->_redirect( '/admin/page/edit/' . $page->id );
             }
-
-            $page->save();
-
-            $this->_redirect( '/admin/page/edit/' . $page->id );
-
-            $e = $form->getChildren();
-            exit;
-
         }
 
         $this->getView()->form = $form;
