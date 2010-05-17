@@ -1,6 +1,6 @@
 <?php
 class Controller_Admin_Image extends Pico_AdminController{
-    const IMAGESIZE_THUMBNAIL = '64x64';
+    const IMAGESIZE_THUMBNAIL = '128x128';
     const IMAGESIZE_ICON      = '32x32';
     const IMAGESIZE_VIGNETTE   = '400x300';
 
@@ -13,6 +13,12 @@ class Controller_Admin_Image extends Pico_AdminController{
     public function indexAction(){
         $this->getView()->content = "Hello World";
     }
+
+	public function listAction(){
+		$image = new Model_Image();
+
+		$this->getView()->images = $image->search();
+	}
 
     protected function addAction(){
         $request = $this->getRequest();
@@ -85,17 +91,14 @@ class Controller_Admin_Image extends Pico_AdminController{
         $this->getView()->image = new Model_Image( array('id'=>$request->id) );
     }
 
-    protected function getItemForm( $item ){
-
-    }
-
     public function viewAction(){
         $request = $this->getRequest();
 
         $id = $request->id;
-        $type = 1;
+        $type = self::TYPE_ORIGINAL;
 
         if( !is_numeric( $request->id ) && is_numeric( $request->value ) ){
+            $id = $request->value;
             switch( $request->id ){
                 case 'thumbnail':
                     $type = self::TYPE_THUMBNAIL;
@@ -110,22 +113,25 @@ class Controller_Admin_Image extends Pico_AdminController{
                     $type = self::TYPE_ICON;
                     break;
                 default:
-                    die('Invalid type: ' . $type );
+					$type = self::TYPE_ORIGINAL;
+//                    die('Invalid type: ' . $type );
             }
 
-            $id = $request->value;
         }
-        else{
-            die('Invalid paramters given');
-        }
+        //else{
+        //    die('Invalid paramters given');
+        //}
 
 
-        $images = new Model_ImageData( array( 'imageId' => $id, 'type' => $type ) );
+        $images = new Model_ImageData( array( 'image_id' => $id, 'type' => $type ) );
         $images = $images->search();
 
         if( count($images) == 0 ){
-            $images = new Model_ImageData( array( 'imageId' => $id, 'type' => self::TYPE_ORIGINAL ) );
+            $images = new Model_ImageData( array( 'image_id' => $id, 'type' => self::TYPE_ORIGINAL ) );
             $images  = $images->search();
+
+
+
             if( count( $images ) == 0 ){
                 die( 'Image not found!');
             }
@@ -171,30 +177,8 @@ class Controller_Admin_Image extends Pico_AdminController{
             $image = $images[0];
         }
 
-
-
         header( 'Content-Type: ' . $image->mime );
         echo $image->data;
-
-        //echo $imageData->type;
-
-        exit;
-
-
-        $project = new Model_Project(array('id'=>$request->id));
-
-        //@todo fix this wiht a real user
-        $project->userId = 1;
-
-        if( null == $project->name ){
-            $this->_pageNotFound( "Invalid project id" );
-        }
-
-        $image = new Model_Image(array('projectId' => $project->id ));
-
-        $this->getView()->images    = $image->search();
-        $this->getView()->projects  = $project->search();
-        $this->getView()->project   = $project;
     }
 
     public function postDispatch(){

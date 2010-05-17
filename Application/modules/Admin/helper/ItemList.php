@@ -34,7 +34,7 @@ class Helper_ItemList{
 
             $tr->addChild( new Nano_Element( 'td', null, $select ) );
 
-            $link = sprintf( '<a href="/admin/%s/edit/%d">%s</a>', $this->getTypeName($item), $item->id, $item->name );
+			$link = sprintf( '<a href="/admin/%s/edit/%d">%s</a>', $this->getTypeName($item), $item->id, $item->name );
 
             $tr->addChild( new Nano_Element('td', null, $link ) );
             $tr->addChild( new Nano_Element('td', null, $item->description ) );
