@@ -6,23 +6,53 @@ class Helper_ImageList{
 
     private function renderList( $contents ){
 		$form = new Nano_Form();
-		$form->setWrapper( new Nano_Element('div', array('id'	=> 'image-thumbnails')));
+		$form->setWrapper( new Nano_Element('div', array('id'=> 'image-thumbnails')));
 
-		foreach( $contents as $item ){
+		$fieldset = new Nano_Form_Element_Fieldset(array('class'=>'buttonbar'));
+
+		$fieldset->addElement( 'select-all', array(
+			'type'		=>'button',
+			'wrapper'	=> false,
+			'value'		=> 'select all',
+			'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
+		));
+
+		$fieldset->addElement( 'select-all', array(
+			'type'=>'reset',
+			'wrapper'	=> false,
+			'value'=> 'clear selection',
+			'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
+		));
+
+		$fieldset->addElement( 'action', array(
+			'type'		=> 'select',
+			'wrapper'	=> false,
+			'label'		=> 'With selected images do ',
+			'options'	=> array(
+				0	=> 'TEST option 1',
+				1	=> 'TEST option 2'
+			)
+		) );
+
+		$form->addChild( $fieldset );
+
+		$fieldset = new Nano_Form_Element_Fieldset(array('type'=>'div','id'=>'draggable-items'));
+
+		foreach( $contents as $index => $item ){
 			$img = new Nano_Element( 'img', array(
 				'alt'	     => $item->name,
-				'width'		 => 128,
-				'height' 	 => 128,
+				'width'		 => 96,
+				'height' 	 => 96,
 				'ondblclick' => sprintf("document.location.href='/admin/image/edit/%d'", $item->id ),
 				'onclick'	 => '$(this).up(\'dl\').toggleClassName(\'active\')',
 				'src'		 => sprintf("/admin/image/view/thumbnail/%d", $item->id)
 			));
 
-			$form->addElements(array(
+			$fieldset->addElements(array(
 				'title[' . $item->id . ']'	=> array(
 					'type'	=> 'text',
 					'value'	=> $item->name,
-					'prefix'	=> '<dl class="list-item">',
+					'prefix'	=> '<dl class="list-item" id="image_' . $item->id . '">',
 					'wrapper'	=> new Nano_Element('dt'),
 					'validators' => array(
 						array( 'StringLength', 0, 64),
@@ -36,6 +66,10 @@ class Helper_ImageList{
 				)
 			));
 		}
+
+		$form->addChild( $fieldset );
+
+		//$form->addChild( new Nano_Element( 'script', null, "Sortable.create('image-thumbnails',{tag:'dl'});"));
 
 
 		return $form;

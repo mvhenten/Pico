@@ -1,1 +1,24 @@
 <?php echo $this->imageList( $this->images ) ?>
+<style>
+    #draggable-items{
+        display: block;
+        overflow: auto;
+        position: absolute;
+        overflow: auto;
+        top: 25px;
+        bottom: 0px;
+    }
+</style>
+<script>
+Sortable.create('draggable-items',{
+    constraint:false,
+    overlap:'horizontal',
+    elements:$$('.list-item'),
+    onUpdate: function( el ){
+        console.log(el);
+    },
+    onChange: function( el ){
+        console.log(el);
+    }
+});
+</script>

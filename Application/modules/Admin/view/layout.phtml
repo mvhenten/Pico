@@ -4,6 +4,7 @@
     <title>Slicr::<?php echo $this->getRequest()->controller ?>::<?php echo $this->getRequest()->action; ?></title>
 	<link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
     <script src="/js/prototype.js"></script>
+    <script src="/js/scriptaculous/scriptaculous.js"></script>
 </head>
 <body>
     <div id="main">
@@ -11,6 +12,7 @@
 			<?php if( Nano_Session::session()->auth == true ): ?>
 			<div id="top-bar" class="wrap">
 				<div class="padding">
+
 					<h1 class="float-left">PICO - site title</h1>
 					<a href="/">view site</a> |
 					<a href="/user/logout">logout</a>
@@ -21,17 +23,26 @@
 					<?php echo $this->modules() ?>
 				</div>
 			</div>
-			<div id="menu-left">
-				<div class="padding">
-					<?php echo $this->linkList( $this->actions ) ?>
-				</div>
-			</div>
 			<?php endif; ?>
-			<div id="main-content">
-				<div class="padding">
+			<div id="vp-offset">
+				<div id="main-content">
 					<?php echo $this->getView() ?>
 					<!-- Insert your content here -->
 				</div>
+				<?php if( $this->actions ): ?>
+				<div id="menu-left">
+					<div class="padding">
+						<?php echo $this->linkList( $this->actions ) ?>
+					</div>
+					<form action="http://www.twitter.com">
+						<textarea name="tet" disabled="true">dit is een voorgedefineerd tekstje</textarea>
+						<input type="hidden" name="status" value="dit is het eigenlijk"/>
+						<input type="submit" value="TWEET" />
+
+					</form>
+				</div>
+				<?php endif; ?>
+			</div>
 			</div>
 		</div>
     </div>

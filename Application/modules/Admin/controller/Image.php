@@ -1,6 +1,6 @@
 <?php
 class Controller_Admin_Image extends Pico_AdminController{
-    const IMAGESIZE_THUMBNAIL = '128x128';
+    const IMAGESIZE_THUMBNAIL = '96x96';
     const IMAGESIZE_ICON      = '32x32';
     const IMAGESIZE_VIGNETTE   = '400x300';
 
@@ -9,10 +9,6 @@ class Controller_Admin_Image extends Pico_AdminController{
     const TYPE_THUMBNAIL      = 3;
     const TYPE_ICON           = 4;
     const TYPE_CUSTOM         = 5;
-
-    public function indexAction(){
-        $this->getView()->content = "Hello World";
-    }
 
 	public function listAction(){
 		$image = new Model_Image();
@@ -114,14 +110,9 @@ class Controller_Admin_Image extends Pico_AdminController{
                     break;
                 default:
 					$type = self::TYPE_ORIGINAL;
-//                    die('Invalid type: ' . $type );
             }
 
         }
-        //else{
-        //    die('Invalid paramters given');
-        //}
-
 
         $images = new Model_ImageData( array( 'image_id' => $id, 'type' => $type ) );
         $images = $images->search();
