@@ -10,39 +10,31 @@
     <div id="main">
 		<div class="reps">
 			<?php if( Nano_Session::session()->auth == true ): ?>
-			<div id="top-bar" class="wrap">
-				<div class="padding">
-
+			<div id="header" class="wrap">
+				<div class="wrap">
 					<h1 class="float-left">PICO - site title</h1>
 					<a href="/">view site</a> |
 					<a href="/user/logout">logout</a>
 				</div>
+                <div id="main-menu">
+                    <div class="wrap">
+                        <?php echo $this->modules() ?>
+                    </div>
+                </div>
 			</div>
-			<div id="main-menu">
-				<div class="padding">
-					<?php echo $this->modules() ?>
-				</div>
-			</div>
-			<?php endif; ?>
-			<div id="vp-offset">
-				<div id="main-content">
-					<?php echo $this->getView() ?>
-					<!-- Insert your content here -->
-				</div>
-				<?php if( $this->actions ): ?>
-				<div id="menu-left">
-					<div class="padding">
-						<?php echo $this->linkList( $this->actions ) ?>
-					</div>
-					<form action="http://www.twitter.com">
-						<textarea name="tet" disabled="true">dit is een voorgedefineerd tekstje</textarea>
-						<input type="hidden" name="status" value="dit is het eigenlijk"/>
-						<input type="submit" value="TWEET" />
-
-					</form>
-				</div>
-				<?php endif; ?>
-			</div>
+            <?php endif; ?>
+			<div id="main-content">
+                <div id="main-left" class="reps">
+                    <?php echo $this->getView() ?>
+                </div>
+                <?php if( $this->actions ): ?>
+                <div id="menu-left" class="reps">
+                    <h2 class="buttonbar">Actions</h2>
+                        <div class="wrap">
+                        <?php echo $this->linkList( $this->actions ) ?>
+                        </div>
+                </div>
+                <?php endif; ?>
 			</div>
 		</div>
     </div>

@@ -1,6 +1,8 @@
 @import "reset.css";
 body, input, textarea, p{
-    font: 12px/16px "Lucida Grande", "Arial", sans-serif;
+    font: 12px/18px "FreeSans", "Lucida Grande", "Arial", sans-serif;
+    line-height: 2em;
+    font-size: 12px;
     color: #444;
 }
 
@@ -13,28 +15,15 @@ a:hover{
     text-decoration: underline;
 }
 
-h1, h2, h3, h4, h5, h6{
-    font: bold 14px/18px "Lucida Grande", "Arial", sans-serif;
-}
-
-.float-left{
-    width: 45%;
-    float: left;
-    text-align: left;
-}
-
-.float-right{
-    width: 45%;
-    float: right;
+h1{
+    font-size: 2em;
+    line-height: 2em;
+    /*font:24px/32px "FreeSans", "Lucida Grande", "Arial", sans-serif;*/
 }
 
 .wrap{
-    overflow: hidden;
-}
-
-.padding{
-    overflow: hidden;
-    padding: 7px;
+    clear: both;
+    overflow:hidden;
 }
 
 .reps{
@@ -44,65 +33,104 @@ h1, h2, h3, h4, h5, h6{
     overflow: hidden;
 }
 
+input{
+    font: 12px "FreeSans", "Lucida Grande", "Arial", sans-serif;
+}
+
 .abps{
     position: absolute;
 }
 
-#vp-offset{
-    position: absolute;
-    top: 65px;
-    bottom:0px;
-
+.buttonbar{
+    line-height: 3em;
+    text-align: right;
+    background-color: #eee;
+    padding-right: 1em;
 }
 
 #main{
     position: absolute;
-    top: 0;
+    top:0;left:0;bottom:0;right:0;
+}
+
+
+#header{
+    background-color: #373D40;
+    overflow: hidden;
+    text-align: right;
+}
+
+#menu-left .wrap,
+#header .wrap{
+    padding: 1em;
+}
+
+#header h1{
+    margin:0;
+    float: left;
+    color: #fff;
+}
+
+#main-menu{
+    background-color: #6C7275;
+    overflow: hidden;
+}
+
+#main-menu ul li{
+    position: relative;
+    left: -1em;
+    float: left;
+    margin:0;
+}
+
+#main-menu a{
+    color: #eee;
+    display:block;
+    padding: 0 1em 0 1em;
+}
+
+#main-menu a:hover{
+    background-color: #7a8185;
+}
+
+#main-content{
+    position: absolute;
+    top: 10em;
     left:0;
     right:0;
     bottom:0;
 }
 
-#menu-left{
-    height: 95%;
-    margin: 0 7px;
-    /*position: absolute;*/
-    border: 1px solid #eee;
-
-    float: left;
-    width: 20%;
-}
-
-#main-content{
-    height: 95%;
-    /*position: absolute;*/
-    border: 1px solid #eee;
+#main-left{
+    margin: 1em;
+    position: relative;
     float: left;
     width: 75%;
-    overflow: hidden;
-    margin: 0 7px;
-    position: relative;
+    height: 95%;
+    border: 1px solid #eee;
+    border-top: none;
 }
 
-#top-bar{
-    background-color: #e9e9e9;
-    text-align: right;
-    color: #999;
-}
-
-#top-bar a{
-    color: #666;
-}
-
-#main-menu{
-    /*border-bottom: 1px solid #999;*/
-}
-
-#main-menu ul li{
+#menu-left{
+    border: 1px solid #eee;
+    border-top: none;
+    margin-top: 1em;
+    width: 20%;
+    height: 95%;
     float: left;
-    margin-right: 7px;
-    text-transform:lowercase;
 }
+
+#draggable-items{
+    position: absolute;
+    top:2em;
+    bottom:0;
+    left:0;
+    right:0;
+    overflow: auto;
+    padding: 1em 0;
+}
+
+
 
 #image-thumbnails dl{
     width: 96px;
@@ -123,7 +151,7 @@ h1, h2, h3, h4, h5, h6{
 
 #image-thumbnails dl .input-text{
     display: inline;
-    width: 128px;
+    width: 90px;
     background-color: transparent;
     border: 1px solid transparent;
 }
@@ -132,3 +160,5 @@ h1, h2, h3, h4, h5, h6{
     border: 1px solid green;
     background-color: #fff;
 }
+
+

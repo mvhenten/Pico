@@ -29,8 +29,8 @@ class Helper_ImageList{
 			'wrapper'	=> false,
 			'label'		=> 'With selected images do ',
 			'options'	=> array(
-				0	=> 'TEST option 1',
-				1	=> 'TEST option 2'
+				'delete'	=> 'delete images',
+				'labels'	=> 'edit labels'
 			)
 		) );
 
