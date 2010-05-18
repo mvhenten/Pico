@@ -33,8 +33,8 @@ h1{
     overflow: hidden;
 }
 
-input{
-    font: 12px "FreeSans", "Lucida Grande", "Arial", sans-serif;
+input, select{
+    font: 1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
 }
 
 .abps{
@@ -46,6 +46,10 @@ input{
     text-align: right;
     background-color: #eee;
     padding-right: 1em;
+    -moz-border-radius-topleft: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    -webkit-border-top-right-radius: 10px;
 }
 
 #main{
@@ -94,6 +98,7 @@ input{
 }
 
 #main-content{
+    -moz-border-radius-topleft:5px;
     position: absolute;
     top: 10em;
     left:0;
@@ -103,12 +108,15 @@ input{
 
 #main-left{
     margin: 1em;
-    position: relative;
     float: left;
     width: 75%;
     height: 95%;
     border: 1px solid #eee;
     border-top: none;
+    -moz-border-radius-topleft: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    -webkit-border-top-right-radius: 10px;
 }
 
 #menu-left{
@@ -118,6 +126,10 @@ input{
     width: 20%;
     height: 95%;
     float: left;
+    -moz-border-radius-topleft: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    -webkit-border-top-right-radius: 10px;
 }
 
 #draggable-items{
