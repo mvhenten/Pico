@@ -1,0 +1,9 @@
+<?php echo $this->form ?>
+<script src="/js/colourPicker.js"></script>
+<script>
+$(document).observe('dom:loaded', function(evt){
+    $$('.colorpicker').each(function(el){
+      var picker = new ColourPicker(el);
+    });
+});
+</script>
