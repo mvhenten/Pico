@@ -1,5 +1,7 @@
 @import "reset.css";
-body, input, textarea, p{
+@import "layout.css";
+
+body, p, a, label{
     font: 12px/18px "FreeSans", "Lucida Grande", "Arial", sans-serif;
     line-height: 2em;
     font-size: 12px;
@@ -18,38 +20,49 @@ a:hover{
 h1{
     font-size: 2em;
     line-height: 2em;
-    /*font:24px/32px "FreeSans", "Lucida Grande", "Arial", sans-serif;*/
 }
 
-.wrap{
-    clear: both;
-    overflow:hidden;
+input, select, textarea{
+    font: 1em/1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
 }
 
-.reps{
-    position: relative;
-    width: 100%;
-    height:100%;
-    overflow: hidden;
-}
-
-input, select{
-    font: 1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
-}
-
-.abps{
-    position: absolute;
-}
-
-.buttonbar{
+.buttonbar, .toolbar{
     line-height: 3em;
     text-align: right;
     background-color: #eee;
     padding-right: 1em;
-    -moz-border-radius-topleft: 10px;
-    -webkit-border-top-left-radius: 10px;
-    -moz-border-radius-topright: 10px;
-    -webkit-border-top-right-radius: 10px;
+    font-weight: bold;
+}
+
+.input-checkbox{
+    float: left;
+}
+
+.formElementWrapper label input
+, .formElementWrapper label textarea{
+    display: block;
+    clear: both;
+}
+
+.formElementWrapper{
+    padding: 0 1em;
+}
+
+.colorpicker-color{
+    border: 1px inset #333;
+}
+
+.colorpicker-color:hover{
+    border: 1px solid #99cc99;
+}
+
+.colorpicker{
+    width: 1.2em;
+    height: 1em;
+    text-indent: -100em;
+    float: left;
+    margin-right: 1em;
+    border: 1px inset #333;
 }
 
 #main{
@@ -97,80 +110,45 @@ input, select{
     background-color: #7a8185;
 }
 
-#main-content{
-    -moz-border-radius-topleft:5px;
-    position: absolute;
-    top: 10em;
-    left:0;
-    right:0;
-    bottom:0;
-}
+/** images list **/
 
-#main-left{
-    margin: 1em;
+#images dl{
+    width: 8em;
+    height: 10em;
+    padding: 0.4em;
+    margin: 0.6em;
     float: left;
-    width: 75%;
-    height: 95%;
-    border: 1px solid #eee;
-    border-top: none;
-    -moz-border-radius-topleft: 10px;
-    -webkit-border-top-left-radius: 10px;
-    -moz-border-radius-topright: 10px;
-    -webkit-border-top-right-radius: 10px;
-}
-
-#menu-left{
-    border: 1px solid #eee;
-    border-top: none;
-    margin-top: 1em;
-    width: 20%;
-    height: 95%;
-    float: left;
-    -moz-border-radius-topleft: 10px;
-    -webkit-border-top-left-radius: 10px;
-    -moz-border-radius-topright: 10px;
-    -webkit-border-top-right-radius: 10px;
-}
-
-#draggable-items{
-    position: absolute;
-    top:2em;
-    bottom:0;
-    left:0;
-    right:0;
-    overflow: auto;
-    padding: 1em 0;
-}
-
-
-
-#image-thumbnails dl{
-    width: 96px;
-    float: left;
-    padding: 0 7px;
-    margin: 3px;
     border: 1px solid #eee;
 }
 
-#image-thumbnails dl.active{
+#images dl.active{
     background-color: #009900;
     border: 1px solid #ccc;
 }
 
-#image-thumbnails dl .input-checkbox{
+#images dl .input-checkbox{
     display: none;
 }
 
-#image-thumbnails dl .input-text{
-    display: inline;
+
+#images dl .input-text{
+    display: block;
+    margin: auto;
     width: 90px;
     background-color: transparent;
     border: 1px solid transparent;
 }
 
-#image-thumbnails dl .input-text:focus{
+#images dl .input-text:focus{
     border: 1px solid green;
     background-color: #fff;
 }
 
+#images dl label{
+    text-align: center;
+    display: block;
+}
 
+#images label img{
+    margin: auto;
+}

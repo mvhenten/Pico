@@ -1,14 +1,14 @@
 <?php echo $this->imageList( $this->images ) ?>
 <script>
-Sortable.create('draggable-items',{
+Sortable.create('images',{
     constraint:false,
-    overlap:'horizontal',
+    overlap:    'horizontal',
     elements:$$('.list-item'),
-    onUpdate: function( el ){
-        console.log(el);
-    },
-    onChange: function( el ){
-        console.log(el);
-    }
+    //onUpdate: function( el ){
+    //    console.log(el);
+    //},
+    //onChange: function( el ){
+    //    console.log(el);
+    //}
 });
 </script>

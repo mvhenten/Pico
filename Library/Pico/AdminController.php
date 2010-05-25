@@ -21,42 +21,5 @@ class Pico_AdminController extends Nano_Controller{
     }
 
     protected function getItemForm( $item ){
-        $form = new Nano_Form();
-
-        $form->addElements(array(
-            'type'  => array(
-                'type'  => 'hidden',
-                'value' => $item->type,
-            ),
-            'name' => array(
-                'type'          => 'text',
-                'value'         => $item->name,
-                'label'         => 'Title',
-                'validators'    => array(
-                    array('stringLength', array(1, 64), false )
-                ),
-                'required'      => true
-            ),
-            'description'   => array(
-                'type'  => 'textarea',
-                'value' => $item->description,
-                'label' => 'Description',
-                'validators'    => array(
-                    array('stringLength', array(1, 254), false )
-                ),
-            ),
-            'visible'   => array(
-                'type'  => 'checkbox',
-                'value' => $item->visible,
-                'label' => 'Visible'
-            ),
-            'submit'    => array(
-                'type'  => 'submit',
-                'value' => 'Save'
-            )
-
-        ));
-
-        return $form;
     }
 }

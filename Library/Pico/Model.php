@@ -86,7 +86,7 @@ abstract class Pico_Model{
 			throw new Exception( sprintf('Trying to get property %s', $name) );
 		}
     }
-
+    
 	/**
 	 * returns all class values as an array
 	 * @return array $values
