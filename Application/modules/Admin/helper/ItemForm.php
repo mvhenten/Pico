@@ -10,7 +10,7 @@ class Helper_ItemForm{
     public function ItemForm( Model_Item $item, $extra = array(), $actions = array() ){
         $form = new Nano_Form(array('class'=>'reps'));
         $form->setWrapper( false );
-        $table = new Nano_Element( 'table' );
+        $table = new Nano_Element( 'table', array('class'=>'reps'));
 
         $actions = array_merge(array(
             'save'  => array(
@@ -64,7 +64,7 @@ class Helper_ItemForm{
                 'value' => $item->visible,
                 'label' => 'Visible'
             ),
-        ), $extra);
+        ), $extra );
 
 
         $fieldset = new Nano_Form_Element_Fieldset(array(

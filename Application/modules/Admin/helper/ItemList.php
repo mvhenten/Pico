@@ -1,7 +1,39 @@
 <?php
 class Helper_ItemList{
-    function ItemList( $contents = null ){
-        return $this->renderList( (array) $contents );
+    function ItemList( $items, $config = array()){
+        $config = (object) array_merge(array(
+            'key'   => 'id',
+            'columns' => array(
+                'Title' => 'title',
+                'Updated' => 'updated'
+            ),
+            'sortable' => array('title','updated'),
+        ), $config);
+
+        $table = new Nano_Element( 'table' );
+        $head = new Nano_Element( 'tr' );
+
+        foreach( $config->columns as $title => $key ){
+            $head->addChild( 'th',null, $title );
+        }
+
+        $table->addChild( $head );
+
+
+        foreach( $items as $key => $item ){
+            $row = new Nano_Element('tr');
+
+            foreach( $config->columns as $title => $key ){
+                $row->addChild( 'td', null, $item[$key] );
+            }
+
+            $table->addChild( $row );
+        }
+
+        return $table;
+
+
+
     }
 
     private function renderList( $contents ){

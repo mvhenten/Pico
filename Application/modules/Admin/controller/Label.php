@@ -12,17 +12,27 @@ class Controller_Admin_Label extends Pico_AdminController{
             $this->_forward( 'edit' );
         }
 
+        foreach( $items as $i => $item ){
+            $item = $item->toArray();
+            $item['title'] = sprintf('<a href="/admin/label/edit/%d">%s</a>', $item['id'], $item['name']);
+
+            $items[$i] = $item;
+        }
+
         $this->getView()->items = $items;
     }
 
     protected  function editAction(){
         $request = $this->getRequest();
-        $label = new Model_Item();
+        $label = new Model_Label();
         $label->type = self::ITEM_TYPE_LABEL;
         $label->name = 'New label';
 
         if( null !== $request->id ){
             $label->id = $request->id;
+            $images = $label->fetchImages();
+
+            var_dump( $images );exit;
         }
 
         $form = $this->_helper( 'ItemForm', $label, array(
@@ -39,6 +49,9 @@ class Controller_Admin_Label extends Pico_AdminController{
             $form->validate( $post );
 
             if( ! $form->hasErrors() ){
+                if( $post->delete ){
+                    $this->_redirect('/admin/label/delete/' . $label->id );
+                }
                 $label->name = $post->name;
                 $label->description = $post->description;
                 $label->visible     = (bool) $post->visible;

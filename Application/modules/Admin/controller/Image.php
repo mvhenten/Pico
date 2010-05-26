@@ -11,10 +11,38 @@ class Controller_Admin_Image extends Pico_AdminController{
     const TYPE_CUSTOM         = 5;
 
 	public function listAction(){
-		$image = new Model_Image();
+        $request = $this->getRequest();
 
-		$this->getView()->images = $image->search();
+        $images = ( $image = new Model_Image() ) ? $image->search():null;
+        //$this->imageList( $this->images )
+        $form = $this->_helper('imageList', $images );
+
+        if( $request->isPost() && $post = $request->getPost() ){
+            $form->validate( $post );
+            if( ! $form->hasErrors() ){
+                if( $post->action == 'labels' && count($post->selection) > 0 ){
+                    $query = join(',' ,array_keys( $post->selection ) );
+                    $this->_redirect( '/admin/image/labels/' . $query );
+                }
+                var_dump( $post ); exit;
+            }
+        }
+
+        $this->getView()->form = $form;
+//		$this->getView()->images = $images;
 	}
+
+    protected function labelsAction(){
+        $request = $this->getRequest();
+
+        $ids = explode( ',', urldecode($request->id) );
+
+        var_dump( $ids );
+
+
+
+
+    }
 
     protected function addAction(){
         $request = $this->getRequest();
@@ -82,9 +110,54 @@ class Controller_Admin_Image extends Pico_AdminController{
         $this->getView()->form = $form;
     }
 
-    public function editAction(){
+    protected  function editAction(){
         $request = $this->getRequest();
-        $this->getView()->image = new Model_Image( array('id'=>$request->id) );
+        $image = new Model_Image();
+
+        $image->type = self::ITEM_TYPE_IMAGE;
+
+        if( null !== $request->id ){
+            $image->id = $request->id;
+        }
+
+        $labels = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
+
+        $ids = array(); foreach( $image->fetchLabels() as $val) $ids[]=$val->id;
+        $elements = array(new Nano_Element('img', array('src'=>'/admin/image/view/thumbnail/1')));
+
+        foreach( $labels as $label ){
+            $elements['labels[' . $label->id . ']'] = array(
+                'type'  => 'checkbox',
+                'label' => $label->name,
+                'value' => in_array( $label->id, $ids )
+            );
+        }
+
+        $form = $this->_helper( 'ItemForm', $image, $elements );
+
+        if( $request->isPost() ){
+            $post = $request->getPost();
+            $form->validate( $post );
+
+            if( ! $form->hasErrors() ){
+                if( $post->delete ){
+                    $this->_redirect('/admin/image/delete/' . $image->id );
+                }
+
+                $image->name = $post->name;
+                $image->description = $post->description;
+                $image->visible     = (bool) $post->visible;
+
+                $image->data = $post->data;
+
+                $image->setLabels( array_keys( (array) $post->labels ) );
+                $image->save();
+
+                $this->_redirect( '/admin/image/edit/' . $image->id );
+            }
+        }
+
+        $this->getView()->form = $form;
     }
 
     public function viewAction(){

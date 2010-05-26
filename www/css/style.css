@@ -22,6 +22,11 @@ h1{
     line-height: 2em;
 }
 
+td,th{
+    text-align: left;
+    vertical-align: top;
+}
+
 input, select, textarea{
     font: 1em/1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
 }
@@ -121,7 +126,7 @@ input, select, textarea{
     border: 1px solid #eee;
 }
 
-#images dl.active{
+#images .active{
     background-color: #009900;
     border: 1px solid #ccc;
 }

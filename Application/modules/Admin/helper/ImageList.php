@@ -37,7 +37,7 @@ class Helper_ImageList{
             )
         ));
 
-        $table = new Nano_Element( 'table' );
+        $table = new Nano_Element( 'table', array('class'=>'reps') );
         $row = new Nano_Element( 'tr' );
         $row->addChild( $fieldset );
         $table->addChild( $row );
@@ -55,24 +55,30 @@ class Helper_ImageList{
 				'alt'	     => $item->name,
 				'width'		 => 96,
 				'height' 	 => 96,
-				'src'		 => sprintf("/admin/image/view/thumbnail/%d", $item->id)
+				'src'		 => sprintf("/admin/image/view/thumbnail/%d", $item->id),
+                'onclick'    => '$(this).up(\'dl\').toggleClassName(\'active\');',
+                'ondblclick' => 'document.location.href = $(this).up(\'dl\').down(\'a\').href;return false;'
 			));
 
             $link = new Nano_Element( 'a', array(
                 'href'  => '/admin/image/edit/' . $item->id,
-                'onclick'   => '$(this).up(\'dl\').toggleClassName(\'active\'); return false;',
-                'ondblclick' => 'document.location.href = this.href;',
-                'title' => 'Edit ' . $item->name
-            ));
+                'title' => 'Edit ' . $item->name,
+                'style'  => 'display: none;'
+            ), 'Edit ' . $item->name );
+            //
+            //$link->addChild( $img );
 
-            $link->addChild( $img );
+            $wrapper =  new Nano_Element('dt');
+            $wrapper->addChild( $link );
+
 
 			$fieldset->addElements(array(
 				'title[' . $item->id . ']'	=> array(
 					'type'	=> 'text',
 					'value'	=> $item->name,
 					'prefix'	=> '<dl class="list-item" id="image_' . $item->id . '">',
-					'wrapper'	=> new Nano_Element('dt'),
+					'wrapper'	=> $wrapper,
+                    //'label'     => $link,
 					'validators' => array(
 						array( 'StringLength', 0, 64),
 					)
@@ -80,8 +86,8 @@ class Helper_ImageList{
 				'selection[' . $item->id . ']' => array(
 					'wrapper'	=> new Nano_Element('dd'),
 					'type'	=> 'checkbox',
-					'label'	=> (string) $link,
-					'suffix'	=> '</dl>'
+					'label'	=> (string) $img,
+					'suffix'	=> '</dl>',
 				)
 			));
 		}
