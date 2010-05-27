@@ -8,10 +8,10 @@ username = pico
 password = pico
 
 [layout]
-default.base      = APPLICATION_PATH
-default.path      = "Application/view"
-default.layout    = "layout.phtml"
-default.structure = "/:controller/:action.phtml"
+default.base        = APPLICATION_PATH
+default.path        = "Application/view"
+default.layoutPath  = "layout.phtml"
+default.structure   = "/:controller/:action.phtml"
 
 admin.base      = APPLICATION_PATH
 admin.path      = "Application/modules/Admin/view"
@@ -19,15 +19,15 @@ admin.layout    = "layout.phtml"
 admin.structure = "/:controller/:action.phtml"
 
 [route]
-admin.route   = "/admin/:controller/:action/:id"
+admin.route   = "/admin/:controller/:action/:id/:value"
 admin.defaults.module     = "admin"
-admin.defaults.controller = "index"
-admin.defaults.action     = "index"
+admin.defaults.controller = "image"
+admin.defaults.action     = "list"
 
 default.route = "/:controller/:id"
 default.module = ""
-default.defaults.controller = "index"
-default.defaults.action = "index"
+default.defaults.controller = "user"
+default.defaults.action = "list"
 
 [modules]
 admin.image = "Images"

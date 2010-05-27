@@ -75,6 +75,12 @@ input, select, textarea{
     top:0;left:0;bottom:0;right:0;
 }
 
+#menu-left, #main-left{
+    border: 1px solid #eee;
+    border-width: 0px 1px 1px 1px;
+}
+
+
 
 #header{
     background-color: #373D40;
@@ -82,7 +88,6 @@ input, select, textarea{
     text-align: right;
 }
 
-#menu-left .wrap,
 #header .wrap{
     padding: 1em;
 }
@@ -100,7 +105,6 @@ input, select, textarea{
 
 #main-menu ul li{
     position: relative;
-    left: -1em;
     float: left;
     margin:0;
 }
@@ -108,7 +112,7 @@ input, select, textarea{
 #main-menu a{
     color: #eee;
     display:block;
-    padding: 0 1em 0 1em;
+    padding: 0 1em 0 0;
 }
 
 #main-menu a:hover{
@@ -121,7 +125,8 @@ input, select, textarea{
     width: 8em;
     height: 10em;
     padding: 0.4em;
-    margin: 0.6em;
+    margin: 0.5em;
+    margin-left:0;
     float: left;
     border: 1px solid #eee;
 }

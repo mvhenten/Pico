@@ -10,6 +10,7 @@ class Pico_AdminController extends Nano_Controller{
         if( ! Nano_Session::session()->auth ){
             $this->_redirect( '/admin/user/login' );
         }
+        $this->getView()->disableTemplate();
     }
 
     public function postDispatch(){
@@ -70,10 +71,6 @@ class Pico_AdminController extends Nano_Controller{
             }
         }
 
-        $this->getView()->form = $form;
-
-
-
-//        $this->getView()->layout = null;
+        $this->getView()->mainLeft = $form;
     }
 }
