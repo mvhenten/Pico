@@ -28,7 +28,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             }
         }
 
-        $this->getView()->form = $form;
+        $this->getview()->mainLeft = $form;
 //		$this->getView()->images = $images;
 	}
 
@@ -107,7 +107,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             )
         ));
 
-        $this->getView()->form = $form;
+        $this->getview()->mainLeft = $form;
     }
 
     protected  function editAction(){
@@ -157,7 +157,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             }
         }
 
-        $this->getView()->form = $form;
+        $this->getview()->mainLeft = $form;
     }
 
     public function viewAction(){

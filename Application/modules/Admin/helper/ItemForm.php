@@ -8,16 +8,12 @@ class Helper_ItemForm{
      * @param actions Extra actions to apply to form-toolbar
      */
     public function ItemForm( Model_Item $item, $extra = array(), $actions = array() ){
-        $form = new Nano_Form(array('class'=>'reps'));
-        $form->setWrapper( false );
-        $table = new Nano_Element( 'table', array('class'=>'reps'));
-
         $actions = array_merge(array(
             'save'  => array(
                 'wrapper' => false,
                 'type'  => 'submit',
-                'value' => 'Save changes',
-                'label' => sprintf('Editing <em>%s</em>&nbsp; ', $item->name)
+                'value' => 'Save changes?',
+                'prefix' => sprintf('Editing <em>%s</em>&nbsp; ', $item->name)
             ),
             'delete' => ( null !== $item->id ? array(
                 'wrapper' => false,
@@ -25,17 +21,6 @@ class Helper_ItemForm{
                 'value' => 'Delete ' . $item->name
             ):null)), $actions
         );
-
-
-        $fieldset = new Nano_Form_Element_Fieldset( array(
-            'type' => 'th',
-            'class' => 'toolbar',
-            'elements'  => $actions
-        ));
-
-        $row = new Nano_Element('tr');
-        $row->addChild( $fieldset );
-        $table->addChild( $row );
 
         $elements = array_merge(array(
             'type'  => array(
@@ -66,30 +51,27 @@ class Helper_ItemForm{
             ),
         ), $extra );
 
-
-        $fieldset = new Nano_Form_Element_Fieldset(array(
-            'type'  => 'div',
-            'class' => 'abps',
-            'elements'=> $elements
+        $elements = array_merge($elements, array(
+            'Save'  => array(
+                'type'  => 'submit',
+                'value' => 'Save changes'
+            )
         ));
 
-        $fieldset->addElement( 'save', array(
-            'type'  => 'submit',
-            'value' => 'Save changes'
-        ));
-
-        $table->addChildren(array(
-            'tr' => array( 'children' => array('td' => array(
-                'class'    => 'viewport',
-                'children' => array('div' => array(
-                    'content' => $fieldset,
-                    'class'   => 'reps'
+        return new Nano_Form( 'item-' . $item->id, array(
+            'elements' => array(
+                'toolbar'   => array(
+                    'type'      => 'fieldset',
+                    'elements'  => $actions,
+                    'class'     => 'toolbar'
+                ),
+                'viewport'  => array(
+                    'type'      => 'fieldset',
+                    'elements'  => $elements
                 )
-            ))))
+            )
         ));
 
-
-        $form->addChild( $table );
         return $form;
     }
 }

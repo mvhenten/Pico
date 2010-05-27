@@ -19,7 +19,7 @@ class Controller_Admin_Label extends Pico_AdminController{
             $items[$i] = $item;
         }
 
-        $this->getView()->items = $items;
+        $this->getView()->mainLeft = 'test';join(',', $items);
     }
 
     protected  function editAction(){
@@ -63,7 +63,7 @@ class Controller_Admin_Label extends Pico_AdminController{
             }
         }
 
-        $this->getView()->form = $form;
+        $this->getView()->mainLeft = $form;
     }
 
     protected  function addAction(){

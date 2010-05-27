@@ -4,52 +4,10 @@ class Helper_ImageList{
         return $this->renderList( (array) $contents );
     }
 
-    private function renderList( $contents ){
-		$form = new Nano_Form(array('class'=>'reps'));
-        $form->setWrapper( false );
+    private function renderList( $items ){
+        $elements = array();
 
-		$fieldset = new Nano_Form_Element_Fieldset(array(
-            'type'  => 'td',
-            'class'=>'buttonbar',
-            'elements'  => array(
-                'select-all'    => array(
-                    'type'		=>'button',
-                    'wrapper'	=> false,
-                    'value'		=> 'select all',
-                    'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
-            	),
-                'reset' => array(
-                    'type'=>'reset',
-                    'wrapper'	=> false,
-                    'value'=> 'clear selection',
-                    'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
-        		),
-                'action' => array(
-                    'type'		=> 'select',
-                    'wrapper'	=> false,
-                    'label'		=> 'With selected images do ',
-                    'onchange'  => 'this.form.submit()',
-                    'options'	=> array(
-                        'delete'	=> 'delete images',
-                        'labels'	=> 'edit labels'
-                    ),
-                )
-            )
-        ));
-
-        $table = new Nano_Element( 'table', array('class'=>'reps') );
-        $row = new Nano_Element( 'tr' );
-        $row->addChild( $fieldset );
-        $table->addChild( $row );
-
-
-		$fieldset = new Nano_Form_Element_Fieldset(array(
-            'type'  =>'div',
-            'class' => 'abps',
-            'id'    => 'images',
-        ));
-
-		foreach( $contents as $index => $item ){
+        foreach( $items as $item ){
 			$img = new Nano_Element( 'img', array(
                 'class'     => 'thumbnail',
 				'alt'	     => $item->name,
@@ -65,53 +23,83 @@ class Helper_ImageList{
                 'title' => 'Edit ' . $item->name,
                 'style'  => 'display: none;'
             ), 'Edit ' . $item->name );
-            //
-            //$link->addChild( $img );
 
-            $wrapper =  new Nano_Element('dt');
-            $wrapper->addChild( $link );
+            $elements['image-' . $item->id] = array(
+                'type'    => 'fieldset',
+                'tagname' => 'dl',
+                'elements' => array(
+                    'title[' . $item->id . ']' => array(
+                        'type' => 'text',
+                        'value' => $item->name,
+                        'prefix' => '<dt>' . $link,
+                        'suffix' => '</dt>',
+                        'wrapper' => false
+                    ),
+                    'selection[' . $item->id . ']' => array(
+                        'type'  => 'checkbox',
+                        'prefix' => '<dd>',
+                        'suffix' => '</dd>',
+                        'label' => $img,
+                        'wrapper' => false
+                    )
+                )
+            );
+        }
+        /**
+<script>
+Sortable.create('images',{
+    constraint:false,
+    overlap:    'horizontal',
+    elements:$$('.list-item'),
+    //onUpdate: function( el ){
+    //    console.log(el);
+    //},
+    //onChange: function( el ){
+    //    console.log(el);
+    //}
+});
+</script>
+*/
 
 
-			$fieldset->addElements(array(
-				'title[' . $item->id . ']'	=> array(
-					'type'	=> 'text',
-					'value'	=> $item->name,
-					'prefix'	=> '<dl class="list-item" id="image_' . $item->id . '">',
-					'wrapper'	=> $wrapper,
-                    //'label'     => $link,
-					'validators' => array(
-						array( 'StringLength', 0, 64),
-					)
-				),
-				'selection[' . $item->id . ']' => array(
-					'wrapper'	=> new Nano_Element('dd'),
-					'type'	=> 'checkbox',
-					'label'	=> (string) $img,
-					'suffix'	=> '</dl>',
-				)
-			));
-		}
-
-        $row = new Nano_Element( 'tr' );
-        $cell = new Nano_Element( 'td', array('height'=>'100%'));
-        $wrapper = new Nano_Element( 'div', array( 'class' => 'reps'));
-
-        $table->addChild( $row->addChild( $cell->addChild( $wrapper->addChild( $fieldset ) ) ) );
-		$form->addChild( $table );
-
-		return $form;
+        return new Nano_Form( 'images', array(
+            'class' => 'list-images',
+            'elements'  => array(
+                'toolbar'   => array(
+                    'type'  => 'fieldset',
+                    'class' => 'toolbar',
+                    'elements' => array(
+                        'select-all'    => array(
+                            'type'		=>'button',
+                            'wrapper'	=> false,
+                            'value'		=> 'select all',
+                            'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
+                        ),
+                        'reset' => array(
+                            'type'=>'reset',
+                            'wrapper'	=> false,
+                            'value'=> 'clear selection',
+                            'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
+                        ),
+                        'action' => array(
+                            'type'		=> 'select',
+                            'wrapper'	=> false,
+                            'label'		=> 'With selected images do ',
+                            'onchange'  => 'this.form.submit()',
+                            'options'	=> array(
+                                'delete'	=> 'delete images',
+                                'labels'	=> 'edit labels'
+                            ),
+                        )
+                    )
+                ),
+                'viewport' => array(
+                    'type'      => 'fieldset',
+                    'tagname'   => 'div',
+                    'class'     => 'wrap',
+                    'elements'  => $elements
+                )
+            )
+        ));
     }
-
-    private function getTypeName( $item ){
-        $types = array(
-            Pico_AdminController::ITEM_TYPE_IMAGE   => 'image',
-            Pico_AdminController::ITEM_TYPE_PAGE    => 'page',
-            Pico_AdminController::ITEM_TYPE_CAT     => 'category',
-            Pico_AdminController::ITEM_TYPE_NAV     => 'navigation',
-            Pico_AdminController::ITEM_TYPE_LABEL   => 'label'
-        );
-
-        return $types[$item->type];
-    }
-
 }
