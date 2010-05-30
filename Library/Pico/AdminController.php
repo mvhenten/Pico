@@ -7,10 +7,11 @@ class Pico_AdminController extends Nano_Controller{
     const ITEM_TYPE_CAT   = 5;
 
     public function preDispatch(){
+        $this->getView()->disableViewScript();
+
         if( ! Nano_Session::session()->auth ){
             $this->_redirect( '/admin/user/login' );
         }
-        $this->getView()->disableTemplate();
     }
 
     public function postDispatch(){
