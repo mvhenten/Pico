@@ -13,7 +13,7 @@ class Helper_ItemForm{
                 'wrapper' => false,
                 'type'  => 'submit',
                 'value' => 'Save changes?',
-                'prefix' => sprintf('Editing <em>%s</em>&nbsp; ', $item->name)
+                'prefix' => sprintf('<h5>Editing <em>%s</em>&nbsp;</h5>', $item->name)
             ),
             'delete' => ( null !== $item->id ? array(
                 'wrapper' => false,
@@ -41,7 +41,7 @@ class Helper_ItemForm{
                 'value' => $item->description,
                 'label' => 'Description',
                 'validators'    => array(
-                    array('stringLength', array(1, 254), false )
+                    array('stringLength', array(0, 254), false )
                 ),
             ),
             'visible'   => array(

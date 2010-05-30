@@ -23,26 +23,33 @@ class Controller_Admin_Label extends Pico_AdminController{
     }
 
     protected  function editAction(){
+        //var_dump( $this->getView()->disableTemplate() );
         $request = $this->getRequest();
+
         $label = new Model_Label();
         $label->type = self::ITEM_TYPE_LABEL;
         $label->name = 'New label';
 
         if( null !== $request->id ){
             $label->id = $request->id;
-            $images = $label->fetchImages();
-
-            var_dump( $images );exit;
         }
 
         $form = $this->_helper( 'ItemForm', $label, array(
             'data[color]' => array(
+                'id'    => 'colorpicker',
                 'label' => 'Color for this label',
                 'class' => 'colorpicker',
                 'type'  => 'input',
                 'value' => ($label->data&&isset($label->data->color)?$label->data->color:null)
             )
         ) );
+
+        $form->setSuffix( '
+            <script src="/js/colourPicker.js"></script>
+            <script>
+                $(document).observe("dom:loaded", function(){new ColourPicker("colorpicker")});
+            </script>'
+            );
 
         if( $request->isPost() ){
             $post = $request->getPost();
@@ -60,6 +67,9 @@ class Controller_Admin_Label extends Pico_AdminController{
 
                 $label->save();
                 $this->_redirect( '/admin/label/edit/' . $label->id );
+            }
+            else{
+//                var_dump( $form->getErrors() );
             }
         }
 

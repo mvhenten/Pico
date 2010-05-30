@@ -82,6 +82,7 @@ Sortable.create('images',{
                             'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
                         ),
                         'action' => array(
+                            'name'      => 'action',
                             'type'		=> 'select',
                             'wrapper'	=> false,
                             'label'		=> 'With selected images do ',

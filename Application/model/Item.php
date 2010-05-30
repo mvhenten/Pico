@@ -22,8 +22,9 @@ class Model_Item extends Pico_Model{
             $this->find();
         }
 
+
         if( is_string( $this->_data ) ){
-            $this->_data = json_decode(json_decode( stripslashes($this->_data) ));
+            $this->_data = json_decode(json_decode( $this->_data ));
         }
 
 

@@ -9,8 +9,11 @@ class Model_ImageLabel extends Pico_Model{
     protected $limit;
     protected $offset;
 
-    public function search( $limit = 10, $offset = 0 ){
-        return $this->getMapper()->search( $this, $limit, $offset );
+    /**
+     * Find elements from item by imageId or labelId
+     */
+    public function find( $limit = 10, $offset = 0 ){
+        return $this->getMapper()->find( $this, $limit, $offset );
     }
 
     public function setLimit( $limit ){
@@ -41,6 +44,11 @@ class Model_ImageLabel extends Pico_Model{
         $this->getMapper()->delete( $what );
     }
 
+    /**
+     * Save multiple rows
+     *
+     * @param what array with keys image_id or label_id
+     */
     public function save( $what ){
         $what = array_merge(array(
             'image_id' => null,
@@ -49,6 +57,17 @@ class Model_ImageLabel extends Pico_Model{
 
         if( $what['image_id'] != null && $what['label_id'] != null ){
             $this->getMapper()->save( $what );
+        }
+    }
+
+    public function search( $what ){
+        $what = array_merge(array(
+            'image_id' => null,
+            'label_id' => null
+        ), $what);
+
+        if( $what['image_id'] != null || $what['label_id'] != null ){
+            return $this->getMapper()->search( $what );
         }
     }
 

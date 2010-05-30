@@ -20,6 +20,8 @@ class Model_Image extends Model_Item{
     }
 
     public function setLabels( array $labels ){
+
+        var_dump( $labels );exit;
         $search = new Model_ImageLabel();
 
         $search->delete( array( 'image_id' => $this->_id ) );

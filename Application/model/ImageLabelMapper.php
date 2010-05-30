@@ -13,14 +13,10 @@ class Model_ImageLabelMapper extends Nano_Db_Mapper{
         $where = array();
         $values = array();
 
-
         foreach( $what as $key => $value ){
             if( $key != 'label_id' && $key != 'image_id' ) continue;
 
             $value = array_map('intval', (array) $value );
-
-
-
             $value = join( ',', $value );
             $where[] = sprintf('%s IN (%s)', $key, $value );
         }
@@ -30,6 +26,28 @@ class Model_ImageLabelMapper extends Nano_Db_Mapper{
            ', $this->_tableName
             , join( 'AND ', $where )
         ));
+    }
+
+    public function search( $what ){
+        $what = array_filter( $what );
+        $where = array();
+        $values = array();
+
+        foreach( $what as $key => $value ){
+            if( $key != 'label_id' && $key != 'image_id' ) continue;
+
+            $value = array_map('intval', (array) $value );
+            $value = join( ',', $value );
+            $where[] = sprintf('%s IN (%s)', $key, $value );
+        }
+
+        $query = sprintf('
+            SELECT *
+            FROM `%s`
+            WHERE %s
+        ', $this->_tableName, join('OR', $where));
+
+        return $this->getDb()->fetchAll($query);
     }
 
     public function save( $what ){
@@ -68,7 +86,7 @@ class Model_ImageLabelMapper extends Nano_Db_Mapper{
         }
     }
 
-    public function search( Model_ImageLabel $search ){
+    public function find( Model_ImageLabel $search ){
         $where = array();
 
         $query = array('

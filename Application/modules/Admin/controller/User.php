@@ -1,5 +1,9 @@
 <?php
 class Controller_Admin_User extends Nano_Controller{
+    public function preDispatch(){
+        $this->getView()->disableTemplate();
+    }
+
     public function indexAction(){
         if( ! Nano_Session::session()->auth ){
             $this->_redirect( '/admin/user/login' );
@@ -38,6 +42,11 @@ class Controller_Admin_User extends Nano_Controller{
                     'value' => 'login'
                 )
             ));
+
+            $this->getView()->disableLayout();
+
+            echo $form;
+            exit;
 
             $this->getView()->form = $form;
         }

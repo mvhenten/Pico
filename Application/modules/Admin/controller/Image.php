@@ -24,7 +24,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                     $query = join(',' ,array_keys( $post->selection ) );
                     $this->_redirect( '/admin/image/labels/' . $query );
                 }
-                var_dump( $post ); exit;
+//                var_dump( $post ); exit;
             }
         }
 
@@ -34,11 +34,79 @@ class Controller_Admin_Image extends Pico_AdminController{
 
     protected function labelsAction(){
         $request = $this->getRequest();
+        $elements = array();
 
-        $ids = explode( ',', urldecode($request->id) );
+        $images = explode( ',', urldecode($request->id));
+        $rows = ($rows = new Model_ImageLabel()) ? $rows->search( array('image_id' => $images ) ):null;
+        $labels   = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
+        $selected = array(); foreach( $rows as $val) $selected[]=$val->label_id;
 
-        var_dump( $ids );
 
+
+        if( $request->isPost() && $post = $request->getPost() ){
+            $selection = array_keys( $post->selection );
+
+            foreach( $images as $image ){
+                $image = new Model_Image( array('id'=>$image) );
+                $image->setLabels( $selection );
+            }
+        }
+
+
+        foreach( $labels as $label ){
+            $elements['selection[' . $label->id . ']'] = array(
+                'type'  => 'checkbox',
+                'label' => $label->name,
+                'value' => in_array( $label->id, $selected )
+            );
+        }
+
+        $form = new Nano_Form( 'labels-bulk', array(
+            'elements' => array(
+                'toolbar'   => array(
+                    'type'  => 'fieldset',
+                    'class' => 'toolbar',
+                    'legend' => '<h5>Editing labels</h5>',
+                    'elements' => array(
+                        'reset' => array(
+                            'wrapper' => false,
+                            'type' => 'button',
+                            'value' => 'clear all',
+                            'onclick' => '$$(".input-checkbox").each(function(el){el.checked=false;});'
+                        ),
+                        'select-all' => array(
+                            'wrapper' => false,
+                            'type' => 'button',
+                            'value' => 'select all',
+                            'onclick' => '$$(".input-checkbox").each(function(el){el.checked=true;});'
+                        ),
+                        'save' => array(
+                            'wrapper' => false,
+                            'type' => 'submit',
+                            'value' => 'Save changes'
+                        ),
+                    )
+                ),
+                'viewport' => array(
+                    'type'  => 'fieldset',
+                    'class' => 'viewport',
+                    'elements' => $elements
+                ),
+                'save' => array(
+                    'wrapper' => false,
+                    'type' => 'submit',
+                    'value' => 'Save changes'
+                ),
+            )
+        ));
+
+        $this->getView()->mainLeft = $form;
+
+
+
+  //      var_dump( $selected );
+
+//        $elements = array(new Nano_Element('img', array('src'=>'/admin/image/view/thumbnail/1')));
 
 
 
