@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_User extends Nano_Controller{
     public function preDispatch(){
-        $this->getView()->disableTemplate();
+        //$this->getView()->disableTemplate();
     }
 
     public function indexAction(){

@@ -16,12 +16,10 @@ class Model_Image extends Model_Item{
         $search->setLimit( $limit );
         $search->setOffset( $offset );
 
-        return $search->search();
+        return $search->find();
     }
 
     public function setLabels( array $labels ){
-
-        var_dump( $labels );exit;
         $search = new Model_ImageLabel();
 
         $search->delete( array( 'image_id' => $this->_id ) );

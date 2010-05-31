@@ -14,8 +14,8 @@ default.layoutPath  = "layout.phtml"
 default.structure   = "/:controller/:action.phtml"
 
 admin.base      = APPLICATION_PATH
-admin.path      = "Application/modules/Admin/view"
-admin.layout    = "layout.phtml"
+admin.path      = "Application/modules/Admin/"
+admin.layoutPath    = "layout.phtml"
 admin.structure = "/:controller/:action.phtml"
 
 [route]

@@ -13,7 +13,20 @@ class Controller_Admin_Image extends Pico_AdminController{
 	public function listAction(){
         $request = $this->getRequest();
 
-        $images = ( $image = new Model_Image() ) ? $image->search():null;
+        if( null !== $request->id ){
+            $label = new Model_Label( array( 'id' => $request->id ) );
+            $images = $label->fetchImages();
+//            $images = ( $image = new Model_Image() ) ? $image-
+            if( count( $images ) == 0 ){
+                $this->getView()->mainLeft = sprintf('No images with label %s found!', $label->name );
+                return;
+            }
+        }
+        else{
+            $images = ( $image = new Model_Image() ) ? $image->search():null;
+        }
+
+
         //$this->imageList( $this->images )
         $form = $this->_helper('imageList', $images );
 
@@ -44,12 +57,13 @@ class Controller_Admin_Image extends Pico_AdminController{
 
 
         if( $request->isPost() && $post = $request->getPost() ){
-            $selection = array_keys( $post->selection );
+            $selection = array_keys( (array) $post->selection );
 
             foreach( $images as $image ){
                 $image = new Model_Image( array('id'=>$image) );
                 $image->setLabels( $selection );
             }
+            $this->_redirect( '/admin/image' );
         }
 
 
@@ -101,15 +115,6 @@ class Controller_Admin_Image extends Pico_AdminController{
         ));
 
         $this->getView()->mainLeft = $form;
-
-
-
-  //      var_dump( $selected );
-
-//        $elements = array(new Nano_Element('img', array('src'=>'/admin/image/view/thumbnail/1')));
-
-
-
     }
 
     protected function addAction(){
@@ -165,17 +170,60 @@ class Controller_Admin_Image extends Pico_AdminController{
 
         $form = new Nano_Form();
 
+
+        //$form->addChild( new Nano_Element( 'script', null, ob_get_clean() ) );
+
         $form->addElements(array(
             'image' => array(
-                'type'  => 'file'
+                'type'  => 'file',
             ),
             'upload'    => array(
                 'type'  => 'submit',
                 'value' => 'Submit'
             )
         ));
+        $form->setAttribute( 'target', 'iframeSubmit');
+        $form->setAttribute( 'action', '/admin/image/add');
+        $form->setAttribute( 'id', 'image-add');
+        $form->setAttribute( 'onsubmit', 'loadResults()');
 
-        $this->getview()->mainLeft = $form;
+        $frame = '<iframe style="display:none;" name="iframeSubmit" id="iframeSubmit"></iframe>'."\n";
+        ob_start();
+        ?>
+        <script>
+            function loadResults(){
+                var handler = function(){
+                    $('iframeSubmit').stopObserving('load', handler );
+
+                    var frame = $('iframeSubmit');
+
+                    var doc = frame.contentWindow || frame.contentDocument;
+                    if( doc.document ){
+                        doc = doc.document;
+                    }
+
+//                    console.log( doc.findElementsByTagName('img') );
+
+                    console.log( doc.baseURI.replace('edit', 'view/thumbnail') );
+
+                    var thumb = doc.baseURI.replace('edit', 'view/thumbnail');
+                    var uri   = doc.baseURI;
+
+                    $('main-left').insert('<a href="' + uri + '"><img src="' +  thumb + '" /></a>');
+
+  //                  console.log( frame.select('img') );
+
+
+                }
+
+                $('iframeSubmit').observe('load', handler );
+//                console.log( $('image-add') );
+            }
+        </script>
+
+        <?php
+
+        $this->getview()->mainLeft = (string) $form . $frame . ob_get_clean();
     }
 
     protected  function editAction(){
@@ -262,8 +310,6 @@ class Controller_Admin_Image extends Pico_AdminController{
             $images = new Model_ImageData( array( 'image_id' => $id, 'type' => self::TYPE_ORIGINAL ) );
             $images  = $images->search();
 
-
-
             if( count( $images ) == 0 ){
                 die( 'Image not found!');
             }
@@ -318,11 +364,23 @@ class Controller_Admin_Image extends Pico_AdminController{
     }
 
     protected function getMenu(){
-        return array(
+        $menu = array();
+
+        $labels = ( $label = new Model_Label() ) ? $label->search() : null;
+
+        foreach( $labels as $label ){
+            $menu['label_' . $label->id ] = array(
+              'target'  => '/admin/image/list/' . $label->id,
+              'value'   => 'Label ' . $label->name
+            );
+        }
+
+
+        return array_merge( array(
             'add'   => array(
                 'target' => '/admin/image/add',
                 'value'  => 'Add new image'
             )
-        );
+        ), $menu);
     }
 }
