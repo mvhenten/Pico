@@ -26,8 +26,6 @@ class Controller_Admin_Image extends Pico_AdminController{
             $images = ( $image = new Model_Image() ) ? $image->search():null;
         }
 
-
-        //$this->imageList( $this->images )
         $form = $this->_helper('imageList', $images );
 
         if( $request->isPost() && $post = $request->getPost() ){
@@ -37,12 +35,10 @@ class Controller_Admin_Image extends Pico_AdminController{
                     $query = join(',' ,array_keys( $post->selection ) );
                     $this->_redirect( '/admin/image/labels/' . $query );
                 }
-//                var_dump( $post ); exit;
             }
         }
 
         $this->getview()->mainLeft = $form;
-//		$this->getView()->images = $images;
 	}
 
     protected function labelsAction(){
@@ -186,6 +182,9 @@ class Controller_Admin_Image extends Pico_AdminController{
         $form->setAttribute( 'action', '/admin/image/add');
         $form->setAttribute( 'id', 'image-add');
         $form->setAttribute( 'onsubmit', 'loadResults()');
+
+        $this->getView()->headScript()->append( '/js/upload.js');
+        $this->getView()->headScript()->append( '/js/test.js');
 
         $frame = '<iframe style="display:none;" name="iframeSubmit" id="iframeSubmit"></iframe>'."\n";
         ob_start();
