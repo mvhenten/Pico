@@ -178,51 +178,19 @@ class Controller_Admin_Image extends Pico_AdminController{
                 'value' => 'Submit'
             )
         ));
-        $form->setAttribute( 'target', 'iframeSubmit');
+        //$form->setAttribute( 'target', 'go');
         $form->setAttribute( 'action', '/admin/image/add');
+        $form->setAttribute( 'class', 'uploadForm' );
+
         $form->setAttribute( 'id', 'image-add');
-        $form->setAttribute( 'onsubmit', 'loadResults()');
+//        $form->setAttribute( 'onsubmit', 'loadResults()');
 
         $this->getView()->headScript()->append( '/js/upload.js');
-        $this->getView()->headScript()->append( '/js/test.js');
 
-        $frame = '<iframe style="display:none;" name="iframeSubmit" id="iframeSubmit"></iframe>'."\n";
-        ob_start();
-        ?>
-        <script>
-            function loadResults(){
-                var handler = function(){
-                    $('iframeSubmit').stopObserving('load', handler );
-
-                    var frame = $('iframeSubmit');
-
-                    var doc = frame.contentWindow || frame.contentDocument;
-                    if( doc.document ){
-                        doc = doc.document;
-                    }
-
-//                    console.log( doc.findElementsByTagName('img') );
-
-                    console.log( doc.baseURI.replace('edit', 'view/thumbnail') );
-
-                    var thumb = doc.baseURI.replace('edit', 'view/thumbnail');
-                    var uri   = doc.baseURI;
-
-                    $('main-left').insert('<a href="' + uri + '"><img src="' +  thumb + '" /></a>');
-
-  //                  console.log( frame.select('img') );
+        $iframe = '<iframe name="go" id="go"></iframe>';
 
 
-                }
-
-                $('iframeSubmit').observe('load', handler );
-//                console.log( $('image-add') );
-            }
-        </script>
-
-        <?php
-
-        $this->getview()->mainLeft = (string) $form . $frame . ob_get_clean();
+        $this->getview()->mainLeft = $iframe . (string) $form;
     }
 
     protected  function editAction(){
@@ -271,6 +239,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                 $this->_redirect( '/admin/image/edit/' . $image->id );
             }
         }
+
 
         $this->getview()->mainLeft = $form;
     }
