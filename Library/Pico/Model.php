@@ -86,7 +86,14 @@ abstract class Pico_Model{
 			throw new Exception( sprintf('Trying to get property %s', $name) );
 		}
     }
-    
+
+    public function __isset( $name ){
+        if( null !== $this->__get( $name ) ){
+            return true;
+        }
+        return false;
+    }
+
 	/**
 	 * returns all class values as an array
 	 * @return array $values

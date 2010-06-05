@@ -1,5 +1,4 @@
 $(document).observe('dom:loaded', function(evt){
-    console.log('ready');
     $$('.uploadForm').each( function( el ){
         var form = new FormUpload(el);
     });
@@ -8,85 +7,54 @@ $(document).observe('dom:loaded', function(evt){
 var FormUpload = Class.create({
     initialize: function( element ){
         this._form = $(element);
-        //var frame = Element('iframe').setStyle('border:1px solid red; height:100px; width:100px;');
-        $('go').remove();
-
-        var frame = Element('div').update('<iframe name="go" id="go" src=""></iframe>');
+        var frame = Element('div').update('<iframe name="go" id="go" src=""></iframe>').hide();
 
         this._form.up().insert({top: frame});
-//        this._form.up().insert({top: '<a href="/admin/image" target="go">go</a>'});
         this._form.target = 'go';
-
         this._iframe = frame.down('iframe');
 
-        this._form.observe('submit', function(evt){
-            this._iframe.observe('load', function(evt){
-                console.log('load');
-                var frame = this._iframe;// evt.findElement('iframe');
-                console.log(frame);
+        this._form.observe( 'submit', this.onSubmit.bindAsEventListener(this) );
+    },
 
-                var doc = frame.contentWindow || frame.contentDocument;
+    onSubmit: function( evt ){
+        this.onLoad = this.onFrameLoad.bindAsEventListener( this );
+        this._iframe.observe( 'load', this.onLoad );
+    },
 
+    onFrameLoad: function(evt){
+        this._iframe.stopObserving( 'load', this.onLoad );
 
-                if( doc.document ){
-                    doc = doc.document;
-                }
-                console.log(doc.forms[0]);
+        var doc = this._iframe.contentWindow || this._iframe.contentDocument;
 
+        console.log( 'hier', doc );
 
-                this._form.up().insert(doc.forms[0]);
+        if( doc.document ){
+            doc = doc.document;
+        }
 
-                //console.log(doc.findElementsByTagName('img'));
+        var url = doc.baseURI;
+        var src = doc.baseURI.replace( 'edit', 'view/thumbnail' );
+        var name = doc.forms[0].elements['name'].value;
 
-//                console.log($(doc).select('img'));
+        var html = "\
+            <dl class='thumbnail'>\
+                <dt><a title='edit %name' href='%url'><img src='%src' /></a></dt>\
+                <dd><a title='edit %name' href='%url'>edit %name</strong></dd>\
+            </dl>\
+        ";
 
+        html = html.replace( /%name/ig, name );
+        html = html.replace( /%url/ig, url );
+        html = html.replace( /%src/ig, src );
 
-
-
-                //console.log( doc.findElementsByTagName('img') );
-                //
-                //console.log( doc.baseURI.replace('edit', 'view/thumbnail') );
-                //
-                //var thumb = doc.baseURI.replace('edit', 'view/thumbnail');
-                //var uri   = doc.baseURI;
-                //
-                //this._form.up().insert('<a href="' + uri + '"><img src="' +  thumb + '" /></a>');
-
-            }.bind(this));
-        }.bind(this));
-
-
-
-
-        //frame.name = 'go';
-        //frame.id = 'go';
-
-        //frame.setAtribute('id', 'go');
-        //frame.setAtribute('NAME', 'go');
-        //frame.setAtribute('name', 'go');
-
-//        var id = frame.identify();
+        //$('main-left').insert('<a href="' + uri + '"><img src="' +  thumb + '" /></a>');
         //
-  //      frame.name = id;
-        //
-    //    this._form.target = id;
+        //console.log(img);
 
-        //this._form.observe('submit', function( evt ){
-        //    //evt.stop();
-        //
-        //    form = evt.findElement('form');
-        //
-        //    console.log('submit');
-        //
-        //
-        //
-        //   // form.submit();
-        //
-        //    //return false;
-        //});
+        $('upload-results').insert(html);
 
+//        this._form.up().insert(html);
     }
-
 });
 
 
@@ -105,12 +73,6 @@ var FormUpload = Class.create({
 //
 ////                    console.log( doc.findElementsByTagName('img') );
 //
-//                    console.log( doc.baseURI.replace('edit', 'view/thumbnail') );
-//
-//                    var thumb = doc.baseURI.replace('edit', 'view/thumbnail');
-//                    var uri   = doc.baseURI;
-//
-//                    $('main-left').insert('<a href="' + uri + '"><img src="' +  thumb + '" /></a>');
 //
 //  //                  console.log( frame.select('img') );
 //

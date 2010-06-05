@@ -13,6 +13,7 @@ class Bootstrap{
         Nano_Autoloader::registerNamespace( 'Model', APPLICATION_PATH . '/Application/model' );
 
         $config  = new Nano_Config_Ini( APPLICATION_PATH . '/Application/config/application.ini' );
+
         $router  = new Nano_Router( $config->route );
         $request = new Nano_Request( $router );
 
@@ -24,10 +25,10 @@ class Bootstrap{
 
         Nano_Db::setAdapter( $config->database );
 
-
-        if( '' !== $router->module ){
+        if( null !== $router->module ){
             $module = ucfirst( $router->module );
             Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_PATH . '/Application/modules/' . $module . '/controller' );
+            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_PATH . '/Application/modules/' . $module . '/forms' );
 
             $name = sprintf( 'Controller_%s_%s', $module, ucfirst($request->controller ));
             $controller = new $name( $request, $config );

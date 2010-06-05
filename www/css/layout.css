@@ -17,3 +17,12 @@
 .wrap{
     overflow: auto;
 }
+
+table.viewport{
+    width: 100%;
+}
+
+table.viewport td label,
+table.viewport td a{
+    display: block;
+}

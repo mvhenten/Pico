@@ -50,7 +50,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         $labels   = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
         $selected = array(); foreach( $rows as $val) $selected[]=$val->label_id;
 
-
+        $form = new Form_EditLabels( $labels, $selected );
 
         if( $request->isPost() && $post = $request->getPost() ){
             $selection = array_keys( (array) $post->selection );
@@ -62,60 +62,15 @@ class Controller_Admin_Image extends Pico_AdminController{
             $this->_redirect( '/admin/image' );
         }
 
-
-        foreach( $labels as $label ){
-            $elements['selection[' . $label->id . ']'] = array(
-                'type'  => 'checkbox',
-                'label' => $label->name,
-                'value' => in_array( $label->id, $selected )
-            );
-        }
-
-        $form = new Nano_Form( 'labels-bulk', array(
-            'elements' => array(
-                'toolbar'   => array(
-                    'type'  => 'fieldset',
-                    'class' => 'toolbar',
-                    'legend' => '<h5>Editing labels</h5>',
-                    'elements' => array(
-                        'reset' => array(
-                            'wrapper' => false,
-                            'type' => 'button',
-                            'value' => 'clear all',
-                            'onclick' => '$$(".input-checkbox").each(function(el){el.checked=false;});'
-                        ),
-                        'select-all' => array(
-                            'wrapper' => false,
-                            'type' => 'button',
-                            'value' => 'select all',
-                            'onclick' => '$$(".input-checkbox").each(function(el){el.checked=true;});'
-                        ),
-                        'save' => array(
-                            'wrapper' => false,
-                            'type' => 'submit',
-                            'value' => 'Save changes'
-                        ),
-                    )
-                ),
-                'viewport' => array(
-                    'type'  => 'fieldset',
-                    'class' => 'viewport',
-                    'elements' => $elements
-                ),
-                'save' => array(
-                    'wrapper' => false,
-                    'type' => 'submit',
-                    'value' => 'Save changes'
-                ),
-            )
-        ));
-
         $this->getView()->mainLeft = $form;
     }
 
     protected function addAction(){
+        $this->getView()->headScript()->append( '/js/upload.js');
         $request = $this->getRequest();
         $errors  = array();
+
+        $form = new Form_AddImage();
 
         if( $request->isPost() && is_uploaded_file( $_FILES['image']['tmp_name'] ) ){
             $file = (object) $_FILES['image'];
@@ -164,33 +119,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             $errors[] = 'Tampering detected: not an uploaded file';
         }
 
-        $form = new Nano_Form();
-
-
-        //$form->addChild( new Nano_Element( 'script', null, ob_get_clean() ) );
-
-        $form->addElements(array(
-            'image' => array(
-                'type'  => 'file',
-            ),
-            'upload'    => array(
-                'type'  => 'submit',
-                'value' => 'Submit'
-            )
-        ));
-        //$form->setAttribute( 'target', 'go');
-        $form->setAttribute( 'action', '/admin/image/add');
-        $form->setAttribute( 'class', 'uploadForm' );
-
-        $form->setAttribute( 'id', 'image-add');
-//        $form->setAttribute( 'onsubmit', 'loadResults()');
-
-        $this->getView()->headScript()->append( '/js/upload.js');
-
-        $iframe = '<iframe name="go" id="go"></iframe>';
-
-
-        $this->getview()->mainLeft = $iframe . (string) $form;
+        $this->getview()->mainLeft = (string) $form;
     }
 
     protected  function editAction(){
@@ -244,92 +173,9 @@ class Controller_Admin_Image extends Pico_AdminController{
         $this->getview()->mainLeft = $form;
     }
 
-    public function viewAction(){
-        $request = $this->getRequest();
-
-        $id = $request->id;
-        $type = self::TYPE_ORIGINAL;
-
-        if( !is_numeric( $request->id ) && is_numeric( $request->value ) ){
-            $id = $request->value;
-            switch( $request->id ){
-                case 'thumbnail':
-                    $type = self::TYPE_THUMBNAIL;
-                    break;
-                case 'original':
-                    $type = self::TYPE_ORIGINAL;
-                    break;
-                case 'vignette':
-                    $type = self::TYPE_VIGNETTE;
-                    break;
-                case 'icon':
-                    $type = self::TYPE_ICON;
-                    break;
-                default:
-					$type = self::TYPE_ORIGINAL;
-            }
-
-        }
-
-        $images = new Model_ImageData( array( 'image_id' => $id, 'type' => $type ) );
-        $images = $images->search();
-
-        if( count($images) == 0 ){
-            $images = new Model_ImageData( array( 'image_id' => $id, 'type' => self::TYPE_ORIGINAL ) );
-            $images  = $images->search();
-
-            if( count( $images ) == 0 ){
-                die( 'Image not found!');
-            }
-
-            $original = $images[0];
-            $source = new Nano_Gd( $images[0]->data, false );
-
-            switch( $type ){
-                case self::TYPE_ICON:
-                    list( $width, $height ) = explode( 'x', self::IMAGESIZE_ICON );
-                    break;
-                case self::TYPE_THUMBNAIL:
-                    list( $width, $height ) = explode( 'x', self::IMAGESIZE_THUMBNAIL );
-                    break;
-                case self::TYPE_VIGNETTE:
-                    list( $width, $height ) = explode( 'x', self::IMAGESIZE_VIGNETTE );
-                    list( $x, $y ) = array_values($source->getDimensions());
-
-                    $width = ( $x > $y ) ? $width : ( $height / $y ) * $x;
-                    $height = ( $x < $y ) ? $height : ( $width / $x ) * $y;
-                    break;
-                default:
-                    die( 'Image not found!');
-            }
-
-            $target = $source->resize( $width, $height );
-            $data   = $target->getImageJPEG();
-
-            $image = new Model_ImageData(array(
-                    'imageId'   => $id,
-                    'size'      => strlen($data),
-                    'mime'      => 'image/jpeg',
-                    'width'     => $width,
-                    'height'    => $height,
-                    'data'      => $data,
-                    'filename'  => $request->id . '_' . $original->filename,
-                    'type'      => $type
-            ));
-
-            $image->save();
-        }
-        else{
-            $image = $images[0];
-        }
-
-        header( 'Content-Type: ' . $image->mime );
-        echo $image->data;
-    }
-
-    public function postDispatch(){
-        $this->getView()->actions = $this->getMenu();
-    }
+    //public function postDispatch(){
+    //    $this->getView()->actions = $this->getMenu();
+    //}
 
     protected function getMenu(){
         $menu = array();

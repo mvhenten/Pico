@@ -9,6 +9,25 @@ class Model_Image extends Model_Item{
         return $this->fetchLabels();
     }
 
+    public function fetchData( $type = null ){
+        if( null !== $this->_id ){
+            $data = new Model_ImageData(array(
+                'imageId' => $this->_id
+            ));
+
+            if( null == $type ){
+                $type = Model_ImageData::TYPE_ORIGINAL;
+            }
+            else if( ! is_numeric($type) ){
+                $type = $data->getTypeId($type);
+            }
+
+            $data->type = $type;
+
+            return $data;
+        }
+    }
+
     public function fetchLabels( $limit = 10, $offset = 0 ){
         $search = new Model_ImageLabel();
 

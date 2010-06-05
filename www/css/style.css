@@ -31,7 +31,14 @@ input, select, textarea{
     font: 1em/1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
 }
 
-.buttonbar, .toolbar{
+fieldset fieldset{
+    padding: 0.5em;
+    margin: 0.5em;
+    border: 1px solid #eee;
+}
+
+.buttonbar,
+.toolbar{
     line-height: 3em;
     text-align: right;
     background-color: #eee;
@@ -39,7 +46,9 @@ input, select, textarea{
     padding-left: 1em;
 }
 
-.buttonbar h5, .toolbar h5{
+.buttonbar h5,
+.toolbar h5,
+.toolbar legend{
     float: left;
     font-weight: bold;
 }
@@ -55,7 +64,7 @@ input, select, textarea{
 }
 
 .formElementWrapper{
-    padding: 0 1em;
+    padding: 1em 1em 0 1em;
 }
 
 .colorpicker-color{
@@ -117,9 +126,26 @@ input, select, textarea{
     background-color: #7a8185;
 }
 
+/** item list **/
+
+table.viewport tr.even:hover,
+table.viewport tr.uneven:hover,
+table.viewport tr.even:hover a,
+table.viewport tr.uneven:hover a
+{
+    background-color: #090;
+    color: #fff;
+    cursor: pointer;
+}
+
+table.viewport tr.uneven{
+    background-color: #f9f9f9;
+}
+
 /** images list **/
 
-#images dl{
+#images dl,
+dl.thumbnail{
     width: 8em;
     height: 10em;
     padding: 0.4em;

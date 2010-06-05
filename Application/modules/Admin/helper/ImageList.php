@@ -13,7 +13,7 @@ class Helper_ImageList{
 				'alt'	     => $item->name,
 				'width'		 => 96,
 				'height' 	 => 96,
-				'src'		 => sprintf("/admin/image/view/thumbnail/%d", $item->id),
+				'src'		 => sprintf("/image/thumbnail/%d", $item->id),
                 'onclick'    => '$(this).up(\'dl\').toggleClassName(\'active\');',
                 'ondblclick' => 'document.location.href = $(this).up(\'dl\').down(\'a\').href;return false;'
 			));
