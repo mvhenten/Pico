@@ -4,11 +4,13 @@ class Form_ListItems extends Nano_Form{
         parent::__construct();
 
         $viewport = $this->getFieldset( 'viewport', array(
+            'prefix'    => '<div class="formElementWrapper">',
+            'suffix'    => '</div>',
             'tagname' => 'table',
             'class'   => 'viewport'
         ));
 
-        $head = '<th>name</th><th>description</th><th>visible</th><th colspan=3>created</th>';
+        $head = '<th>name</th><th>description</th><th>visible</th><th colspan=3>updated</th>';
 
         $head = new Nano_Element( 'tr', null, $head );
         $class = 'even';
@@ -16,7 +18,11 @@ class Form_ListItems extends Nano_Form{
 
         foreach( $items as $item ){
             $class = ($class == 'even') ? 'uneven' : 'even';
-            $row = new Nano_Element( 'tr', array('class'=>$class) );
+            $row = new Nano_Element( 'tr', array(
+                'class'      => $class,
+                'onclick'    => '$(this).toggleClassName("active")',
+                'ondblclick' => 'document.location.href = "/admin/page/edit/' . $item->id . '"'
+            ));
             $id = 'item-' . $item->id;
             $updated = (null == $item->updated) ? $item->inserted : $item->updated;
 
@@ -30,26 +36,13 @@ class Form_ListItems extends Nano_Form{
             $row->addChild( $input );
 
             $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $item->description) );
-            $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $item->visible) );
+            $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, ($item->visible>0?'yes':'no') ) );
             $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $updated) );
             $row->addChild('td', array('width'=>'10%'), '<a href="/admin/page/edit/' . $item->id . '">edit</a>');
             $row->addChild('td', array('width'=>'10%'), '<a href="/admin/page/delete/' . $item->id . '">delete</a>');
             $viewport->addChild( $row );
 
         }
-
-        $this->addChildren( array(
-            'div'  => array(
-                'class' => 'foo',
-                'content' => 'foo',
-                'children' => array(
-                    'span'  => array(
-                        'class' => 'biz',
-                        'content' => 'fiz'
-                    )
-                )
-            )
-        ) );
 
         $this->addElements(array(
             'toolbar'   => array(

@@ -5,21 +5,12 @@ class Controller_Admin_Label extends Pico_AdminController{
     }
 
     protected  function listAction(){
-        $items = new Model_Item( array('type'=>self::ITEM_TYPE_LABEL));
-        $items = $items->search();
+        $items = ( $item = new Model_Label() ) ? $item->search() : null;
+//        $items = $items->search();
 
-        if( count( $items ) == 0 ){
-            $this->_forward( 'edit' );
-        }
+        $form = new Form_ListItems( $items );
 
-        foreach( $items as $i => $item ){
-            $item = $item->toArray();
-            $item['title'] = sprintf('<a href="/admin/label/edit/%d">%s</a>', $item['id'], $item['name']);
-
-            $items[$i] = $item;
-        }
-
-        $this->getView()->mainLeft = 'test';join(',', $items);
+        $this->getView()->mainLeft = $form;
     }
 
     protected  function editAction(){
