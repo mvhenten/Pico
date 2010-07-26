@@ -12,11 +12,66 @@ class Controller_Admin_Image extends Pico_AdminController{
 
 	public function listAction(){
         $request = $this->getRequest();
+        $labelId = $request->id;
+
+        $model = new Nano_Db_Model( array(
+            'tableName' => 'item'
+        ));
+
+        echo "<pre>";
+
+        //$values = $model->all()->filter('type =', 1)->order('name');
+        //$values->execute();
+        //$values = $model->all()->filter('type !=', 1)->order('name');
+        //$values->execute();
+        //$values = $model->all()->filter('name LIKE', '%f%')->order('name');
+        //$values->execute();
+        $values = $model->all()->limit(1);
+        print $values->count();
+
+
+        $values = $model->all()->limit(5)->offset(10)->filter('name NOT LIKE', '%f%')
+        ->filter( 'type =', 1)->order('-name')->order('type')->group('inserted');
+
+        print "COUNT: " . $values->count();
+
+        var_dump( "NUMBER 8");
+        var_dump( $values[3] );
+
+//        $values->execute();
+
+        foreach( $values as $value ){
+            var_dump( $value );
+        }
+
+        exit('done');
+
+
+
+
+        //if( null !== $labelId ){
+        //    $find = new Model_ImageLabel(
+        //        array('label_id' => $labelId ),
+        //        array('offset' => $request->offset )
+        //    );
+        //
+        //    foreach( $find as $image ){
+        //        echo "HIER";
+        //        var_dump( $image );
+        //    }
+        //
+        //}
+        //
+        return;
 
         if( null !== $request->id ){
-            $label = new Model_Label( array( 'id' => $request->id ) );
-            $images = $label->fetchImages();
-//            $images = ( $image = new Model_Image() ) ? $image-
+            $search = new Model_ImageLabel();
+            $search->setOffset( $request->offset );
+
+            //$label = new Model_Label( array( 'id' => $request->id ) );
+            $images = $search->search( array('label_id' => $request->id ) );
+
+
             if( count( $images ) == 0 ){
                 $this->getView()->mainLeft = sprintf('No images with label %s found!', $label->name );
                 return;

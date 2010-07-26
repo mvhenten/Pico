@@ -45,22 +45,6 @@ class Helper_ImageList{
                 )
             );
         }
-        /**
-<script>
-Sortable.create('images',{
-    constraint:false,
-    overlap:    'horizontal',
-    elements:$$('.list-item'),
-    //onUpdate: function( el ){
-    //    console.log(el);
-    //},
-    //onChange: function( el ){
-    //    console.log(el);
-    //}
-});
-</script>
-*/
-
 
         return new Nano_Form( 'images', array(
             'class' => 'list-images',

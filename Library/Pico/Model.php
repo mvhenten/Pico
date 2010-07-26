@@ -1,11 +1,15 @@
 <?php
 /**
  * Base class for slicr models
- *
- * Since all models basically have the same design, this class holds the common
- * funcitons.
  */
 abstract class Pico_Model{
+    const DEFAULT_LIMIT = 25;
+    const DEFAULT_OFFSET = 0;
+
+    protected $limit;
+    protected $offset;
+
+
     /**
      * Placeholder variable for the Mapper object
      * @var Object $mapper
@@ -31,7 +35,7 @@ abstract class Pico_Model{
     }
 
 	/**
-	 * magic seter: may get values to be saved or retrieved from db record
+	 * magic setter: may get values to be saved or retrieved from db record
 	 * - Convert between under_scores and camelCase
 	 * - Calls setMethod if defined
 	 *
