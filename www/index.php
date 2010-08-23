@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', "true");
 ini_set('display_warnings', "true");
 ini_set('upload_max_filesize', '16M');

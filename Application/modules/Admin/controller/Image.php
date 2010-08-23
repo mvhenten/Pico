@@ -14,9 +14,37 @@ class Controller_Admin_Image extends Pico_AdminController{
         $request = $this->getRequest();
         $labelId = $request->id;
 
-        $model = new Nano_Db_Model( array(
-            'tableName' => 'item'
-        ));
+        $new = Model_Item::get();
+
+        $new->name = "FOOBAZ";
+        $new->type = 2;
+
+
+        var_dump( $new->properties() );
+
+        $new->put();
+
+
+
+
+
+
+        return;
+
+
+
+
+        $item = Model_Item::get(1);
+
+        foreach( $item->all()->limit(3)->order('id', 'DESC') as $obj ){
+            var_dump( $obj );
+        }
+
+
+        var_dump( $item );
+
+
+        return;
 
         echo "<pre>";
 
@@ -234,6 +262,8 @@ class Controller_Admin_Image extends Pico_AdminController{
 
     protected function getMenu(){
         $menu = array();
+
+        return $menu;
 
         $labels = ( $label = new Model_Label() ) ? $label->search() : null;
 

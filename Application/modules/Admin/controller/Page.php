@@ -5,12 +5,11 @@ class Controller_Admin_Page extends Pico_AdminController{
     }
 
     protected  function listAction(){
-        $items = new Model_Item( array('type'=>self::ITEM_TYPE_PAGE));
-        $items = $items->search();
+        
 
-        $form = new Form_ListItems( $items );
-
-        $this->getView()->mainLeft = $form;
+        $item = new Model_Item;
+        $pages = $item->all()->filter( 'type', self::ITEM_TYPE_PAGE );
+        $this->getView()->mainLeft = new Form_ListItems( $pages );
     }
 
     protected  function editAction(){
@@ -39,7 +38,11 @@ class Controller_Admin_Page extends Pico_AdminController{
     }
 
     protected  function addAction(){
-        $this->_forward( 'edit' );
+        $page = new Model_Item;
+
+        $page->type = self::ITEM_TYPE_PAGE;
+        $page->put();
+
     }
 
     protected function getMenu(){
