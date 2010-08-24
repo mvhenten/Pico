@@ -19,12 +19,13 @@ class Form_AddImage extends Nano_Form{
                     'upload'    => array(
                         'type'  => 'submit',
                         'value' => 'Submit'
-                    ),
-                    'results' => array(
-                        'type'    => 'fieldset',
-                        'legend'  => 'uploaded images',
-                        'id'      => 'upload-results'
                     )
+                    //,
+                    //'results' => array(
+                    //    'type'    => 'fieldset',
+                    //    'legend'  => 'uploaded images',
+                    //    'id'      => 'upload-results'
+                    //)
                 )
             ),
         ));

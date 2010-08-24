@@ -14,84 +14,6 @@ class Controller_Admin_Image extends Pico_AdminController{
         $request = $this->getRequest();
         $labelId = $request->id;
 
-        $new = Model_Item::get();
-
-        $new->name = "FOOBAZ";
-        $new->type = 2;
-
-
-        var_dump( $new->properties() );
-
-        $new->put();
-
-
-
-
-
-
-        return;
-
-
-
-
-        $item = Model_Item::get(1);
-
-        foreach( $item->all()->limit(3)->order('id', 'DESC') as $obj ){
-            var_dump( $obj );
-        }
-
-
-        var_dump( $item );
-
-
-        return;
-
-        echo "<pre>";
-
-        //$values = $model->all()->filter('type =', 1)->order('name');
-        //$values->execute();
-        //$values = $model->all()->filter('type !=', 1)->order('name');
-        //$values->execute();
-        //$values = $model->all()->filter('name LIKE', '%f%')->order('name');
-        //$values->execute();
-        $values = $model->all()->limit(1);
-        print $values->count();
-
-
-        $values = $model->all()->limit(5)->offset(10)->filter('name NOT LIKE', '%f%')
-        ->filter( 'type =', 1)->order('-name')->order('type')->group('inserted');
-
-        print "COUNT: " . $values->count();
-
-        var_dump( "NUMBER 8");
-        var_dump( $values[3] );
-
-//        $values->execute();
-
-        foreach( $values as $value ){
-            var_dump( $value );
-        }
-
-        exit('done');
-
-
-
-
-        //if( null !== $labelId ){
-        //    $find = new Model_ImageLabel(
-        //        array('label_id' => $labelId ),
-        //        array('offset' => $request->offset )
-        //    );
-        //
-        //    foreach( $find as $image ){
-        //        echo "HIER";
-        //        var_dump( $image );
-        //    }
-        //
-        //}
-        //
-        return;
-
         if( null !== $request->id ){
             $search = new Model_ImageLabel();
             $search->setOffset( $request->offset );
@@ -106,7 +28,8 @@ class Controller_Admin_Image extends Pico_AdminController{
             }
         }
         else{
-            $images = ( $image = new Model_Image() ) ? $image->search():null;
+            $images = Model_Image::get()->all();
+            //$images = ( $image = new Model_Image() ) ? $image->search():null;
         }
 
         $form = $this->_helper('imageList', $images );
@@ -149,7 +72,7 @@ class Controller_Admin_Image extends Pico_AdminController{
     }
 
     protected function addAction(){
-        $this->getView()->headScript()->append( '/js/upload.js');
+        //$this->getView()->headScript()->append( '/js/upload.js');
         $request = $this->getRequest();
         $errors  = array();
 
@@ -169,7 +92,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                     'inserted'  => date('Y-m-d H:i:s')
                 ));
 
-                $image->save();
+                $image->put();
 
                 if( $info[2] === IMAGETYPE_PNG ){
                     $src = $gd->getImagePNG();
@@ -190,7 +113,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                     'type'      => 1
                 ));
 
-                $data->save();
+                $data->put();
 
                 $this->_redirect( '/admin/image/edit/' . $image->id );
             }
@@ -207,51 +130,55 @@ class Controller_Admin_Image extends Pico_AdminController{
 
     protected  function editAction(){
         $request = $this->getRequest();
-        $image = new Model_Image();
-
-        $image->type = self::ITEM_TYPE_IMAGE;
-
-        if( null !== $request->id ){
-            $image->id = $request->id;
-        }
-
-        $labels = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
-
-        $ids = array(); foreach( $image->fetchLabels() as $val) $ids[]=$val->id;
-        $elements = array(new Nano_Element('img', array('src'=>'/admin/image/view/thumbnail/1')));
-
-        foreach( $labels as $label ){
-            $elements['labels[' . $label->id . ']'] = array(
-                'type'  => 'checkbox',
-                'label' => $label->name,
-                'value' => in_array( $label->id, $ids )
-            );
-        }
-
-        $form = $this->_helper( 'ItemForm', $image, $elements );
-
+        //$image = new Model_Image();
+        //
+        //$image->type = self::ITEM_TYPE_IMAGE;
+        //
+        //if( null !== $request->id ){
+        //    $image->id = $request->id;
+        //}
+        //
+        //$labels = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
+        //
+        //$ids = array(); foreach( $image->fetchLabels() as $val) $ids[]=$val->id;
+        //$elements = array(new Nano_Element('img', array('src'=>'/admin/image/view/thumbnail/1')));
+        //
+        //foreach( $labels as $label ){
+        //    $elements['labels[' . $label->id . ']'] = array(
+        //        'type'  => 'checkbox',
+        //        'label' => $label->name,
+        //        'value' => in_array( $label->id, $ids )
+        //    );
+        //}
+        //
+        
+        $image = Model_Image::get( $request->id );
+        $form = $this->_helper( 'ItemForm', $image, array() );
+        
         if( $request->isPost() ){
             $post = $request->getPost();
             $form->validate( $post );
-
+        
             if( ! $form->hasErrors() ){
                 if( $post->delete ){
                     $this->_redirect('/admin/image/delete/' . $image->id );
                 }
-
-                $image->name = $post->name;
+        
+                $image->name        = $post->name;
                 $image->description = $post->description;
                 $image->visible     = (bool) $post->visible;
-
-                $image->data = $post->data;
-
-                $image->setLabels( array_keys( (array) $post->labels ) );
-                $image->save();
-
-                $this->_redirect( '/admin/image/edit/' . $image->id );
+        
+                //$image->data = $post->data;
+        
+                //$image->setLabels( array_keys( (array) $post->labels ) );
+                $image->put();
+                
+                
+        
+                $this->_redirect( '/admin/image/edit/' . $request->id );
             }
         }
-
+        
 
         $this->getview()->mainLeft = $form;
     }
