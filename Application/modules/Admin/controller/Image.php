@@ -29,16 +29,18 @@ class Controller_Admin_Image extends Pico_AdminController{
         }
         else{
             $images = Model_Image::get()->all();
-            //$images = ( $image = new Model_Image() ) ? $image->search():null;
         }
 
-        $form = $this->_helper('imageList', $images );
+        $form = new Form_ListImages( $images );
+
+        //
+        //$form = $this->_helper('imageList', $images );
 
         if( $request->isPost() && $post = $request->getPost() ){
             $form->validate( $post );
             if( ! $form->hasErrors() ){
-                if( $post->action == 'labels' && count($post->selection) > 0 ){
-                    $query = join(',' ,array_keys( $post->selection ) );
+                if( $post->action == 'labels' && count($post->item) > 0 ){
+                    $query = join(',' ,array_keys( $post->item ) );
                     $this->_redirect( '/admin/image/labels/' . $query );
                 }
             }
@@ -52,14 +54,80 @@ class Controller_Admin_Image extends Pico_AdminController{
         $elements = array();
 
         $images = explode( ',', urldecode($request->id));
-        $rows = ($rows = new Model_ImageLabel()) ? $rows->search( array('image_id' => $images ) ):null;
-        $labels   = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
+
+/*
+
+ SELECT *
+FROM image_label
+WHERE ((label_id = 16 AND image_id = 1) OR (label_id = 17) OR (label_id = 18))
+AND image_id = 13
+
+ */
+
+        $test = Model_ImageLabel::get()->all()
+            ->filter('image_id', 13)->filterOr('label_id', 1);
+
+
+        echo $test[0];
+
+        echo "\nDONE\n";
+
+        exit;
+
+        $filter = array();
+        foreach( $images as $id ) $filter[] = array('image_id =', $id );
+
+        $rows = array();// Model_ImageLabel::get()->all()->filter( $filter );
+        $labels   = Model_Label::get()->all();
+
         $selected = array(); foreach( $rows as $val) $selected[]=$val->label_id;
 
         $form = new Form_EditLabels( $labels, $selected );
 
         if( $request->isPost() && $post = $request->getPost() ){
-            $selection = array_keys( (array) $post->selection );
+            $label_ids = array_keys( (array) $post->selection);
+
+            var_dump( $label_ids );
+
+            $filter = array();
+            foreach( $label_ids as $id ) $filter[] = array('label_id =', $id);
+
+            echo "HIER";
+
+            $test = Model_ImageLabel::get()->all()->filter('image_id', 1);
+
+
+            var_dump( $test );
+
+
+            exit;
+
+
+
+
+
+
+            // foreach image id, create an array of arrays with image id and
+
+
+            $selection = array_fill( 0, count($images), array_keys( (array) $post->selection ));
+            $selection = array_combine( array_values($images), $selection );
+
+
+
+            var_dump( $selection ); exit;
+
+
+            $filter = array();
+
+
+            $qr = Model_ImageLabel::get();
+
+            $qr->delete();
+
+            var_dump( $selection );
+
+            exit();
 
             foreach( $images as $image ){
                 $image = new Model_Image( array('id'=>$image) );
@@ -103,7 +171,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                 }
 
                 $data = new Model_ImageData(array(
-                    'imageId'   => $image->id,
+                    'image_id'   => $image->id,
                     'size'      => $file->size,
                     'mime'      => $file->type,
                     'width'     => $width,
@@ -151,34 +219,34 @@ class Controller_Admin_Image extends Pico_AdminController{
         //    );
         //}
         //
-        
+
         $image = Model_Image::get( $request->id );
         $form = $this->_helper( 'ItemForm', $image, array() );
-        
+
         if( $request->isPost() ){
             $post = $request->getPost();
             $form->validate( $post );
-        
+
             if( ! $form->hasErrors() ){
                 if( $post->delete ){
                     $this->_redirect('/admin/image/delete/' . $image->id );
                 }
-        
+
                 $image->name        = $post->name;
                 $image->description = $post->description;
                 $image->visible     = (bool) $post->visible;
-        
+
                 //$image->data = $post->data;
-        
+
                 //$image->setLabels( array_keys( (array) $post->labels ) );
                 $image->put();
-                
-                
-        
+
+
+
                 $this->_redirect( '/admin/image/edit/' . $request->id );
             }
         }
-        
+
 
         $this->getview()->mainLeft = $form;
     }

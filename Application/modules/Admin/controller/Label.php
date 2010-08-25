@@ -5,11 +5,10 @@ class Controller_Admin_Label extends Pico_AdminController{
     }
 
     protected  function listAction(){
-        $items = ( $item = new Model_Label() ) ? $item->search() : null;
-//        $items = $items->search();
-
+        $items = Model_Item::get()->all()
+                ->filter('type = ', self::ITEM_TYPE_LABEL);
+                
         $form = new Form_ListItems( $items );
-
         $this->getView()->mainLeft = $form;
     }
 
