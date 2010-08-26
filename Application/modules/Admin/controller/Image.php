@@ -28,7 +28,17 @@ class Controller_Admin_Image extends Pico_AdminController{
 
 
         //foreach( $list as $item ) $item = True;
-
+        
+        $labels = range(44,56);
+        $images = range(1,9);
+        
+        $t = microtime(true);
+        $l = array();
+        foreach($labels as $label)
+            $l[] = array(array('image_id IN', $images ), array('label_id', $label));
+                
+        $test = Model_ImageLabel::get()->delete( $l );        
+        exit;
 
         $test = Model_ImageLabel::get()->delete(array(
             array(array('label_id',1), array('image_id',32)),
