@@ -13,6 +13,33 @@ class Controller_Admin_Image extends Pico_AdminController{
 	public function listAction(){
         $request = $this->getRequest();
         $labelId = $request->id;
+        
+        
+        //$list = Model_ImageLabel::get()->all()->where( array(array('image_id', 1), array('item_id', 1)) );
+        //foreach( $list as $item ) $item = True;
+        
+        //$list = Model_ImageLabel::get()->all()->where('blaat', 33)->where('biz', 'foo' );
+        //foreach( $list as $item ) $item = True;
+
+        //$list = Model_ImageLabel::get()->all()
+        //        ->orWhere('image_id <', 2)->orWhere('label_id !=', 1 )
+        //        ->where('label_id >', 1)
+        //        ->orWhere( array( array('image_id NOT LIKE',3), array('label_id LIKE', 5)));
+
+
+        //foreach( $list as $item ) $item = True;
+
+
+        $test = Model_ImageLabel::get()->delete(array(
+            array(array('label_id',1), array('image_id',32)),
+            array(array('label_id',1), array('image_id',32))
+        ));
+
+        echo "DONE";
+        
+        exit;
+        
+        
 
         if( null !== $request->id ){
             $search = new Model_ImageLabel();
@@ -64,11 +91,11 @@ AND image_id = 13
 
  */
 
-        $test = Model_ImageLabel::get()->all()
-            ->filter('image_id', 13)->filterOr('label_id', 1);
+        //$test = Model_ImageLabel::get()->all()
+        //    ->where('image_id', 13)->whereOr('label_id', 1);
+        //
+        //echo $test[0];
 
-
-        echo $test[0];
 
         echo "\nDONE\n";
 
@@ -77,7 +104,7 @@ AND image_id = 13
         $filter = array();
         foreach( $images as $id ) $filter[] = array('image_id =', $id );
 
-        $rows = array();// Model_ImageLabel::get()->all()->filter( $filter );
+        $rows = array();// Model_ImageLabel::get()->all()->where( $filter );
         $labels   = Model_Label::get()->all();
 
         $selected = array(); foreach( $rows as $val) $selected[]=$val->label_id;
@@ -94,7 +121,7 @@ AND image_id = 13
 
             echo "HIER";
 
-            $test = Model_ImageLabel::get()->all()->filter('image_id', 1);
+            $test = Model_ImageLabel::get()->all()->where('image_id', 1);
 
 
             var_dump( $test );
