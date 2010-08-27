@@ -13,65 +13,19 @@ class Controller_Admin_Image extends Pico_AdminController{
 	public function listAction(){
         $request = $this->getRequest();
         $labelId = $request->id;
-        
-        
-        //$list = Model_ImageLabel::get()->all()->where( array(array('image_id', 1), array('item_id', 1)) );
-        //foreach( $list as $item ) $item = True;
-        
-        //$list = Model_ImageLabel::get()->all()->where('blaat', 33)->where('biz', 'foo' );
-        //foreach( $list as $item ) $item = True;
 
-        //$list = Model_ImageLabel::get()->all()
-        //        ->orWhere('image_id <', 2)->orWhere('label_id !=', 1 )
-        //        ->where('label_id >', 1)
-        //        ->orWhere( array( array('image_id NOT LIKE',3), array('label_id LIKE', 5)));
+        if( null !== $labelId ){
+            $images = Model_ImageLabel::get()->all()
+                    ->leftJoin( 'item', 'id', 'image_id')
+                    ->where( 'label_id', $labelId)
+                    ->setModel( new Model_Item() );
 
-
-        //foreach( $list as $item ) $item = True;
-        
-        $labels = range(44,56);
-        $images = range(1,9);
-        
-        $t = microtime(true);
-        $l = array();
-        foreach($labels as $label)
-            $l[] = array(array('image_id IN', $images ), array('label_id', $label));
-                
-        $test = Model_ImageLabel::get()->delete( $l );        
-        exit;
-
-        $test = Model_ImageLabel::get()->delete(array(
-            array(array('label_id',1), array('image_id',32)),
-            array(array('label_id',1), array('image_id',32))
-        ));
-
-        echo "DONE";
-        
-        exit;
-        
-        
-
-        if( null !== $request->id ){
-            $search = new Model_ImageLabel();
-            $search->setOffset( $request->offset );
-
-            //$label = new Model_Label( array( 'id' => $request->id ) );
-            $images = $search->search( array('label_id' => $request->id ) );
-
-
-            if( count( $images ) == 0 ){
-                $this->getView()->mainLeft = sprintf('No images with label %s found!', $label->name );
-                return;
-            }
         }
         else{
             $images = Model_Image::get()->all();
         }
 
         $form = new Form_ListImages( $images );
-
-        //
-        //$form = $this->_helper('imageList', $images );
 
         if( $request->isPost() && $post = $request->getPost() ){
             $form->validate( $post );
@@ -92,83 +46,45 @@ class Controller_Admin_Image extends Pico_AdminController{
 
         $images = explode( ',', urldecode($request->id));
 
-/*
+        $labels = Model_Label::get()->all();
 
- SELECT *
-FROM image_label
-WHERE ((label_id = 16 AND image_id = 1) OR (label_id = 17) OR (label_id = 18))
-AND image_id = 13
+        $filter = Model_ImageLabel::get()->all();
 
- */
+        foreach( $labels as $label ){
+            foreach( $images as $id ){
+                $filter->orWhere(array(array( 'image_id', $id ), array('label_id', $label->id)));
+            }
+        }
 
-        //$test = Model_ImageLabel::get()->all()
-        //    ->where('image_id', 13)->whereOr('label_id', 1);
-        //
-        //echo $test[0];
-
-
-        echo "\nDONE\n";
-
-        exit;
-
-        $filter = array();
-        foreach( $images as $id ) $filter[] = array('image_id =', $id );
-
-        $rows = array();// Model_ImageLabel::get()->all()->where( $filter );
-        $labels   = Model_Label::get()->all();
-
-        $selected = array(); foreach( $rows as $val) $selected[]=$val->label_id;
-
+        $selected = array(); foreach( $filter as $f ) $selected[] = $f->label_id;
+        $selected = array_unique($selected);
         $form = new Form_EditLabels( $labels, $selected );
 
         if( $request->isPost() && $post = $request->getPost() ){
             $label_ids = array_keys( (array) $post->selection);
 
-            var_dump( $label_ids );
+            if( count( $filter ) > 0 ){
+                $delete_filter = array();
 
-            $filter = array();
-            foreach( $label_ids as $id ) $filter[] = array('label_id =', $id);
+                foreach( $filter as $comb ){
+                    $delete_filter[] = array(
+                        array('image_id', $comb->image_id),
+                        array('label_id', $comb->label_id)
+                    );
+                }
 
-            echo "HIER";
+                Model_ImageLabel::get()->delete( $delete_filter );
+            }
 
-            $test = Model_ImageLabel::get()->all()->where('image_id', 1);
-
-
-            var_dump( $test );
-
-
-            exit;
-
-
-
-
-
-
-            // foreach image id, create an array of arrays with image id and
-
-
-            $selection = array_fill( 0, count($images), array_keys( (array) $post->selection ));
-            $selection = array_combine( array_values($images), $selection );
-
-
-
-            var_dump( $selection ); exit;
-
-
-            $filter = array();
-
-
-            $qr = Model_ImageLabel::get();
-
-            $qr->delete();
-
-            var_dump( $selection );
-
-            exit();
-
-            foreach( $images as $image ){
-                $image = new Model_Image( array('id'=>$image) );
-                $image->setLabels( $selection );
+            if( count( $label_ids ) > 0 ){
+                foreach( $images as $id ){
+                    foreach( $label_ids as $label_id ){
+                        $model = Model_ImageLabel::get();
+                        $model->image_id = $id;
+                        $model->label_id = $label_id;
+                        $model->put();
+                    }
+                }
             }
             $this->_redirect( '/admin/image' );
         }
@@ -235,28 +151,6 @@ AND image_id = 13
 
     protected  function editAction(){
         $request = $this->getRequest();
-        //$image = new Model_Image();
-        //
-        //$image->type = self::ITEM_TYPE_IMAGE;
-        //
-        //if( null !== $request->id ){
-        //    $image->id = $request->id;
-        //}
-        //
-        //$labels = ( $labels = new Model_Label(array('type'=>self::ITEM_TYPE_LABEL)) ) ? $labels->search():null;
-        //
-        //$ids = array(); foreach( $image->fetchLabels() as $val) $ids[]=$val->id;
-        //$elements = array(new Nano_Element('img', array('src'=>'/admin/image/view/thumbnail/1')));
-        //
-        //foreach( $labels as $label ){
-        //    $elements['labels[' . $label->id . ']'] = array(
-        //        'type'  => 'checkbox',
-        //        'label' => $label->name,
-        //        'value' => in_array( $label->id, $ids )
-        //    );
-        //}
-        //
-
         $image = Model_Image::get( $request->id );
         $form = $this->_helper( 'ItemForm', $image, array() );
 
@@ -273,13 +167,7 @@ AND image_id = 13
                 $image->description = $post->description;
                 $image->visible     = (bool) $post->visible;
 
-                //$image->data = $post->data;
-
-                //$image->setLabels( array_keys( (array) $post->labels ) );
                 $image->put();
-
-
-
                 $this->_redirect( '/admin/image/edit/' . $request->id );
             }
         }
@@ -287,10 +175,6 @@ AND image_id = 13
 
         $this->getview()->mainLeft = $form;
     }
-
-    //public function postDispatch(){
-    //    $this->getView()->actions = $this->getMenu();
-    //}
 
     protected function getMenu(){
         $menu = array();
@@ -305,7 +189,6 @@ AND image_id = 13
               'value'   => 'Label ' . $label->name
             );
         }
-
 
         return array_merge( array(
             'add'   => array(

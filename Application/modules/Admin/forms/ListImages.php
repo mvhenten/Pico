@@ -69,7 +69,7 @@ class Form_ListImages extends Nano_Form{
                         'onchange'  => 'this.form.submit()',
                         'options'	=> array(
                             'delete'	=> 'delete',
-//                            'labels'	=> 'edit labels'
+                            'labels'	=> 'edit labels'
                         ),
                     )
                 )
