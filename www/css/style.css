@@ -84,11 +84,6 @@ fieldset fieldset{
     border: 1px inset #333;
 }
 
-#menu-left, #main-left{
-    border: 1px solid #eee;
-    border-width: 0px 1px 1px 1px;
-}
-
 #header{
     background-color: #373D40;
     overflow: hidden;

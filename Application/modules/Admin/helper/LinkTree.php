@@ -2,13 +2,17 @@
 class Helper_LinkTree extends Nano_View_Helper{
     function LinkTree( $items, $current ){
         $sorted = $this->sortItems( $items, $current );
-        $ul     = new Nano_Element( 'ul', array('class'=>'pico-linktree'));
+        $container = new Nano_Element( 'div', array( 'class' => 'pico-linktree'));
+
+        $ul     = new Nano_Element( 'ul');
 
         foreach( $sorted as $parent ){
             $ul->addChild( $this->renderItem( $parent, (int) $current->id ));
         }
 
-        return $ul;
+
+        $container->addChild( $ul );
+        return $container;
     }
 
     private function renderItem( $item, $current ){
@@ -20,12 +24,14 @@ class Helper_LinkTree extends Nano_View_Helper{
         $li->addChild( new Nano_Element( 'a', array('href' => $url ), $item->title ) );
 
         if( $item->active && count( $item->children ) && $item->id !== $current ){
+            $container = new Nano_Element( 'div', array('class' => 'itemGroup') );
             $ul = new Nano_Element( 'ul' );
 
             foreach( $item->children as $child ){
                 $ul->addChild( $this->renderItem( $child, $current ) );
             }
-            $li->addChild( $ul );
+            $container->addChild( $ul );
+            $li->addChild( $container );
         }
         return $li;
     }

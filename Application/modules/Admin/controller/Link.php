@@ -36,6 +36,7 @@ class Controller_Admin_Link extends Pico_AdminController{
                 ->order( 'parent_id');
 
         $this->getView()->mainLeft = $this->getView()->linkTree( $items, $item );
+        $this->getView()->mainRight = 'boo';
 
 
     }
