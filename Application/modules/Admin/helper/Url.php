@@ -1,6 +1,6 @@
 <?php
 class Helper_Url extends Nano_View_Helper{
-    function Url( $url ){
+    function Url( $url = array() ){
         $request = $this->getView()->getRequest();
 
         $base = (array) $request->getRouter();

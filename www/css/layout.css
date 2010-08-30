@@ -25,10 +25,21 @@ body,html{
     width: 18%;
 }
 
-#main-left{
-    float: left;
-    width: 80%;
-    margin: 0 1em;
+#middle{
+    float: right;
+    width: 85%;
+    height: 100%;
+    overflow-x: auto;
+    /*margin: 0 1em;*/
+    position: relative;
+}
+/*#main-left{*/
+/*    /*float: right;*/*/
+/**/
+/*}*/
+
+td#left{
+    width: 400px;
 }
 
 .wrap{
@@ -57,6 +68,15 @@ table.viewport td a{
     position: absolute;
     left: 100%;
     top:0;
+}
+
+.pico-linktree div.itemForm{
+    height: 100%;
+    width: 270px;
+    position: absolute;
+    left: 100%;
+    top:0;
+    color: #000;
 }
 
 .pico-linktree ul{

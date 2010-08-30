@@ -5,7 +5,7 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
     <script src="/js/prototype.js"></script>
     <script src="/js/scriptaculous/scriptaculous.js"></script>
-    <?php echo $this->headScript() ?>
+    <?php // echo $this->headScript() ?>
 </head>
 <body>
     <div id="main">
@@ -25,17 +25,33 @@
 			</div>
             <?php endif; ?>
 			<div id="main-content">
-                <div id="main-left" class="reps">
-                    <?php echo $this->mainLeft ?>
+                <div id="middle">
+                    <?php echo $this->middle ?>
                 </div>
-                <?php if( $this->actions ): ?>
-                <div id="menu-left" class="reps">
-                    <h2 class="buttonbar">Actions</h2>
-                        <div class="wrap">
-                        <?php echo $this->linkList( $this->actions ) ?>
-                        </div>
-                </div>
-                <?php endif; ?>
+                <!--<table id="main-left" class="reps">-->
+                <!--    <tr>-->
+                <!--        <td id="left">-->
+                <!--            <?php echo $this->left ?>-->
+                <!--        </td>-->
+                <!--        <td id="middle" class="reps">-->
+                <!--            <?php echo $this->middle ?>-->
+                <!--        </td>-->
+                <!--        <td id="right">-->
+                <!--            <?php echo $this->right ?>-->
+                <!--        </td>-->
+                <!--    </tr>-->
+                <!--</table>-->
+                <!--<div id="main-left" class="reps">-->
+                <!--    <?php echo $this->mainLeft ?>-->
+                <!--</div>-->
+                <!--<?php if( $this->actions ): ?>-->
+                <!--<div id="menu-left" class="reps">-->
+                <!--    <h2 class="buttonbar">Actions</h2>-->
+                <!--        <div class="wrap">-->
+                <!--        <?php echo $this->linkList( $this->actions ) ?>-->
+                <!--        </div>-->
+                <!--</div>-->
+                <!--<?php endif; ?>-->
 			</div>
 		</div>
     </div>

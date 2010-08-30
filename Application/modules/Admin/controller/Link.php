@@ -30,13 +30,38 @@ class Controller_Admin_Link extends Pico_AdminController{
     protected function editAction(){
         $request = $this->getRequest();
 
+
         $item = Model_Link::get( $request->id );
+
+        if( $request->isPost() ){
+            $post = $request->getPost();
+
+            $item->title = $post->title;
+            $item->priority = $post->priority;
+            $item->parent_id = $post->parent_id;
+            $item->description = $post->description;
+            //$item->parent_id = $post
+            //foreach( $request->getPost() as $key => $value ){
+            //    $item->$key = $value;
+            //}
+
+            $item->put();
+
+            //var_dump( $post ); exit();
+
+            //$this->_redirect( $this->getView()->url() );
+        }
+
         $items = Model_Link::get()->all()
                 ->where( 'group', $item->group )
                 ->order( 'parent_id');
 
-        $this->getView()->mainLeft = $this->getView()->linkTree( $items, $item );
-        $this->getView()->mainRight = 'boo';
+        $tree = $this->getView()->linkTree( $items, $item );
+
+        //$tree->addChild( new Nano_Element(  '<b>hier</b>';
+
+        $this->getView()->middle = $tree;
+        //$this->getView()->right  = new Form_EditLink( $item );
 
 
     }

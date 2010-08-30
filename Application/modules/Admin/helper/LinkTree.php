@@ -23,15 +23,26 @@ class Helper_LinkTree extends Nano_View_Helper{
         $li = new Nano_Element('li', array('class' => ( $item->active ? 'active':'')));
         $li->addChild( new Nano_Element( 'a', array('href' => $url ), $item->title ) );
 
-        if( $item->active && count( $item->children ) && $item->id !== $current ){
+        if( $item->active && count( $item->children ) ){
             $container = new Nano_Element( 'div', array('class' => 'itemGroup') );
             $ul = new Nano_Element( 'ul' );
 
             foreach( $item->children as $child ){
-                $ul->addChild( $this->renderItem( $child, $current ) );
+                $el = $this->renderItem( $child, $current );
+                $ul->addChild( $el );
             }
             $container->addChild( $ul );
             $li->addChild( $container );
+        }
+        if( $item->id == $current ){
+            $form = new Form_EditLink( Model_Link::get( $current ) );
+            $container = new Nano_Element( 'div', array('class' => 'itemForm'), $form );
+            if( count($item->children) ){
+                $el->addChild( $container );
+            }
+            else{
+                $li->addChild($container);
+            }
         }
         return $li;
     }
