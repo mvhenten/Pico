@@ -54,7 +54,8 @@ class Controller_Admin_Link extends Pico_AdminController{
 
         $items = Model_Link::get()->all()
                 ->where( 'group', $item->group )
-                ->order( 'parent_id');
+                ->order( 'parent_id')
+                ->order( 'priority' );
 
         $tree = $this->getView()->linkTree( $items, $item );
 
