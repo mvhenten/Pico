@@ -22,10 +22,10 @@ class Pico_AdminController extends Nano_Controller{
         return array();
     }
 
-    protected function getItemForm( $item ){
-    }
+    //protected function getItemForm( $item ){
+    //}
 
-    public function deleteAction(){
+    protected function deleteAction(){
         $request = $this->getRequest();
     
         $item = new Model_Item( array('id' => $request->id ) );

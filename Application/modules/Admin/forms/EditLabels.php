@@ -2,6 +2,8 @@
 class Form_EditLabels extends Nano_Form{
     public function __construct( $labels, $selected ){
         parent::__construct();
+        
+        $elements = array();
 
         foreach( $labels as $label ){
             $elements['selection[' . $label->id . ']'] = array(
