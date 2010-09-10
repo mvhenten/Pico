@@ -27,12 +27,20 @@ body,html{
 
 #middle{
     float: right;
-    width: 85%;
+    border-left: 1px solid #ececec;
+    width: 80%;
     height: 100%;
     overflow-x: auto;
     /*margin: 0 1em;*/
     position: relative;
 }
+
+#left{
+    float: left;
+    width: 15%;
+    margin-left: 1em;
+}
+
 /*#main-left{*/
 /*    /*float: right;*/*/
 /**/

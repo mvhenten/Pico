@@ -3,74 +3,62 @@ class Form_EditLink extends Nano_Form{
     public function __construct( Model_Link $link ){
         parent::__construct();
 
-        //$item = ( isset($item) ? $item : Model_Link::get() );
-        //
-        //$title = ( $item->id == null ) ? 'Create new' . $item->type : 'Editing ' . $item->name;
         $search = new $link;
         $search = $search->all();
-                //->where( 'group', $link->group )
-                //->where( 'id !=', $link->id );
-
         $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
 
-        //var_dump( $parents );
+        if( null == $link->id ){
+            $this->setAttribute( 'action', '/admin/link/add/' . $link->group );
+        }
 
         $this->addElements(array(
             'viewport' => array(
                 'type' => 'fieldset',
+                'legend'    => $link->id ? 'Edit ' . $link->title : 'Add link',
                 //'class' => 'viewport',
                 'elements' => array(
                     'title' => array(
                         'type'  => 'text',
-                        'title'          => 'text',
-                        'value'         => $link->title,
+                        'value'         => $link->title ? $link->title : 'New menu item',
                         'label'         => 'Title',
                         'validators'    => array(
                             array('stringLength', array(1, 64), false )
                         ),
                         'required'      => true
                     ),
-                    'description'   => array(
-                        'type'  => 'textarea',
-                        'value' => $link->description,
-                        'label' => 'Description (optional)',
+                    'url' => array(
+                        'type'          => 'text',
+                        'value'         => $link->url,
+                        'label'         => 'Url',
                         'validators'    => array(
-                            array('stringLength', array(0, 254), false )
+                            array('stringLength', array(1, 64), false )
                         ),
-                    ),
-                    'priority' => array(
-                        'type'  => 'text',
-                        'value' => $link->priority > 0 ? $link->priority : '0 ',
-                        'label' => 'Priority',
-                        //'validators' => array(
-                        //    array( 'is_numeric' )
-                        //),
-                        'required'  => false
+                        'required'      => true
                     ),
                     'parent_id' => array(
-                        //'name'      => 'parent_id',
                         'type'		=> 'select',
-                        //'label'		=> 'Parent item',
+                        'label'		=> 'Parent item',
                         //'onchange'  => 'this.form.submit()',
                         'value'     => $link->parent_id,
                         'options'	=> $parents
                     ),
-                    'actions' => array(
-                        'type'  => 'fieldset',
-                        'elements' => array(
-                            'save'  => array(
-                                'wrapper' => false,
-                                'type'  => 'submit',
-                                'value' => 'Save changes',
-                                //'disabled' => 'disabled'
-                            ),
-                            'delete' => ( null !== $link->id ? array(
-                                'wrapper' => false,
-                                'type'  => 'submit',
-                                'value' => 'Delete ' . $link->title
-                            ):null)
-                        )
-                    )
+                    'priority' => ( $link->id ? array(
+                        'type'  => 'text',
+                        'value' => $link->priority > 0 ? $link->priority : '0 ',
+                        'label' => 'Priority',
+                        'required'  => false
+                    ):null),
+                    'save'  => array(
+                        'wrapper' => false,
+                        'type'  => 'submit',
+                        'value' => $link->id ? 'Save changes' : 'Add link',
+                        //'disabled' => 'disabled'
+                    ),
+                    'delete' => ( null !== $link->id ? array(
+                        'wrapper' => false,
+                        'type'  => 'submit',
+                        'value' => 'Delete ' . $link->title
+                    ):null)
                 )
             ),
         ));

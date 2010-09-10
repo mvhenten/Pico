@@ -17,14 +17,18 @@
 					<a href="/">view site</a> |
 					<a href="/user/logout">logout</a>
 				</div>
-                <div id="main-menu">
-                    <div class="wrap">
-                        <?php echo $this->modules() ?>
-                    </div>
-                </div>
 			</div>
+            <div id="main-menu" class="menu">
+                <?php echo $this->modules() ?>
+            </div>
+            <div id="sub-menu" class="menu">
+                <?php echo $this->actions ?>
+            </div>
             <?php endif; ?>
 			<div id="main-content">
+                <div id="left">
+                    <?php echo $this->left ?>
+                </div>
                 <div id="middle">
                     <?php echo $this->middle ?>
                 </div>

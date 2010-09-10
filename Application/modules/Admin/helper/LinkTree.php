@@ -18,7 +18,7 @@ class Helper_LinkTree extends Nano_View_Helper{
     private function renderItem( $item, $current ){
         $html = array();
 
-        $url = $this->getView()->url( array( 'id' => $item->id ) );
+        $url = $this->getView()->url( array( 'action' => 'edit', 'id' => $item->id ) );
 
         $li = new Nano_Element('li', array('class' => ( $item->active ? 'active':'')));
         $li->addChild( new Nano_Element( 'a', array('href' => $url ), $item->title ) );

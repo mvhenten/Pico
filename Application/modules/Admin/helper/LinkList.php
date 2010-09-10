@@ -1,5 +1,5 @@
 <?php
-class Helper_LinkList{
+class Helper_LinkList extends Nano_View_Helper{
     function linkList( $contents = null ){
         return $this->renderList( (array) $contents );
     }
@@ -8,16 +8,17 @@ class Helper_LinkList{
         $ul = new Nano_Element('ul');
         foreach( $contents as $key => $value ){
             if( is_array( $value ) && isset( $value['target'] ) ){
-                $attributes = isset($value['attributes'])?$value['attributes']:array();
-                $attributes['href'] = $value['target'];
+                $value = array_merge( array('attributes' => null), $value );
 
-                $content = new Nano_Element( 'a', $attributes, $value['value'] );
+                $content = $this->getView()->Link( $value['value'], $value['target'], $value['attributes'] );
+
+                //$content = new Nano_Element( 'a', $attributes, $value['value'] );
             }
             else if( is_array( $value ) ){
                 $content = $this->renderList( $contents );
             }
 
-            $li = new Nano_Element( 'li', array('class'=>$key), $content );
+            $li = new Nano_Element( 'li', null, $content );
 
             $ul->addChild( $li );
         }

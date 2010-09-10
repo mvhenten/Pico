@@ -13,7 +13,7 @@ a, a:hover, a:visited, a:active{
     color: #090;
 }
 
-a:hover{
+a:hover, a.active{
     text-decoration: underline;
 }
 
@@ -31,9 +31,9 @@ input, select, textarea{
     font: 1em/1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
 }
 
-fieldset fieldset{
+fieldset{
     padding: 0.5em;
-    margin: 0.5em;
+    /*margin: 0.5em;*/
     border: 1px solid #eee;
 }
 
@@ -64,7 +64,7 @@ fieldset fieldset{
 }
 
 .formElementWrapper{
-    padding: 1em 1em 0 1em;
+    padding: 0 0 0.5em 0;
 }
 
 .colorpicker-color{
@@ -102,24 +102,36 @@ fieldset fieldset{
 
 #main-menu{
     background-color: #6C7275;
-    overflow: hidden;
 }
 
-#main-menu ul li{
-    position: relative;
-    float: left;
-    margin:0;
+#sub-menu{
+    background-color: #999;
 }
 
-#main-menu a{
-    color: #eee;
-    display:block;
-    padding: 0 1em 0 0;
+.menu li{
+    display:inline;
+    padding-left: 1em;
 }
 
-#main-menu a:hover{
-    background-color: #7a8185;
+.menu a{
+    color: #fff;
 }
+
+/*#menu ul li{*/
+/*    position: relative;*/
+/*    float: left;*/
+/*    margin:0;*/
+/*}*/
+/**/
+/*#menu a{*/
+/*    color: #eee;*/
+/*    display:block;*/
+/*    padding: 0 1em 0 0;*/
+/*}*/
+/**/
+/*#menu a:hover{*/
+/*    background-color: #7a8185;*/
+/*}*/
 
 /** item list **/
 
