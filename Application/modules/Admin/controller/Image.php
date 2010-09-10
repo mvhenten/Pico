@@ -38,7 +38,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         }
 
         //$this->getview()->actions = '<h2>List images</h2>';
-        $this->getview()->middle = $form;
+        $this->getview()->content = $form;
 
         $html = array();
         $html[] = '<h2>List images</h2>&nbsp;';
@@ -98,7 +98,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             $this->_redirect( '/admin/image' );
         }
 
-        $this->getView()->middle = $form;
+        $this->getView()->content = $form;
     }
 
     protected function addAction(){
@@ -157,7 +157,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         
         $image = Model_Image::get();
 
-        $this->getview()->middle = (string) $form;
+        $this->getview()->content = (string) $form;
         $html = array();
         $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
         $html[] = $this->getView()->Link( 'upload image',
@@ -195,7 +195,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         }
 
 
-        $this->getView()->middle = $form;
+        $this->getView()->content = $form;
         $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
         $html[] = $this->getView()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));

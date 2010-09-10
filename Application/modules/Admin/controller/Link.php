@@ -60,7 +60,7 @@ class Controller_Admin_Link extends Pico_AdminController{
             }
         }
         
-        $this->getView()->middle = $form;
+        $this->getView()->content = $form;
         $this->getView()->actions = $this->getActions( $item );
     }
 
@@ -119,7 +119,7 @@ class Controller_Admin_Link extends Pico_AdminController{
 
         $tree = $this->getView()->linkTree( $items, $item );
 
-        $this->getView()->middle = $tree;
+        $this->getView()->content = $tree;
         $this->getView()->actions = $this->getActions( $item );
     }
     
