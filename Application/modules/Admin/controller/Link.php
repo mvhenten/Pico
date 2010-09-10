@@ -6,78 +6,101 @@ class Controller_Admin_Link extends Pico_AdminController{
 
     protected  function listAction(){
         $request = $this->getRequest();
-
-        $html = array();
-        $link = Model_Link::get();
-        $link->group = $request->id;
-
+        
         if( $request->id ){
-            $item = Model_LinkGroup::get($request->id);
-            $html[] = '<h4>' . $item->name . '</h4>';
-            $html[] = '<p>' . $item->description . '</p>';
-            $form = new Form_EditLink( $link );
-            $html[] = $form;
-            $this->getView()->left = join( "\n", $html );
-
-            $items = Model_Link::get()->all()
-                    ->where( 'group', $link->group )
-                    ->order( 'parent_id')
-                    ->order( 'priority' );
-
-            $tree = $this->getView()->linkTree( $items, $link );
-
-            $this->getView()->middle = $tree;
-
+            $this->_forward('edit');
         }
     }
 
     protected function addAction(){
         $request = $this->getRequest();
-
-        $post = $request->getPost();
+        $group   = Model_LinkGroup::get( $request->id );
+        
+        
         $item = Model_Link::get();
-
-        $item->title = $post->title;
-        $item->priority = 0;
-        $item->parent_id = (int) $post->parent_id;
-        $item->group = $request->id;
-        //$item->description = $post->description;
-
-        $id = $item->put();
-
-        $url = $this->getView()->url( array( 'action' => 'edit', 'id' => $id ) );
-
-        $this->_redirect( $url );
+        
+        $item->title     = sprintf("New %s link", $group->name );
+        $item->parent_id = 0;
+        $item->priority  = 0;
+        $item->group     = $request->id;
+        $item->url       = '/';
+        
+        $form = new Form_EditLink( $item );
+        
+        if( $request->isPost() ){
+            $post = $request->getPost();
+            
+             $form->validate( $post );
+             
+             $errors = $form->getErrors();
+             
+            
+            if( empty( $errors ) ){
+                $values = array_intersect_key( (array) $post, array(
+                    'title'     => 1,
+                    'parent_id' => 1,
+                    'priority'  => 1,
+                    'group'     => 1
+                ));
+                
+                foreach( $values as $key => $value ){
+                    $item->$key = $value;
+                }
+                
+                $id = $item->put();
+                
+                
+                $this->_redirect( $this->getView()->url( array(
+                    'action' => 'edit',
+                    'id'     => $id
+                )));
+            }
+            else{
+                print_r( $errors );
+            }
+        }
+        
+        $this->getView()->middle = $form;
+        $this->getView()->actions = $this->getActions( $item );
     }
 
     protected function editAction(){
         $request = $this->getRequest();
-
-
-        $item = Model_Link::get( $request->id );
+        
+        if( $request->action == 'list' ){
+            $item = Model_Link::get();
+            $item->group = $request->id;
+        }
+        else{
+            $item = Model_Link::get($request->id);
+        }
 
         if( $request->isPost() ){
             $post = $request->getPost();
 
             if( $post->delete ){
-                $id = (int) $item->parent_id;
-                $item->delete();
-
-                $url = $this->getView()->url( array(
-                    'action' => $id > 0 ? 'edit' : 'list',
-                    'id'    => $id > 0 ? $id : $item->group
-                ));
-
-                if( $id > 0 ){
-                    $items = Model_Link::get()->all()->where('parent_id', $id );
-
-                    foreach( $items as $item ){
-                        $item->parent_id = 0;
-                        $item->put();
-                    }
-                }
-
-                $this->_redirect( $url );
+                $this->_redirect( $this->getView()->url(array(
+                    'action'    => 'delete',
+                    'id'        => $request->id
+                )));
+                //$id = (int) $item->parent_id;
+                //$item->delete();
+                //
+                //$url = $this->getView()->url( array(
+                //    'action' => $id > 0 ? 'edit' : 'list',
+                //    'id'    => $id > 0 ? $id : $item->group
+                //));
+                //
+                //if( $id > 0 ){
+                //    $items = Model_Link::get()->all()->where('parent_id', $id );
+                //
+                //    foreach( $items as $item ){
+                //        $item->parent_id = 0;
+                //        $item->put();
+                //    }
+                //}
+                //
+                //$this->_redirect( $url );
 
             }
 
@@ -97,18 +120,72 @@ class Controller_Admin_Link extends Pico_AdminController{
         $tree = $this->getView()->linkTree( $items, $item );
 
         $this->getView()->middle = $tree;
+        $this->getView()->actions = $this->getActions( $item );
+    }
+    
+    protected function deleteAction(){
+        $request = $this->getRequest();
+        
+        $item = Model_Link::get($request->id);
+        $group = $item->group;
+        
+        $children = Model_Link::get()->all()
+            ->where( 'parent_id', $request->id );
+            
+        foreach( $children as $child ){
+            $child->parent_id = $item->parent_id;
+            $child->put();
+        }
+        
+        $item->delete();
+        
+        $this->_redirect( $this->getView()->Url(array(
+            'action'    => 'list',
+            'id'        => $group
+        )) );
+    }
+    
+    protected function getActions( $item ){
+        $group  = Model_LinkGroup::get($item->group);
+        $url    = $this->getView()->Url(array('action' => 'add', 'id' => $group->id ));
 
-        $group = Model_LinkGroup::get($item->group);
-        $link = Model_Link::get();
-        $link->parent_id = $item->id;
-        $link->group     = $item->id;
-
-        $html[] = '<h4>' . $group->name . '</h4>';
-        $html[] = '<p>' . $group->description . '</p>';
-        $form = new Form_EditLink( $link );
+        $search = ModeL_Link::get()->all()->where('group', $group->id );
+        $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
+        
+        $html[] = '<strong>' . $group->name . '</strong>';
+        $html[] = '<span>&nbsp;&nbsp;</span>';
+        $html[] = $this->getView()->Link( 'Add link', $url, array('class'=>'button'));
+        
+        $form = new Nano_Form(null ,array(
+            'class'     =>  'float-right',
+            'action'    =>  $url
+        ));
+        
+        $form->addElements(array(
+            'title'     => array(
+                'type'  => 'hidden',
+                'value' => sprintf("New %s link %d", $group->name, count($parents) )
+            ),
+            'url'   => array(
+                'type' => 'hidden',
+                'value' => '/'
+            ),
+            'parent_id' => array(
+                'wrapper' => false,
+                'type'  => 'select',
+                'label' => 'Select parent',
+                'options' => $parents,
+                'value'     => ($item->parent_id > 0 ? $item->parent_id : null )
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => 'quck add',
+                'wrapper' => false
+            )
+        ));
+        
         $html[] = $form;
-        $this->getView()->left = join( "\n", $html );
-
+        return join( "\n", $html);        
     }
 
     protected function getMenu(){

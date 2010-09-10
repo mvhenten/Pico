@@ -9,55 +9,29 @@
 </head>
 <body>
     <div id="main">
-		<div class="reps">
-			<?php if( Nano_Session::session()->auth == true ): ?>
-			<div id="header" class="wrap">
-				<div class="wrap">
-					<h1 class="float-left">PICO - site title</h1>
-					<a href="/">view site</a> |
-					<a href="/user/logout">logout</a>
-				</div>
-			</div>
+        <?php if( Nano_Session::session()->auth == true ): ?>
+        <div id="header">
+            <a href="/">view site</a> |
+            <a href="/user/logout">logout</a>
+        </div>
+        <div id="sidebar">
             <div id="main-menu" class="menu">
                 <?php echo $this->modules() ?>
             </div>
             <div id="sub-menu" class="menu">
-                <?php echo $this->actions ?>
+                <?php echo $this->submenu ?>
             </div>
-            <?php endif; ?>
-			<div id="main-content">
-                <div id="left">
-                    <?php echo $this->left ?>
-                </div>
-                <div id="middle">
-                    <?php echo $this->middle ?>
-                </div>
-                <!--<table id="main-left" class="reps">-->
-                <!--    <tr>-->
-                <!--        <td id="left">-->
-                <!--            <?php echo $this->left ?>-->
-                <!--        </td>-->
-                <!--        <td id="middle" class="reps">-->
-                <!--            <?php echo $this->middle ?>-->
-                <!--        </td>-->
-                <!--        <td id="right">-->
-                <!--            <?php echo $this->right ?>-->
-                <!--        </td>-->
-                <!--    </tr>-->
-                <!--</table>-->
-                <!--<div id="main-left" class="reps">-->
-                <!--    <?php echo $this->mainLeft ?>-->
-                <!--</div>-->
-                <!--<?php if( $this->actions ): ?>-->
-                <!--<div id="menu-left" class="reps">-->
-                <!--    <h2 class="buttonbar">Actions</h2>-->
-                <!--        <div class="wrap">-->
-                <!--        <?php echo $this->linkList( $this->actions ) ?>-->
-                <!--        </div>-->
-                <!--</div>-->
-                <!--<?php endif; ?>-->
-			</div>
-		</div>
+        </div>
+        <div id="main-actions">
+            <?php echo $this->actions ?>
+        </div>
+        <div id="main-content">
+            <?php echo $this->middle ?>
+        </div>
+        <?php endif; ?>
     </div>
+    <script>
+        $('main-content').scrollLeft = $('main-content').getWidth();
+    </script>
 </body>
 </html>

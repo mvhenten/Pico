@@ -19,6 +19,6 @@ class Helper_Url extends Nano_View_Helper{
 
         $url = $module . '/' . join("/", $base );
 
-        return $url;
+        return rtrim( $url, '/');
     }
 }

@@ -1,15 +1,15 @@
 <?php
 class Controller_Admin_Image extends Pico_AdminController{
-    const IMAGESIZE_THUMBNAIL = '96x96';
-    const IMAGESIZE_ICON      = '32x32';
-    const IMAGESIZE_VIGNETTE   = '400x300';
-
-    const TYPE_ORIGINAL       = 1;
-    const TYPE_VIGNETTE       = 2;
-    const TYPE_THUMBNAIL      = 3;
-    const TYPE_ICON           = 4;
-    const TYPE_CUSTOM         = 5;
-
+    //const IMAGESIZE_THUMBNAIL = '96x96';
+    //const IMAGESIZE_ICON      = '32x32';
+    //const IMAGESIZE_VIGNETTE   = '400x300';
+    //
+    //const TYPE_ORIGINAL       = 1;
+    //const TYPE_VIGNETTE       = 2;
+    //const TYPE_THUMBNAIL      = 3;
+    //const TYPE_ICON           = 4;
+    //const TYPE_CUSTOM         = 5;
+    //
 	public function listAction(){
         $request = $this->getRequest();
         $labelId = $request->id;
@@ -37,7 +37,16 @@ class Controller_Admin_Image extends Pico_AdminController{
             }
         }
 
-        $this->getview()->mainLeft = $form;
+        //$this->getview()->actions = '<h2>List images</h2>';
+        $this->getview()->middle = $form;
+
+        $html = array();
+        $html[] = '<h2>List images</h2>&nbsp;';
+        $html[] = $this->getView()->Link( 'upload image',
+            array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
+        
+        $this->getView()->actions = join( "\n", $html );
+
 	}
 
     protected function labelsAction(){
@@ -89,7 +98,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             $this->_redirect( '/admin/image' );
         }
 
-        $this->getView()->mainLeft = $form;
+        $this->getView()->middle = $form;
     }
 
     protected function addAction(){
@@ -113,7 +122,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                     'inserted'  => date('Y-m-d H:i:s')
                 ));
 
-                $image->put();
+                $id = $image->put();
 
                 if( $info[2] === IMAGETYPE_PNG ){
                     $src = $gd->getImagePNG();
@@ -124,7 +133,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                 }
 
                 $data = new Model_ImageData(array(
-                    'image_id'   => $image->id,
+                    'image_id'   => $id,
                     'size'      => $file->size,
                     'mime'      => $file->type,
                     'width'     => $width,
@@ -136,7 +145,7 @@ class Controller_Admin_Image extends Pico_AdminController{
 
                 $data->put();
 
-                $this->_redirect( '/admin/image/edit/' . $image->id );
+                $this->_redirect( '/admin/image/edit/' . $id );
             }
             else{
                 $errors[] = 'Not a valid image type: ' . $file->name;
@@ -145,15 +154,28 @@ class Controller_Admin_Image extends Pico_AdminController{
         else{
             $errors[] = 'Tampering detected: not an uploaded file';
         }
+        
+        $image = Model_Image::get();
 
-        $this->getview()->mainLeft = (string) $form;
+        $this->getview()->middle = (string) $form;
+        $html = array();
+        $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
+        $html[] = $this->getView()->Link( 'upload image',
+            array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
+        $html[] = '&nbsp;';
+        $html[] = $this->getView()->Link( 'list images',
+            array('action' => 'list', 'id' => null), array('class' => 'button'));
+        
+        $this->getView()->actions = join( "\n", $html );
     }
 
     protected  function editAction(){
         $request = $this->getRequest();
         $image = Model_Image::get( $request->id );
-        $form = $this->_helper( 'ItemForm', $image, array() );
-
+        $html  = array();
+        
+        $form = new Form_EditItem( $image );      
+        
         if( $request->isPost() ){
             $post = $request->getPost();
             $form->validate( $post );
@@ -173,7 +195,15 @@ class Controller_Admin_Image extends Pico_AdminController{
         }
 
 
-        $this->getview()->mainLeft = $form;
+        $this->getView()->middle = $form;
+        $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
+        $html[] = $this->getView()->Link( 'upload image',
+            array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
+        $html[] = '&nbsp;';
+        $html[] = $this->getView()->Link( 'list images',
+            array('action' => 'list', 'id' => null), array('class' => 'button'));
+        
+        $this->getView()->actions = join( "\n", $html );
     }
 
     protected function getMenu(){

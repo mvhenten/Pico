@@ -15,7 +15,7 @@ class Pico_AdminController extends Nano_Controller{
     }
 
     public function postDispatch(){
-        $this->getView()->actions = $this->getMenu();
+        $this->getView()->submenu = $this->getMenu();
     }
 
     protected function getMenu(){
@@ -27,14 +27,14 @@ class Pico_AdminController extends Nano_Controller{
 
     public function deleteAction(){
         $request = $this->getRequest();
-
+    
         $item = new Model_Item( array('id' => $request->id ) );
-
+    
         $form = new Nano_Form();
-
+    
         $form->addChild('h1', null, sprintf('You are about to delete "<em>%s<em>"', $item->name ));
         $form->addChild('p', null, sprintf('This cannot be undone, are you sure?', $item->name ));
-
+    
         $form->addElements(array(
             'confirm' => array(
                 'type'  => 'submit',
@@ -51,7 +51,7 @@ class Pico_AdminController extends Nano_Controller{
                 'value' => 'delete-confirm'
             )
         ));
-
+    
         if( $request->isPost() && $post = $request->getPost() ){
             $types = array(
                 self::ITEM_TYPE_IMAGE => 'image',
@@ -60,9 +60,9 @@ class Pico_AdminController extends Nano_Controller{
                 self::ITEM_TYPE_NAV => 'navigation',
                 self::ITEM_TYPE_CAT => 'category',
             );
-
+    
             $type = $types[$item->type];
-
+    
             if( $post->cancel != null ){
                 $this->_redirect( sprintf('/admin/%s/edit/%d', $type, $item->id ) );
             }
@@ -71,7 +71,8 @@ class Pico_AdminController extends Nano_Controller{
                 $this->_redirect( sprintf( '/admin/%s', $type ) );
             }
         }
-
-        $this->getView()->mainLeft = $form;
+    
+        $this->getView()->actions = '<h2>Confirm deletion</h2>';
+        $this->getView()->middle = $form;
     }
 }

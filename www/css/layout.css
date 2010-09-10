@@ -2,72 +2,68 @@ body,html{
     height: 100%;
 }
 
-#main-content{
-    position: absolute;
-    top: 120px;
-    bottom: 4px;
-    border-bottom: 4px solid  #444;
-    width: 100%;
-    overflow: auto;
+li a{
+    padding: 0.5em;
 }
 
-#main, .reps{
+
+#main{
     height: 100%;
 }
 
-.abps{
-    border: 1px solid green;
+#header{
+    border-bottom: 1px solid #999;
+    padding: 0.5em;
+    line-height: 1em;
+    text-align: right;
 }
 
-
-#menu-left{
-    float: right;
-    width: 18%;
-}
-
-#middle{
-    float: right;
-    border-left: 1px solid #ececec;
-    width: 80%;
-    height: 100%;
-    overflow-x: auto;
-    /*margin: 0 1em;*/
-    position: relative;
-}
-
-#left{
+#sidebar{
+    margin-top: 2.5em;
+    width: 200px;
     float: left;
-    width: 15%;
-    margin-left: 1em;
 }
 
-/*#main-left{*/
-/*    /*float: right;*/*/
-/**/
-/*}*/
-
-td#left{
-    width: 400px;
+#main-content{
+    /*padding: 0 0.5em 0 0.5em;*/
+    border-bottom: 0.5em solid #66cc66;
+    position: relative;
+    margin-left: 200px;
+    overflow-x: auto;
+    padding: 0 0 1em 0;
 }
 
-.wrap{
-    overflow: auto;
+#main-actions{
+    line-height: 1.5em;
+    padding: 0.5em; 
+    /*overflow: auto;*/
 }
 
-table.viewport{
+#main-actions h2{
+    display:inline;
+}
+
+.float-right{
+    float: right;
+}
+
+.float-left{
+    float: left;
+}
+
+.reps{
+    position: relative;
+    height: 100%;
     width: 100%;
 }
 
-table.viewport td label,
-table.viewport td a{
-    display: block;
-}
 
+/** link-tree, finder linke interface **/
 
 .pico-linktree{
     position: relative;
     width: 200px;
-    height:100%;
+    height:280px;
 }
 
 .pico-linktree div.itemGroup{
@@ -94,7 +90,7 @@ table.viewport td a{
 }
 
 .pico-linktree li{
-    padding: 0 7px 3px 7px;
+    padding: 0.2em;
 }
 
 .pico-linktree li.active,

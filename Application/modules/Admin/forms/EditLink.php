@@ -1,10 +1,10 @@
 <?php
 class Form_EditLink extends Nano_Form{
     public function __construct( Model_Link $link ){
-        parent::__construct();
+        parent::__construct(null, array('class'=>'item-form'));
 
         $search = new $link;
-        $search = $search->all();
+        $search = $search->all()->where('group', $link->group );
         $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
 
         if( null == $link->id ){
@@ -31,7 +31,7 @@ class Form_EditLink extends Nano_Form{
                         'value'         => $link->url,
                         'label'         => 'Url',
                         'validators'    => array(
-                            array('stringLength', array(1, 64), false )
+                            array('stringLength', array(1, 255), false )
                         ),
                         'required'      => true
                     ),
@@ -39,7 +39,7 @@ class Form_EditLink extends Nano_Form{
                         'type'		=> 'select',
                         'label'		=> 'Parent item',
                         //'onchange'  => 'this.form.submit()',
-                        'value'     => $link->parent_id,
+                        'value'     => $link->parent_id > 0 ? $link->parent_id : null,
                         'options'	=> $parents
                     ),
                     'priority' => ( $link->id ? array(
@@ -49,6 +49,7 @@ class Form_EditLink extends Nano_Form{
                         'required'  => false
                     ):null),
                     'save'  => array(
+                        'prefix' => '<hr/>',
                         'wrapper' => false,
                         'type'  => 'submit',
                         'value' => $link->id ? 'Save changes' : 'Add link',

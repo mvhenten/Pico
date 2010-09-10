@@ -4,11 +4,11 @@ class Form_AddImage extends Nano_Form{
         parent::__construct();
 
         $this->addElements(array(
-            'toolbar' => array(
-                'type' => 'fieldset',
-                'legend' => 'Upload a new image',
-                'class'   => 'toolbar'
-            ),
+            //'toolbar' => array(
+            //    'type' => 'fieldset',
+            //    'legend' => 'Upload a new image',
+            //    'class'   => 'toolbar'
+            //),
             'viewport' => array(
                 'type' => 'fieldset',
                 'class' => 'viewport',

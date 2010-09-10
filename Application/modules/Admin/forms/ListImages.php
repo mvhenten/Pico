@@ -38,8 +38,8 @@ class Form_ListImages extends Nano_Form{
             $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $item->description) );
             $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, ($item->visible>0?'yes':'no') ) );
             $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $updated) );
-            $row->addChild('td', array('width'=>'10%'), '<a href="/admin/page/edit/' . $item->id . '">edit</a>');
-            $row->addChild('td', array('width'=>'10%'), '<a href="/admin/page/delete/' . $item->id . '">delete</a>');
+            $row->addChild('td', array('width'=>'10%'), '<a href="/admin/image/edit/' . $item->id . '">edit</a>');
+            $row->addChild('td', array('width'=>'10%'), '<a href="/admin/image/delete/' . $item->id . '">delete</a>');
             $viewport->addChild( $row );
 
         }

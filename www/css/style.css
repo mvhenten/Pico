@@ -17,18 +17,23 @@ a:hover, a.active{
     text-decoration: underline;
 }
 
-h1{
-    font-size: 2em;
-    line-height: 2em;
-}
 
 td,th{
     text-align: left;
     vertical-align: top;
+    padding: 0.2em 0.5em;
+}
+
+tr.even{
+    background-color: #eef6ee;    
 }
 
 input, select, textarea{
     font: 1em/1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
+}
+
+hr{
+    border: 1px solid #efefef;
 }
 
 fieldset{
@@ -37,159 +42,72 @@ fieldset{
     border: 1px solid #eee;
 }
 
-.buttonbar,
-.toolbar{
-    line-height: 3em;
-    text-align: right;
-    background-color: #eee;
-    padding-right: 1em;
-    padding-left: 1em;
+fieldset.toolbar{
+    background-color: #F0EBE2;
 }
 
-.buttonbar h5,
-.toolbar h5,
-.toolbar legend{
+table.viewport{
+    width: 100%;
+}
+
+#main-content{
+    border: 0.5em solid #66cc66;
+    border-top: 0;
+}
+
+#main-actions{
+    background-color: #66cc66;
+}
+
+.menu{
+    padding: 0.5em;
+    /*margin-bottom: 1em;*/
+    border-bottom: 1px solid #66cc66;
+}
+
+.item-form{
+    width: 330px;
+}
+
+label{
+    overflow:auto;
+}
+
+label input,
+label select,
+label textarea{
+    float: right;
+}
+
+label input.input-checkbox{
     float: left;
-    font-weight: bold;
 }
 
-.input-checkbox{
+input.input-text{
+    width: 135px;
+}
+select.select-select{
+    width: 140px;
+}
+
+.formElementWrapper .input-submit{
+    margin-top: 1em;
     float: left;
-}
-
-.formElementWrapper label input
-, .formElementWrapper label textarea{
-    display: block;
-    clear: both;
 }
 
 .formElementWrapper{
-    padding: 0 0 0.5em 0;
+    overflow: auto;
 }
 
-.colorpicker-color{
-    border: 1px inset #333;
+a.button{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #c6ecc6;
+    color: #464;
+    padding: 0.2em 0.5em;
 }
 
-.colorpicker-color:hover{
-    border: 1px solid #99cc99;
-}
-
-.colorpicker{
-    width: 1.2em;
-    height: 1em;
-    text-indent: -100em;
-    float: left;
-    margin-right: 1em;
-    border: 1px inset #333;
-}
-
-#header{
-    background-color: #373D40;
-    overflow: hidden;
-    text-align: right;
-}
-
-#header .wrap{
-    padding: 1em;
-}
-
-#header h1{
-    margin:0;
-    float: left;
-    color: #fff;
-}
-
-#main-menu{
-    background-color: #6C7275;
-}
-
-#sub-menu{
-    background-color: #999;
-}
-
-.menu li{
-    display:inline;
-    padding-left: 1em;
-}
-
-.menu a{
-    color: #fff;
-}
-
-/*#menu ul li{*/
-/*    position: relative;*/
-/*    float: left;*/
-/*    margin:0;*/
-/*}*/
-/**/
-/*#menu a{*/
-/*    color: #eee;*/
-/*    display:block;*/
-/*    padding: 0 1em 0 0;*/
-/*}*/
-/**/
-/*#menu a:hover{*/
-/*    background-color: #7a8185;*/
-/*}*/
-
-/** item list **/
-
-table.viewport tr.even:hover,
-table.viewport tr.uneven:hover,
-table.viewport tr.even:hover a,
-table.viewport tr.uneven:hover a
-{
-    background-color: #090;
-    color: #fff;
-    cursor: pointer;
-}
-
-table.viewport tr.uneven{
-    background-color: #f9f9f9;
-}
-
-/** images list **/
-
-#images dl,
-dl.thumbnail{
-    width: 8em;
-    height: 10em;
-    padding: 0.4em;
-    margin: 0.5em;
-    margin-left:0;
-    float: left;
-    border: 1px solid #eee;
-}
-
-#images .active{
-    background-color: #009900;
-    border: 1px solid #ccc;
-}
-
-#images dl .input-checkbox{
-    display: none;
-}
-
-
-#images dl .input-text{
-    display: block;
-    margin: auto;
-    width: 90px;
-    background-color: transparent;
-    border: 1px solid transparent;
-}
-
-#images dl .input-text:focus{
-    border: 1px solid green;
-    background-color: #fff;
-}
-
-#images dl label{
-    text-align: center;
-    display: block;
-}
-
-#images label img{
-    margin: auto;
+a.button:hover{
+    background-color: #ccf6cc;
 }

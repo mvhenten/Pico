@@ -5,12 +5,11 @@ class Form_EditItem extends Nano_Form{
 
         $item = ( isset($item) ? $item : new Model_Item() );
 
-        $title = ( $item->id == null ) ? 'Create new' . $item->type : 'Editing ' . $item->name;
+        //$title = ( $item->id == null ) ? 'Create new' . $item->type : 'Editing ' . $item->name;
 
         $this->addElements(array(
             'toolbar' => array(
                 'type' => 'fieldset',
-                'legend' => $title,
                 'class'   => 'toolbar',
                 'elements' => array(
                     'save'  => array(
@@ -28,7 +27,7 @@ class Form_EditItem extends Nano_Form{
             ),
             'viewport' => array(
                 'type' => 'fieldset',
-                'class' => 'viewport',
+                'class' => 'item-form',
                 'elements' => array(
                     'type'  => array(
                         'type'  => 'hidden',
