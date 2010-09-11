@@ -1,7 +1,9 @@
 <?php
 class Helper_ItemList extends Nano_View_Helper{
-    public function ItemList( $items ){
+    public function ItemList( $items, $actions = array('delete' => 'delete items') ){
         $request = $this->getView()->getRequest();
+        //$count  = $items->count();
+        $pager = $this->getView()->Pager( $items ); // copy paste for now
         
         $form = new Nano_Form( 'list_items_' . $request->getRouter()->controller );
         
@@ -22,11 +24,7 @@ class Helper_ItemList extends Nano_View_Helper{
 
         foreach( $items as $item ){
             $class = ($class == 'even') ? 'uneven' : 'even';
-            $row = new Nano_Element( 'tr', array(
-                'class'      => $class,
-                'onclick'    => '$(this).toggleClassName("active")',
-                'ondblclick' => 'document.location.href = "/admin/page/edit/' . $item->id . '"'
-            ));
+            $row = new Nano_Element( 'tr', array('class' => $class));
             
             $id = 'item-' . $item->id;
             $updated = (null == $item->updated) ? $item->inserted : $item->updated;
@@ -59,39 +57,45 @@ class Helper_ItemList extends Nano_View_Helper{
             $viewport->addChild( $row );
         }
         
-        $form->addElements(array(
-            'toolbar'   => array(
-                'type'  => 'fieldset',
-                'class' => 'toolbar',
-                'elements' => array(
-                    'select-all'    => array(
-                        'type'		=>'button',
-                        'wrapper'	=> false,
-                        'value'		=> 'select all',
-                        'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
-                    ),
-                    'reset' => array(
-                        'type'=>'reset',
-                        'wrapper'	=> false,
-                        'value'=> 'clear selection',
-                        'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
-                    ),
-                    'action' => array(
-                        'name'      => 'action',
-                        'type'		=> 'select',
-                        'wrapper'	=> false,
-                        'label'		=> 'With selected items do ',
-                        'onchange'  => 'this.form.submit()',
-                        'options'	=> array(
-                            'delete'	=> 'delete',
-//                            'labels'	=> 'edit labels'
-                        ),
-                    )
+        $toolbar = new Nano_Form_Element_Fieldset('toolbar', array(
+            'class' => 'toolbar',
+            'elements' => array(
+                'select-all'    => array(
+                    'type'		=>'button',
+                    'wrapper'	=> false,
+                    'value'		=> 'select all',
+                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'setAttribute\', \'checked\', true)'
+                ),
+                'reset' => array(
+                    'type'=>'reset',
+                    'wrapper'	=> false,
+                    'value'=> 'clear selection',
+                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'removeAttribute\', \'checked\'))'
+                ),
+                'action' => array(
+                    'name'      => 'action',
+                    'type'		=> 'select',
+                    'wrapper'	=> false,
+                    'label'		=> 'With selected items do ',
+                    'onchange'  => 'this.form.submit()',
+                    'options'	=> $actions
                 )
             )
         ));
         
+        
+        $toolbar->addChild( $pager );        
+        $form->addChild( $toolbar );
         $form->addChild( $viewport );
+        
+        $toolbar = new Nano_Form_Element_Fieldset('toolbar-bottom', array(
+            'class' => 'toolbar'
+        ));
+
+        $pager = $this->getView()->Pager( $items ); // copy paste for now
+        $toolbar->addChild( $pager );
+        $form->addChild( $toolbar );
+        
 
         return $form;
     }

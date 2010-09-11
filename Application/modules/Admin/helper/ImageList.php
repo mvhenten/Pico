@@ -1,90 +1,107 @@
 <?php
-class Helper_ImageList{
-    function ImageList( $contents = null ){
-        return $this->renderList( (array) $contents );
-    }
-
-    private function renderList( $items ){
-        $elements = array();
-
+class Helper_ImageList extends Nano_View_Helper{
+    public function ImageList( $items, $actions = array('delete' => 'delete items') ){
+        $request = $this->getView()->getRequest();
+        $pager = $this->getView()->Pager( $items ); // copy paste for now
+        
+        $form = new Nano_Form( 'list_items_' . $request->getRouter()->controller );
+        
+        $viewport = new Nano_Form_Element_Fieldset( 'image-list', array(
+            'tagname' => 'ul',
+        ));
+        
         foreach( $items as $item ){
-			$img = new Nano_Element( 'img', array(
-                'class'     => 'thumbnail',
-				'alt'	     => $item->name,
-				'width'		 => 96,
-				'height' 	 => 96,
-				'src'		 => sprintf("/image/thumbnail/%d", $item->id),
-                'onclick'    => '$(this).up(\'dl\').toggleClassName(\'active\');',
-                'ondblclick' => 'document.location.href = $(this).up(\'dl\').down(\'a\').href;return false;'
-			));
-
-            $link = new Nano_Element( 'a', array(
-                'href'  => '/admin/image/edit/' . $item->id,
-                'title' => 'Edit ' . $item->name,
-                'style'  => 'display: none;'
-            ), 'Edit ' . $item->name );
-
-            $elements['image-' . $item->id] = array(
-                'type'    => 'fieldset',
-                'tagname' => 'dl',
-                'elements' => array(
-                    'title[' . $item->id . ']' => array(
-                        'type' => 'text',
-                        'value' => $item->name,
-                        'prefix' => '<dt>' . $link,
-                        'suffix' => '</dt>',
-                        'wrapper' => false
-                    ),
-                    'selection[' . $item->id . ']' => array(
-                        'type'  => 'checkbox',
-                        'prefix' => '<dd>',
-                        'suffix' => '</dd>',
-                        'label' => $img,
-                        'wrapper' => false
-                    )
+            $wrapper = new Nano_Form_Element_Fieldset( 'list-item-' . $item->id, array(
+                'tagname' => 'li',
+                'class'    => 'image-list-item'
+            ));
+            
+            $checkbox = new Nano_Form_Element_Input( 'item[' . $item->id . ']', array(
+                'type'  => 'checkbox',
+                'label' => $item->name,
+                'id'    => 'item-' . $item->id,
+                'wrapper' => $wrapper
+            ));
+            
+            //$wrapper->addChild( $checkbox );
+            
+            $img = sprintf('<img src="/image/thumbnail/%d" class="thumbnail" />', $item->id);
+            
+            $link = $this->getView()->Link($img,
+                array(
+                    'action'=>'edit',
+                    'id'=>$item->id
+                ),
+                array(
+                    'onclick' => 'e = $(\'item-' . $item->id . '\'); e.checked = !e.checked; return false;',
+                    'ondblclick' => 'document.location.href = this.href'
                 )
             );
+
+            $wrapper->addChild($link);
+            
+            if( $item->label_id != null ){
+                $wrapper->addChild( new Nano_Form_Element_Input('priority[' . $item->id . ']', array(
+                    'label' => 'priority',
+                    'value' => (int) $item->priority,
+                    'size'  => '1',
+                    'wrapper' => false
+                )));
+            }
+            
+            $viewport->addChild( $checkbox );
         }
 
-        return new Nano_Form( 'images', array(
-            'class' => 'list-images',
-            'elements'  => array(
-                'toolbar'   => array(
-                    'type'  => 'fieldset',
-                    'class' => 'toolbar',
-                    'elements' => array(
-                        'select-all'    => array(
-                            'type'		=>'button',
-                            'wrapper'	=> false,
-                            'value'		=> 'select all',
-                            'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
-                        ),
-                        'reset' => array(
-                            'type'=>'reset',
-                            'wrapper'	=> false,
-                            'value'=> 'clear selection',
-                            'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
-                        ),
-                        'action' => array(
-                            'name'      => 'action',
-                            'type'		=> 'select',
-                            'wrapper'	=> false,
-                            'label'		=> 'With selected images do ',
-                            'onchange'  => 'this.form.submit()',
-                            'options'	=> array(
-                                'delete'	=> 'delete images',
-                                'labels'	=> 'edit labels'
-                            ),
-                        )
-                    )
+        $toolbar = new Nano_Form_Element_Fieldset('toolbar', array(
+            'class' => 'toolbar',
+            'elements' => array(
+                'select-all'    => array(
+                    'type'		=>'button',
+                    'wrapper'	=> false,
+                    'value'		=> 'select all',
+                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'setAttribute\', \'checked\', true)'
                 ),
-                'viewport' => array(
-                    'type'      => 'fieldset',
-                    'tagname'   => 'div',
-                    'class'     => 'wrap',
-                    'elements'  => $elements
+                'reset' => array(
+                    'type'=>'reset',
+                    'wrapper'	=> false,
+                    'value'=> 'clear selection',
+                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'removeAttribute\', \'checked\'))'
+                ),
+                'action' => array(
+                    'name'      => 'action',
+                    'type'		=> 'select',
+                    'wrapper'	=> false,
+                    'label'		=> 'With selected items do ',
+                    'onchange'  => 'this.form.submit()',
+                    'options'	=> $actions
                 )
             )
         ));
+        
+        $form->addChild( $toolbar );
+        $toolbar->addChild( $pager );
+        $form->addChild( $viewport );
+        //$form->addElements(array(
+        //));
+
+        $toolbar = new Nano_Form_Element_Fieldset('toolbar-bottom', array(
+            'class' => 'toolbar',
+            'elements' => array(
+                'submit' => array(
+                    //'wrapper' => new Nano_Element('div', array('class'=>'toolbar')),
+                    'wrapper' => false,
+                    'type' => 'submit',
+                    'value' => 'save'
+               )                
+            )
+        ));
+
+        $pager = $this->getView()->Pager( $items ); // copy paste for now
+        $toolbar->addChild( $pager );
+        $form->addChild( $toolbar );
+
+
+        return $form;
     }
+
 }

@@ -1,29 +1,56 @@
 <?php
 class Controller_Image extends Nano_Controller{
+    public static $sizes = array(
+        array(),
+        array(),
+        array()
+    );
+    
     public function preDispatch(){
         $this->getView()->disableViewScript();
         $this->getView()->disableLayout();
     }
-
-    public function viewAction(){
+    
+    public function viewAction( $type = 'original' ){
         $request = $this->getRequest();
 
-        $type = $request->type;
-        $id   = $request->id;
-
-        if( is_numeric($request->type) && null == $request->id ){
-            $type = 'original';
-            $id   = $request->type;
+        
+        switch( $request->type ){
+            case 'vignette':
+                $type = Model_ImageData::TYPE_VIGNETTE;
+                break;
+            case 'thumbnail':
+                $type = Model_ImageData::TYPE_THUMBNAIL;
+                break;
+            case 'icon':
+                $type = Model_ImageData::TYPE_ICON;
+                break;
+            default:
+                $type = Model_ImageData::TYPE_ORIGINAL;
         }
-
-        $image = new Model_Image(array('id'=>$id));
-        $this->_imageOut( $image, $type );
+        
+        $image  = Model_ImageData::get()->all()
+                ->where( 'image_id', $request->id )
+                ->where( 'type', $type )
+                ->current();
+                
+        if( null == $image ){
+            $image = Model_ImageData::get()->all()
+                ->where('image_id', $request->id )
+                ->current();
+                
+            $id = Model_ImageData::resize( $image, $type );
+            $image = Model_ImageData::get( $id );
+        }
+        
+        $this->_imageOut( $image );
     }
+    
 
-    private function _imageOut( $image, $type, $cache = true ){
+    private function _imageOut( $image, $cache = true ){
         date_default_timezone_set('Europe/Amsterdam');
 
-        $inserted = strtotime($image->inserted);
+        $inserted = strtotime($image->created);
 
         if( $cache && isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ){
             $since = strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
@@ -35,17 +62,17 @@ class Controller_Image extends Nano_Controller{
                 exit;
             }
         }
+        
+        //$data = $image->data;
 
-        $data = $image->fetchData( $type );
-
-        header( 'Content-Type: ' . $data->mime );
-        header( 'Content-length' .  $data->size );
-        header( 'Content-Disposition: inline; filename=' . $data->filename );
+        header( 'Content-Type: ' . $image->mime );
+        header( 'Content-length' .  $image->size );
+        header( 'Content-Disposition: inline; filename=' . $image->filename );
         header( 'Last-Modified: ' . date('r', $inserted ) );
         header( 'Expires: ' . date( 'r', strtotime('+1 Month', $inserted ) ) );
         header( 'Cache-Control: max-age=36000, must-revalidate' );
         header( 'Pragma: cache');
-        echo $data->data;
+        echo $image->data;
         exit;
     }
 

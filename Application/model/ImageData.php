@@ -5,15 +5,80 @@
  */
 class Model_ImageData extends Model_Item{
     const FETCH_TABLENAME   = 'image_data';
-    const FETCH_PRIMARY_KEY = 'image_id';
+    const FETCH_PRIMARY_KEY = 'id';
 
-    protected $_properties = array(
-        'type'  => 1
-    );
+    const IMAGESIZE_THUMBNAIL = '96x96';
+    const IMAGESIZE_ICON      = '32x32';
+    const IMAGESIZE_VIGNETTE   = '400x300';
+
+    const TYPE_ORIGINAL       = 1;
+    const TYPE_VIGNETTE       = 2;
+    const TYPE_THUMBNAIL      = 3;
+    const TYPE_ICON           = 4;
+    const TYPE_CUSTOM         = 5;
+
+
+    //protected $_properties = array(
+    //    'type'  => 1
+    //);
 
     public static function get( $key = null, $name = __CLASS__ ){
         return parent::get( $key, $name );
     }
+    
+    public static function resize( $original, $type, $size = '640x480' ){
+        $gd = new Nano_Gd( $original->data, false );
+
+        switch( $type ){
+            case self::TYPE_ICON:
+                $typename = 'icon';
+                list( $width, $height ) = explode( 'x', self::IMAGESIZE_ICON );
+                break;
+            case self::TYPE_THUMBNAIL:
+                $typename = 'thumb';
+                list( $width, $height ) = explode( 'x', self::IMAGESIZE_THUMBNAIL );
+                break;
+            case self::TYPE_VIGNETTE:
+                $typename = 'vignette';
+                list( $width, $height ) = explode( 'x', self::IMAGESIZE_VIGNETTE );
+                break;
+            case self::TYPE_CUSTOM:
+                $typename  = $size;
+                list( $width, $height) = explode( 'x', $size );
+                break;
+            default:
+                die( 'TYPE NOT FOUND ' . $type);
+
+            list( $x, $y ) = array_values($gd->getDimensions());
+            $width = ( $x > $y ) ? $width : ( $height / $y ) * $x;
+            $height = ( $x < $y ) ? $height : ( $width / $x ) * $y;
+            break;
+        }
+
+        $target = $gd->resize( $width, $height );
+        $data   = $target->getImageJPEG();
+
+        preg_match( '/^(\w+)\.(\w+)?/', $original->filename, $match );
+
+        list(,$base, $ext) = $match;
+        
+        $new = Model_ImageData::get();
+
+        $new->data     = $target->getImageJPEG();
+        $new->size     = strlen($data);
+        $new->mime     = 'image/jpeg';
+        $new->width    = $width;
+        $new->height   = $height;
+        $new->filename = sprintf('%s_%s.%s', $base, $typename, $ext);
+        $new->image_id = $original->image_id;
+        $new->type     = $type;
+        
+        $id = $new->put();
+        
+        return $id;
+    }
+
+    
 }
 
 

@@ -109,6 +109,9 @@ class Controller_Admin_Link extends Pico_AdminController{
 
         $this->getView()->content = $tree;
         $this->getView()->actions = $this->getActions( $item );
+        
+        $this->getView()->content .= '<script>$(\'main-content\').scrollLeft'
+                                  . ' = $(\'main-content\').getWidth();</script>';
     }
     
     protected function deleteAction(){

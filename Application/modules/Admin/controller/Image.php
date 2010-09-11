@@ -1,34 +1,67 @@
 <?php
 class Controller_Admin_Image extends Pico_AdminController{
+    protected function getMenu(){
+        $links = array(
+            array(
+                'target' => array('action' => 'list', 'id' => null),
+                'value'  => 'all images'
+            ),
+            array(
+                'target' => array('action' => 'list', 'id' => 'recent'),
+                'value'  => 'most recent uploads'                
+            )
+        );
+        
+        $items = Model_ImageLabel::get()->all()
+                ->leftJoin( 'item', 'id', 'label_id')
+                ->where('id !=', 'NULL', 'item')
+                ->group('label_id')
+                ->setModel( new Model_Label() );
+
+        foreach( $items as $item ){
+            $links[] = array(
+                'target'=> array( 'action' => 'list', 'id' => $item->id),
+                'value'  => $item->name,
+            );
+        }
+        
+        return $this->getView()->linkList( $links );
+    }
+
+
     public function listAction(){
         $request = $this->getRequest();
-        $labelId = $request->id;
-    
-        if( null !== $labelId ){
+
+        if( $request->isPost() && $post = $request->getPost() ){
+            if( $post->action ){
+                $this->_redirect( $this->getView()->Url(array(
+                    'action'    => $post->action,
+                    'id'        => join( ',', array_keys( $post->item ) )
+                )));                
+            }
+            
+            $this->_forward('order');            
+        }
+        
+        if( is_numeric( $request->id ) ){            
             $images = Model_ImageLabel::get()->all()
                     ->leftJoin( 'item', 'id', 'image_id')
-                    ->where( 'label_id', $labelId)
-                    ->setModel( new Model_Item() );
-    
+                    ->where( 'label_id', $request->id)
+                    ->order('priority')
+                    ->setModel( new Model_Image() );
         }
         else{
-            $images = Model_Image::get()->all();
+            $images = Model_Image::get()->all()->order('-inserted');
         }
-    
-        $form = new Form_ListImages( $images );
-    
-        if( $request->isPost() && $post = $request->getPost() ){
-            $form->validate( $post );
-            if( ! $form->hasErrors() ){
-                if( $post->action == 'labels' && count($post->item) > 0 ){
-                    $query = join(',' ,array_keys( $post->item ) );
-                    $this->_redirect( '/admin/image/labels/' . $query );
-                }
-            }
+        
+        if( null == $images->current() ){
+            $this->_redirect( $this->getView()->url( array('action'=>'add', 'id'=>null)) );
         }
+        
     
-        //$this->getview()->actions = '<h2>List images</h2>';
-        $this->getview()->content = $form;
+        //$form = new Form_ListImages( $images );
+        $this->getview()->content = $this->getView()->ImageList( $images, array(
+            'delete' => 'delete images', 'labels' => 'edit labels'));
     
         $html = array();
         $html[] = '<h2>Images</h2>&nbsp;';
@@ -36,6 +69,34 @@ class Controller_Admin_Image extends Pico_AdminController{
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
         
         $this->getView()->actions = join( "\n", $html );    
+    }
+    
+    protected function orderAction(){
+        $request = $this->getRequest();        
+        $post = $request->getPost();
+        $delete_filter = array();
+        
+
+        foreach( $post->priority as $id => $value ){
+            $delete_filter[] = array(
+                array('image_id', $id),
+                array('label_id', $request->id)
+            );
+        }
+
+        Model_ImageLabel::get()->delete( $delete_filter );
+        
+        foreach( $post->priority as $id => $value ){
+            $model = Model_ImageLabel::get();
+            $model->image_id = $id;
+            $model->label_id = $request->id;
+            $model->priority = intval($value);
+            $model->put();
+        }
+        $this->_redirect($this->getView()->url(array(
+            'action'    => 'list',
+            'id'        => $request->id
+        )));
     }
 
     protected function labelsAction(){
@@ -183,6 +244,17 @@ class Controller_Admin_Image extends Pico_AdminController{
 
 
         $this->getView()->content = $form;
+        if( $request->id ){
+            $this->getView()->content .= sprintf('<img src="%s" class="vignette"/>',
+                $this->getView()->url(array(
+                    'module' => null,
+                    'action' => 'thumbnail',
+                    'controller' => 'image',
+                    'id'   => $request->id
+                ))
+            );            
+        }
+        
         $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
         $html[] = $this->getView()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
@@ -191,27 +263,5 @@ class Controller_Admin_Image extends Pico_AdminController{
             array('action' => 'list', 'id' => null), array('class' => 'button'));
         
         $this->getView()->actions = join( "\n", $html );
-    }
-
-    protected function getMenu(){
-        $menu = array();
-
-        return $menu;
-
-        $labels = ( $label = new Model_Label() ) ? $label->search() : null;
-
-        foreach( $labels as $label ){
-            $menu['label_' . $label->id ] = array(
-              'target'  => '/admin/image/list/' . $label->id,
-              'value'   => 'Label ' . $label->name
-            );
-        }
-
-        return array_merge( array(
-            'add'   => array(
-                'target' => '/admin/image/add',
-                'value'  => 'Add new image'
-            )
-        ), $menu);
     }
 }
