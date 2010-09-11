@@ -13,27 +13,26 @@ class Helper_Link extends Nano_View_Helper{
      * @param array $attributes Optional extra attributes for the html element
      */
     function Link( $name, $target, $attributes = null ){
-        $request = $this->getView()->getRequest();
+        $request = $this->getView()->getRequest();        
         $attr = is_array( $attributes ) ? $attributes : array();
         $url  = $target;
+        $uri = $request->getRequestUri();
 
         if( is_array( $target ) ){
-            $url = $this->getView()->url( $target );
+            $url = $this->getView()->url( $target );            
         }
-
-        if( $url == $request->getRequestUri() ){
-            $class = array();
-
-            if( isset( $attr['class'] ) ){
-                $class[] = $attr['class'];
-            }
-            $class[] = 'active';
-
-            $attr['class'] = join( ' ', $class );
+        
+        if( $url < $uri ){
+            $uri = substr( $uri, 0, strlen($url) );
+        }
+        
+        if( $url == $uri ){
+            $class = array(isset($attr['class'])?$attr['class']:null, 'active');
+            $attr['class'] = join(" ", array_filter($class));
         }
 
         $attr['href'] = $url;
-
+        
         $element = new Nano_Element( 'a', $attr, $name );
 
         return $element;

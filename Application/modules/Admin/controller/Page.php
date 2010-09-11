@@ -5,57 +5,84 @@ class Controller_Admin_Page extends Pico_AdminController{
     }
 
     protected  function listAction(){
+        $request = $this->getRequest();
         
+        if( $request->isPost() && $post = $request->getPost() ){
+            if( $post->action == 'delete' ){
+                $ids = array_keys( $post->item );
+                
+                $this->_redirect( $this->getView()->url(array(
+                    'action'    => 'delete',
+                    'id'        => join(",", $ids )
+                )));
+            }
+        }
+        
+        
+        $items = Model_Page::get()->all();
+        $count = Model_Page::get()->all()->count();
+        
+        if( $count == 0 ){
+            $this->_redirect( $this->getView()->Url(array(
+                'action' => 'add',
+                'id'     => null
+            )));     
+        }
 
-        $item = new Model_Item;
-        $pages = $item->all()->filter( 'type', self::ITEM_TYPE_PAGE );
-        $this->getView()->mainLeft = new Form_ListItems( $pages );
+        $this->getView()->content = $this->getView()->ItemList( $items );            
+        $this->getView()->actions = new Nano_Element('h2', null,'Pages');
+        $this->getView()->actions .= $this->getView()->Link('Add page'
+                                , array('action' => 'add')
+                                , array('class'=>'button'));
+    }
+    
+    protected  function addAction(){
+        $this->_forward( 'edit' );
     }
 
     protected  function editAction(){
         $request = $this->getRequest();
-        $page = new Model_Item(array('id'=>$request->id));
-        $page->type = self::ITEM_TYPE_PAGE;
-
-        $form = new Form_EditItem( $page );
-
-        if( $request->isPost() ){
-            $post = $request->getPost();
-            $form->validate( $post );
-
-            if( ! $form->hasErrors() ){
-                $page->name = $post->name;
-                $page->description = $post->description;
-                $page->visible     = (bool) $post->visible;
-
-                $page->save();
-                $this->_redirect( '/admin/page/edit/' . $page->id );
-            }
-
+        
+        $item = Model_Page::get( $request->id );
+        
+        if( $request->id == null ){
+            $count = $item->all()->count();
+            
+            $item->name     = 'New Page ' . $count;
+            $item->visible  = true;
         }
-
-        $this->getView()->mainLeft = $form;//new Form_EditItem();
+        
+        $form = new Form_EditItem( $item );
+        
+        if( $request->isPost() && $post = $request->getPost() ){
+            $form->validate( $post );
+            
+            if( $form->isValid() ){
+                $item->name        = $post->name;
+                $item->description = $post->descriptoin;
+                $item->visible     = !is_null($post->visible);
+                $id = $item->put();
+                
+                $this->_redirect( $this->getView()->Url(array(
+                    'action'    => 'edit',
+                    'id'        => (null == $item->id ? $id :$item->id )
+                )));
+            }
+            else{
+                $this->getView()->errors = $form->getErrors();
+            }
+        }
+        
+        $this->getView()->content = $form;
+        $this->getView()->actions = new Nano_Element('h2', null, $item->id ?
+                        sprintf('Editing <em>%s</em>', $item->name ) : 'Add new page');
+        
+        $this->getView()->actions .= $this->getView()->Link('add page'
+                                , array('action' => 'add', 'id'=>null)
+                                , array('class'=>'button'));
+        
+        $this->getView()->actions .= $this->getView()->Link('list pages'
+                                , array('action' => 'list', 'id'=>null)
+                                , array('class'=>'button'));
     }
-
-    protected  function addAction(){
-        $page = new Model_Item;
-
-        $page->type = self::ITEM_TYPE_PAGE;
-        $page->put();
-
-    }
-
-    protected function getMenu(){
-        return array(
-            'list'  => array(
-                'target' => '/admin/page/list',
-                'value'  => 'Show pages'
-            ),
-            'add'   => array(
-                'target' => '/admin/page/add',
-                'value'  => 'Add new page'
-            )
-        );
-    }
-
 }

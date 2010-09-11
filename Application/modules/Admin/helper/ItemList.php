@@ -1,97 +1,99 @@
 <?php
-class Helper_ItemList{
-    function ItemList( $items, $config = array()){
-        $config = (object) array_merge(array(
-            'key'   => 'id',
-            'columns' => array(
-                'Title' => 'title',
-                'Updated' => 'updated'
-            ),
-            'sortable' => array('title','updated'),
-        ), $config);
+class Helper_ItemList extends Nano_View_Helper{
+    public function ItemList( $items ){
+        $request = $this->getView()->getRequest();
+        
+        $form = new Nano_Form( 'list_items_' . $request->getRouter()->controller );
+        
+        $viewport = new Nano_Form_Element_Fieldset( 'viewport', array(
+            'prefix'    => '<div class="formElementWrapper">',
+            'suffix'    => '</div>',
+            'tagname' => 'table',
+            'class'   => 'viewport'
+        ));
 
-        $table = new Nano_Element( 'table' );
-        $head = new Nano_Element( 'tr' );
+        $head = new Nano_Element( 'tr', null
+            , '<th>name</th><th>description</th>'
+            . '<th>visible</th><th colspan=3>updated</th>'
+        );
+        
+        $viewport->addChild( $head );
+        $class = 'even';
 
-        foreach( $config->columns as $title => $key ){
-            $head->addChild( 'th',null, $title );
-        }
+        foreach( $items as $item ){
+            $class = ($class == 'even') ? 'uneven' : 'even';
+            $row = new Nano_Element( 'tr', array(
+                'class'      => $class,
+                'onclick'    => '$(this).toggleClassName("active")',
+                'ondblclick' => 'document.location.href = "/admin/page/edit/' . $item->id . '"'
+            ));
+            
+            $id = 'item-' . $item->id;
+            $updated = (null == $item->updated) ? $item->inserted : $item->updated;
 
-        $table->addChild( $head );
-
-
-        foreach( $items as $key => $item ){
-            $row = new Nano_Element('tr');
-
-            foreach( $config->columns as $title => $key ){
-                $row->addChild( 'td', null, $item[$key] );
-            }
-
-            $table->addChild( $row );
-        }
-
-        return $table;
-
-
-
-    }
-
-    private function renderList( $contents ){
-        $form = new Nano_Element( 'form' );
-        $table = new Nano_Element( 'table' );
-
-        $tr = new Nano_Element( 'tr' );
-        $tr->addChild( new Nano_Element('th', null, 'Select') );
-
-        foreach( array('title', 'description', 'visible') as $key ){
-            $td = new Nano_Element( 'th' );
-            $button = new Nano_Element( 'input', array(
-                'type'  =>'submit',
-                'value' => ucfirst( $key ),
-                'name'  => 'order'
+            $input = new Nano_Form_Element_Input( 'item[' . $item->id . ']', array(
+                'type'  => 'checkbox',
+                'label' => $item->name,
+                'id'    => 'item-' . $item->id,
+                'wrapper' => new Nano_Element('td')
             ));
 
-            $td->addChild( $button );
-            $tr->addChild( $td );
+            $row->addChild( $input );
+
+            $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $item->description) );
+            $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, ($item->visible>0?'yes':'no') ) );
+            $row->addChild('td', null, sprintf('<label for="%s">%s</label>', $id, $updated) );
+            
+            //$url = new Helper_Url('test');
+            
+            $row->addChild('td', array('width'=>'10%'),
+                $this->getView()->Link('edit', array(
+                    'action' => 'edit', 'id' => $item->id
+            )));
+
+            $row->addChild('td', array('width'=>'10%'),
+                $this->getView()->Link('delete', array(
+                    'action' => 'delete', 'id' => $item->id
+            )));
+
+            $viewport->addChild( $row );
         }
-
-        $table->addChild( $tr );
-
-        foreach( $contents as $item ){
-            $tr = new Nano_Element( 'tr' );
-            $select = new Nano_Element( 'input', array(
-                'type'=>'checkbox',
-                'name' => 'selection[' . $item->id . ']'
-            ));
-
-            $tr->addChild( new Nano_Element( 'td', null, $select ) );
-
-			$link = sprintf( '<a href="/admin/%s/edit/%d">%s</a>', $this->getTypeName($item), $item->id, $item->name );
-
-            $tr->addChild( new Nano_Element('td', null, $link ) );
-            $tr->addChild( new Nano_Element('td', null, $item->description ) );
-            $tr->addChild( new Nano_Element('td', null, $item->visible ) );
-
-            $table->addChild( $tr );
-
-
-        }
-
-        $form->addChild( $table );
+        
+        $form->addElements(array(
+            'toolbar'   => array(
+                'type'  => 'fieldset',
+                'class' => 'toolbar',
+                'elements' => array(
+                    'select-all'    => array(
+                        'type'		=>'button',
+                        'wrapper'	=> false,
+                        'value'		=> 'select all',
+                        'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
+                    ),
+                    'reset' => array(
+                        'type'=>'reset',
+                        'wrapper'	=> false,
+                        'value'=> 'clear selection',
+                        'onclick'	=> '$(this).up(\'form\').select(\'dl\').invoke(\'removeClassName\', \'active\');'
+                    ),
+                    'action' => array(
+                        'name'      => 'action',
+                        'type'		=> 'select',
+                        'wrapper'	=> false,
+                        'label'		=> 'With selected items do ',
+                        'onchange'  => 'this.form.submit()',
+                        'options'	=> array(
+                            'delete'	=> 'delete',
+//                            'labels'	=> 'edit labels'
+                        ),
+                    )
+                )
+            )
+        ));
+        
+        $form->addChild( $viewport );
 
         return $form;
-    }
-
-    private function getTypeName( $item ){
-        $types = array(
-            Pico_AdminController::ITEM_TYPE_IMAGE   => 'image',
-            Pico_AdminController::ITEM_TYPE_PAGE    => 'page',
-            Pico_AdminController::ITEM_TYPE_CAT     => 'category',
-            Pico_AdminController::ITEM_TYPE_NAV     => 'navigation',
-            Pico_AdminController::ITEM_TYPE_LABEL   => 'label'
-        );
-
-        return $types[$item->type];
     }
 
 }

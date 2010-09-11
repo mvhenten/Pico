@@ -10,13 +10,20 @@ class Controller_Admin_Link extends Pico_AdminController{
         if( $request->id ){
             $this->_forward('edit');
         }
+        else{
+            $items = Model_LinkGroup::get()->all()->limit(1);
+            $this->_redirect( $this->getView()->Url( array(
+                'action' => 'list',
+                'id'     => $items[0]->id
+            )));
+        }
+        
     }
 
     protected function addAction(){
         $request = $this->getRequest();
         $group   = Model_LinkGroup::get( $request->id );
-        
-        
+
         $item = Model_Link::get();
         
         $item->title     = sprintf("New %s link", $group->name );
@@ -83,25 +90,6 @@ class Controller_Admin_Link extends Pico_AdminController{
                     'action'    => 'delete',
                     'id'        => $request->id
                 )));
-                //$id = (int) $item->parent_id;
-                //$item->delete();
-                //
-                //$url = $this->getView()->url( array(
-                //    'action' => $id > 0 ? 'edit' : 'list',
-                //    'id'    => $id > 0 ? $id : $item->group
-                //));
-                //
-                //if( $id > 0 ){
-                //    $items = Model_Link::get()->all()->where('parent_id', $id );
-                //
-                //    foreach( $items as $item ){
-                //        $item->parent_id = 0;
-                //        $item->put();
-                //    }
-                //}
-                //
-                //$this->_redirect( $url );
-
             }
 
             $item->title = $post->title;
@@ -152,7 +140,8 @@ class Controller_Admin_Link extends Pico_AdminController{
         $search = ModeL_Link::get()->all()->where('group', $group->id );
         $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
         
-        $html[] = '<strong>' . $group->name . '</strong>';
+        $html[] = '<h2>' . join( ' &raquo; ',
+            array_filter(array( $group->name, $item->title ))) . '</h2>';
         $html[] = '<span>&nbsp;&nbsp;</span>';
         $html[] = $this->getView()->Link( 'Add link', $url, array('class'=>'button'));
         

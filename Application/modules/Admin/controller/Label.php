@@ -5,78 +5,85 @@ class Controller_Admin_Label extends Pico_AdminController{
     }
 
     protected  function listAction(){
-        $items = Model_Item::get()->all()
-                ->filter('type = ', self::ITEM_TYPE_LABEL);
-                
-        $form = new Form_ListItems( $items );
-        $this->getView()->mainLeft = $form;
-    }
-
-    protected  function editAction(){
-        //var_dump( $this->getView()->disableTemplate() );
         $request = $this->getRequest();
-
-        $label = new Model_Label();
-        $label->type = self::ITEM_TYPE_LABEL;
-        $label->name = 'New label';
-
-        if( null !== $request->id ){
-            $label->id = $request->id;
-        }
-
-        $form = $this->_helper( 'ItemForm', $label, array(
-            'data[color]' => array(
-                'id'    => 'colorpicker',
-                'label' => 'Color for this label',
-                'class' => 'colorpicker',
-                'type'  => 'input',
-                'value' => ($label->data&&isset($label->data->color)?$label->data->color:null)
-            )
-        ) );
-
-        $form->setSuffix( '
-            <script src="/js/colourPicker.js"></script>
-            <script>
-                $(document).observe("dom:loaded", function(){new ColourPicker("colorpicker")});
-            </script>'
-            );
-
-        if( $request->isPost() ){
-            $post = $request->getPost();
-            $form->validate( $post );
-
-            if( ! $form->hasErrors() ){
-                if( $post->delete ){
-                    $this->_redirect('/admin/label/delete/' . $label->id );
-                }
-                $label->name = $post->name;
-                $label->description = $post->description;
-                $label->visible     = (bool) $post->visible;
-
-                $label->data = $post->data;
-
-                $label->save();
-                $this->_redirect( '/admin/label/edit/' . $label->id );
-            }
-            else{
-//                var_dump( $form->getErrors() );
+        
+        if( $request->isPost() && $post = $request->getPost() ){
+            if( $post->action == 'delete' ){
+                $ids = array_keys( $post->item );
+                
+                $this->_redirect( $this->getView()->url(array(
+                    'action'    => 'delete',
+                    'id'        => join(",", $ids )
+                )));
             }
         }
+        
+        
+        $items = Model_Label::get()->all();
+        $count = Model_Label::get()->all()->count();
+        
+        if( $count == 0 ){
+            $this->_redirect( $this->getView()->Url(array(
+                'action' => 'add',
+                'id'     => null
+            )));     
+        }
 
-        $this->getView()->mainLeft = $form;
+        $this->getView()->content = $this->getView()->ItemList( $items );            
+        $this->getView()->actions = new Nano_Element('h2', null,'Labels');
+        $this->getView()->actions .= $this->getView()->Link('Add label'
+                                , array('action' => 'add')
+                                , array('class'=>'button'));
     }
-
+    
     protected  function addAction(){
         $this->_forward( 'edit' );
     }
 
-    protected function getMenu(){
-        return array(
-            'add'   => array(
-                'target' => '/admin/label/add',
-                'value'  => 'Add new label'
-            )
-        );
+    protected  function editAction(){
+        $request = $this->getRequest();
+        
+        $item = Model_Label::get( $request->id );
+        
+        if( $request->id == null ){
+            $count = $item->all()->count();
+            
+            $item->name     = 'New Label ' . $count;
+            $item->visible  = true;
+        }
+        
+        $form = new Form_EditItem( $item );
+        
+        if( $request->isPost() && $post = $request->getPost() ){
+            $form->validate( $post );
+            
+            if( $form->isValid() ){
+                $item->name        = $post->name;
+                $item->description = $post->descriptoin;
+                $item->visible     = !is_null($post->visible);
+                $id = $item->put();
+                
+                
+                $this->_redirect( $this->getView()->Url(array(
+                    'action'    => 'edit',
+                    'id'        => (null == $item->id ? $id :$item->id )
+                )));
+            }
+            else{
+                $this->getView()->errors = $form->getErrors();
+            }
+        }
+        
+        $this->getView()->content = $form;
+        $this->getView()->actions = new Nano_Element('h2', null, $item->id ?
+                        sprintf('Editing <em>%s</em>', $item->name ) : 'Add new label');
+        
+        $this->getView()->actions .= $this->getView()->Link('add label'
+                                , array('action' => 'add', 'id'=>null)
+                                , array('class'=>'button'));
+        
+        $this->getView()->actions .= $this->getView()->Link('list labels'
+                                , array('action' => 'list', 'id'=>null)
+                                , array('class'=>'button'));
     }
-
 }

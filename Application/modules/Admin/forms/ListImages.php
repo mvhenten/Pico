@@ -26,7 +26,7 @@ class Form_ListImages extends Nano_Form{
             $id = 'item-' . $item->id;
             $updated = (null == $item->updated) ? $item->inserted : $item->updated;
 
-            $input = $this->getCheckbox( 'item[' . $item->id . ']', array(
+            $input = new Nano_Form_Element_Input( 'item[' . $item->id . ']', array(
                 'type'  => 'checkbox',
                 'label' => $item->name,
                 'id'    => 'item-' . $item->id,

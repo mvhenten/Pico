@@ -1,32 +1,22 @@
 <?php
 class Controller_Admin_Image extends Pico_AdminController{
-    //const IMAGESIZE_THUMBNAIL = '96x96';
-    //const IMAGESIZE_ICON      = '32x32';
-    //const IMAGESIZE_VIGNETTE   = '400x300';
-    //
-    //const TYPE_ORIGINAL       = 1;
-    //const TYPE_VIGNETTE       = 2;
-    //const TYPE_THUMBNAIL      = 3;
-    //const TYPE_ICON           = 4;
-    //const TYPE_CUSTOM         = 5;
-    //
-	public function listAction(){
+    public function listAction(){
         $request = $this->getRequest();
         $labelId = $request->id;
-
+    
         if( null !== $labelId ){
             $images = Model_ImageLabel::get()->all()
                     ->leftJoin( 'item', 'id', 'image_id')
                     ->where( 'label_id', $labelId)
                     ->setModel( new Model_Item() );
-
+    
         }
         else{
             $images = Model_Image::get()->all();
         }
-
+    
         $form = new Form_ListImages( $images );
-
+    
         if( $request->isPost() && $post = $request->getPost() ){
             $form->validate( $post );
             if( ! $form->hasErrors() ){
@@ -36,27 +26,24 @@ class Controller_Admin_Image extends Pico_AdminController{
                 }
             }
         }
-
+    
         //$this->getview()->actions = '<h2>List images</h2>';
         $this->getview()->content = $form;
-
+    
         $html = array();
-        $html[] = '<h2>List images</h2>&nbsp;';
+        $html[] = '<h2>Images</h2>&nbsp;';
         $html[] = $this->getView()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
         
-        $this->getView()->actions = join( "\n", $html );
-
-	}
+        $this->getView()->actions = join( "\n", $html );    
+    }
 
     protected function labelsAction(){
         $request = $this->getRequest();
         $elements = array();
 
         $images = explode( ',', urldecode($request->id));
-
         $labels = Model_Label::get()->all();
-
         $filter = Model_ImageLabel::get()->all();
 
         foreach( $labels as $label ){
@@ -159,7 +146,7 @@ class Controller_Admin_Image extends Pico_AdminController{
 
         $this->getview()->content = (string) $form;
         $html = array();
-        $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
+        $html[] = '<h2>Upload image</h2>';
         $html[] = $this->getView()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
         $html[] = '&nbsp;';
