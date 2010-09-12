@@ -8,15 +8,19 @@ body, p, a, label{
     color: #444;
 }
 
+h1,h2,h3,h4{
+    font-size: 1.2em;
+    padding-right: 0.5em;
+}
+
 a, a:hover, a:visited, a:active{
     text-decoration: none;
-    color: #090;
+    color: #449944;
 }
 
 a:hover, a.active{
     text-decoration: underline;
 }
-
 
 td,th{
     text-align: left;
@@ -25,11 +29,24 @@ td,th{
 }
 
 tr.even{
-    background-color: #eef6ee;    
+    background-color: #e6f6e6;    
+}
+
+img{
+    vertical-align: middle;
+    display: inline-block;
+    margin: auto;
 }
 
 input, select, textarea{
     font: 1em/1em "FreeSans", "Lucida Grande", "Arial", sans-serif;
+    float: left;
+    clear: right;
+}
+
+label{
+    float: left;
+    width: 8em;
 }
 
 hr{
@@ -37,22 +54,57 @@ hr{
 }
 
 fieldset{
-    padding: 0.5em;
-    /*margin: 0.5em;*/
-    border: 1px solid #eee;
+    border: 1px solid #99CC99;
+    margin:0.5em;
+    padding: 0.5em 0 0;
 }
 
-fieldset.toolbar{
+.toolbar, .pager{
+    border:none;
+}
+
+fieldset.toolbar, .toolbar{
     background-color: #F0EBE2;
+    overflow:hidden;
+    padding: 0.5em;
+    margin:0;
+    clear: both;
+}
+
+fieldset .toolbar{
+    margin-top: 1em;
+    background-color: #99CC99;
 }
 
 table.viewport{
     width: 100%;
 }
 
+li a{
+    padding: 0 1em;
+}
+
+li a.active{
+    background-color: #99cc99;
+    text-decoration: none;
+    /*padding:0.5em;*/
+    display:block;
+    color: #fff;
+}
+
+td label{
+    width: auto;
+}
+
+
+
 #main-content{
     border: 0.5em solid #66cc66;
     border-top: 0;
+}
+
+#main-actions h2{
+    color: #fff;
 }
 
 #main-actions{
@@ -60,34 +112,22 @@ table.viewport{
 }
 
 .menu{
-    padding: 0.5em;
+    padding: 0.5em 0;
     /*margin-bottom: 1em;*/
     border-bottom: 1px solid #66cc66;
 }
 
-.item-form{
-    width: 330px;
+input.input-text, textarea.input-text{
+    width: 160px;
 }
 
-label{
-    overflow:auto;
+textarea.input-text{
+    height: 4.2em;
 }
 
-label input,
-label select,
-label textarea{
-    float: right;
-}
-
-label input.input-checkbox{
-    float: left;
-}
-
-input.input-text{
-    width: 135px;
-}
 select.select-select{
-    width: 140px;
+    margin-left:8em;
+    width: 165px;
 }
 
 .formElementWrapper .input-submit{
@@ -97,6 +137,7 @@ select.select-select{
 
 .formElementWrapper{
     overflow: auto;
+    padding: 0.2em 0.5em;
 }
 
 a.button{
@@ -106,8 +147,57 @@ a.button{
     background-color: #c6ecc6;
     color: #464;
     padding: 0.2em 0.5em;
+    margin-right: 0.5em;
 }
 
 a.button:hover{
     background-color: #ccf6cc;
+}
+
+/** decorative stuff in main-content */
+
+#main-content p{
+    padding: 0.5em 1em;
+}
+
+#main-content ul{
+    padding: 1em;
+    list-style: disc;
+    list-style-position: inside;
+}
+
+/** rte editor **/
+
+#main-content form{
+    display: block;
+    overflow:hidden;
+}
+
+.item-form{
+    /*margin: 1em 0;*/
+    width: 330px;
+    float: left;
+}
+
+.link-form{
+    width: 400px;
+    padding:0;
+}
+
+#content-column{
+    width: 450px;
+    float: left;
+    margin: 1em;
+}
+
+.item-content-wrapper{
+    border: 3px solid #99CC99;
+    margin-bottom: 1em;
+}
+
+iframe.rich-text-editor{
+    border: 1px inset #ccc;
+    display:block;
+    margin:auto;
+    width:100%;
 }

@@ -10,4 +10,8 @@ class Model_Item extends Nano_Db_Model{
     public static function get( $key = null, $name = __CLASS__ ){        
         return parent::get( $key, $name );
     }
+    
+    public function getContent(){
+        return Model_ItemContent::get()->all()->where( 'item_id', $this->id );
+    }
 }

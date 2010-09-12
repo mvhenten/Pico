@@ -1,7 +1,7 @@
 <?php
 class Form_EditLink extends Nano_Form{
     public function __construct( Model_Link $link ){
-        parent::__construct(null, array('class'=>'item-form'));
+        parent::__construct(null, array('class'=>'link-form'));
 
         $search = new $link;
         $search = $search->all()->where('group', $link->group );
@@ -14,7 +14,7 @@ class Form_EditLink extends Nano_Form{
         $this->addElements(array(
             'viewport' => array(
                 'type' => 'fieldset',
-                'legend'    => $link->id ? 'Edit ' . $link->title : 'Add link',
+                //'legend'    => $link->id ? 'Edit ' . $link->title : 'Add link',
                 //'class' => 'viewport',
                 'elements' => array(
                     'title' => array(
@@ -35,6 +35,12 @@ class Form_EditLink extends Nano_Form{
                         ),
                         'required'      => true
                     ),
+                    'priority' => ( $link->id ? array(
+                        'type'  => 'text',
+                        'value' => $link->priority > 0 ? $link->priority : '0 ',
+                        'label' => 'Priority',
+                        'required'  => false
+                    ):null),
                     'parent_id' => array(
                         'type'		=> 'select',
                         'label'		=> 'Parent item',
@@ -42,14 +48,9 @@ class Form_EditLink extends Nano_Form{
                         'value'     => $link->parent_id > 0 ? $link->parent_id : null,
                         'options'	=> $parents
                     ),
-                    'priority' => ( $link->id ? array(
-                        'type'  => 'text',
-                        'value' => $link->priority > 0 ? $link->priority : '0 ',
-                        'label' => 'Priority',
-                        'required'  => false
-                    ):null),
                     'save'  => array(
-                        'prefix' => '<hr/>',
+                        'prefix' => '<div class="toolbar">',
+                        'suffix'    => ( null == $link->id ? '</div>' : ''),
                         'wrapper' => false,
                         'type'  => 'submit',
                         'value' => $link->id ? 'Save changes' : 'Add link',
@@ -58,6 +59,7 @@ class Form_EditLink extends Nano_Form{
                     'delete' => ( null !== $link->id ? array(
                         'wrapper' => false,
                         'type'  => 'submit',
+                        'suffix'    => '</div>',
                         'value' => 'Delete ' . $link->title
                     ):null)
                 )

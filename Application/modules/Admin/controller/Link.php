@@ -110,8 +110,7 @@ class Controller_Admin_Link extends Pico_AdminController{
         $this->getView()->content = $tree;
         $this->getView()->actions = $this->getActions( $item );
         
-        $this->getView()->content .= '<script>$(\'main-content\').scrollLeft'
-                                  . ' = $(\'main-content\').getWidth();</script>';
+        $this->getView()->headScript()->append(null, '$(function(){document.getElementById("main-content").scrollLeft = 10000})');
     }
     
     protected function deleteAction(){
@@ -143,10 +142,11 @@ class Controller_Admin_Link extends Pico_AdminController{
         $search = ModeL_Link::get()->all()->where('group', $group->id );
         $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
         
-        $html[] = '<h2>' . join( ' &raquo; ',
+        $html[] = '<div class="float-left"><h2>' . join( ' &raquo; ',
             array_filter(array( $group->name, $item->title ))) . '</h2>';
         $html[] = '<span>&nbsp;&nbsp;</span>';
         $html[] = $this->getView()->Link( 'Add link', $url, array('class'=>'button'));
+        $html[] = "</div>";
         
         $form = new Nano_Form(null ,array(
             'class'     =>  'float-right',

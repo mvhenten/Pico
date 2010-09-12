@@ -3,9 +3,11 @@
 <head>
     <title>Slicr::<?php echo $this->getRequest()->controller ?>::<?php echo $this->getRequest()->action; ?></title>
 	<link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
-    <script src="/js/prototype.js"></script>
-    <script src="/js/scriptaculous/scriptaculous.js"></script>
-    <?php // echo $this->headScript() ?>
+    <!--<script src="/js/prototype.js"></script>-->
+    <!--<script src="/js/scriptaculous/scriptaculous.js"></script>-->
+    <script src="/js/jquery-1.4.2.min.js"></script>
+    <?php echo $this->headScript() ?>
+    <?php echo $this->Style() ?>
 </head>
 <body>
     <div id="main">

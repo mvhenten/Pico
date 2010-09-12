@@ -245,14 +245,15 @@ class Controller_Admin_Image extends Pico_AdminController{
 
         $this->getView()->content = $form;
         if( $request->id ){
-            $this->getView()->content .= sprintf('<img src="%s" class="vignette"/>',
-                $this->getView()->url(array(
+            $img = new Nano_Element( 'img', array('src' => $this->getView()->url(array(
                     'module' => null,
-                    'action' => 'thumbnail',
+                    'action' => 'vignette',
                     'controller' => 'image',
                     'id'   => $request->id
-                ))
-            );            
+                )),
+                'width' => 200
+            ));
+            $form->addChild($img);
         }
         
         $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
