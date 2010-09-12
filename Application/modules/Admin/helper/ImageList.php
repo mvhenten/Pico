@@ -42,7 +42,8 @@ class Helper_ImageList extends Nano_View_Helper{
             
             if( $item->label_id != null ){
                 $wrapper->addChild( new Nano_Form_Element_Input('priority[' . $item->id . ']', array(
-                    'label' => 'priority',
+                    'class' => 'item-priority',
+                    //'label' => 'priority',
                     'value' => (int) $item->priority,
                     'size'  => '1',
                     'wrapper' => false
@@ -59,13 +60,13 @@ class Helper_ImageList extends Nano_View_Helper{
                     'type'		=>'button',
                     'wrapper'	=> false,
                     'value'		=> 'select all',
-                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'setAttribute\', \'checked\', true)'
+                    'onclick'	=> '$(\'.input-checkbox\').attr(\'checked\', true)'
                 ),
                 'reset' => array(
                     'type'=>'reset',
                     'wrapper'	=> false,
                     'value'=> 'clear selection',
-                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'removeAttribute\', \'checked\'))'
+                    'onclick'	=> '$(\'.input-checkbox\').attr(\'checked\', false)'
                 ),
                 'action' => array(
                     'name'      => 'action',
@@ -73,7 +74,10 @@ class Helper_ImageList extends Nano_View_Helper{
                     'wrapper'	=> false,
                     'label'		=> 'With selected items do ',
                     'onchange'  => 'this.form.submit()',
-                    'options'	=> $actions
+                    'options'	=> array(
+                        'delete'	=> 'delete',
+                        'labels'	=> 'edit labels'
+                    ),
                 )
             )
         ));

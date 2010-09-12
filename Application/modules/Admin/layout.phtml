@@ -1,12 +1,11 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Slicr::<?php echo $this->getRequest()->controller ?>::<?php echo $this->getRequest()->action; ?></title>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
-    <!--<script src="/js/prototype.js"></script>-->
-    <!--<script src="/js/scriptaculous/scriptaculous.js"></script>-->
+    <title><?php echo $this->getRequest()->module ?> // <?php echo $this->getRequest()->controller ?> // <?php echo $this->getRequest()->action; ?></title>
     <script src="/js/jquery-1.4.2.min.js"></script>
+    <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
     <?php echo $this->headScript() ?>
+    <link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
     <?php echo $this->Style() ?>
 </head>
 <body>

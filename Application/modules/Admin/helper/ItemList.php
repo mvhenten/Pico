@@ -64,13 +64,13 @@ class Helper_ItemList extends Nano_View_Helper{
                     'type'		=>'button',
                     'wrapper'	=> false,
                     'value'		=> 'select all',
-                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'setAttribute\', \'checked\', true)'
+                    'onclick'	=> '$(\'.input-checkbox\').attr(\'checked\', true)'
                 ),
                 'reset' => array(
                     'type'=>'reset',
                     'wrapper'	=> false,
                     'value'=> 'clear selection',
-                    'onclick'	=> '$(this.form).select(\'.input-checkbox\').invoke(\'removeAttribute\', \'checked\'))'
+                    'onclick'	=> '$(\'.input-checkbox\').attr(\'checked\', false)'
                 ),
                 'action' => array(
                     'name'      => 'action',

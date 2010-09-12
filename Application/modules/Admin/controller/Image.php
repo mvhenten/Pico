@@ -47,14 +47,25 @@ class Controller_Admin_Image extends Pico_AdminController{
             $images = Model_ImageLabel::get()->all()
                     ->leftJoin( 'item', 'id', 'image_id')
                     ->where( 'label_id', $request->id)
+                    ->where( 'item.id !=', 'NULL' )
                     ->order('priority')
                     ->setModel( new Model_Image() );
+//$(function() {
+//		$("#sortable").sortable();
+//		$("#sortable").disableSelection();
+//	});
+
+            $this->getView()->headScript()->append(null,'$(function(){'
+                . '$(".item-priority").hide(); '
+                . '$("#image-list").sortable({update:function(evt, ui){'
+                . '$(".item-priority").each(function(i,el){el.value = i});'
+                . '}})})');
         }
         else{
             $images = Model_Image::get()->all()->order('-inserted');
         }
         
-        if( null == $images->current() ){
+        if( $images->count() == 0 ){
             $this->_redirect( $this->getView()->url( array('action'=>'add', 'id'=>null)) );
         }
         
