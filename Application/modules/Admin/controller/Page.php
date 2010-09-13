@@ -18,7 +18,6 @@ class Controller_Admin_Page extends Pico_AdminController{
             }
         }
         
-        
         $items = Model_Page::get()->all();
         $count = Model_Page::get()->all()->count();
         

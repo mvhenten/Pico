@@ -50,10 +50,6 @@ class Controller_Admin_Image extends Pico_AdminController{
                     ->where( 'item.id !=', 'NULL' )
                     ->order('priority')
                     ->setModel( new Model_Image() );
-//$(function() {
-//		$("#sortable").sortable();
-//		$("#sortable").disableSelection();
-//	});
 
             $this->getView()->headScript()->append(null,'$(function(){'
                 . '$(".item-priority").hide(); '
@@ -228,52 +224,52 @@ class Controller_Admin_Image extends Pico_AdminController{
         $this->getView()->actions = join( "\n", $html );
     }
 
-    protected  function editAction(){
-        $request = $this->getRequest();
-        $image = Model_Image::get( $request->id );
-        $html  = array();
-        
-        $form = new Form_EditItem( $image );      
-        
-        if( $request->isPost() ){
-            $post = $request->getPost();
-            $form->validate( $post );
-
-            if( ! $form->hasErrors() ){
-                if( $post->delete ){
-                    $this->_redirect('/admin/image/delete/' . $image->id );
-                }
-
-                $image->name        = $post->name;
-                $image->description = $post->description;
-                $image->visible     = (bool) $post->visible;
-
-                $image->put();
-                $this->_redirect( '/admin/image/edit/' . $request->id );
-            }
-        }
-
-
-        $this->getView()->content = $form;
-        if( $request->id ){
-            $img = new Nano_Element( 'img', array('src' => $this->getView()->url(array(
-                    'module' => null,
-                    'action' => 'vignette',
-                    'controller' => 'image',
-                    'id'   => $request->id
-                )),
-                'width' => 200
-            ));
-            $form->addChild($img);
-        }
-        
-        $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
-        $html[] = $this->getView()->Link( 'upload image',
-            array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
-        $html[] = '&nbsp;';
-        $html[] = $this->getView()->Link( 'list images',
-            array('action' => 'list', 'id' => null), array('class' => 'button'));
-        
-        $this->getView()->actions = join( "\n", $html );
-    }
+    //protected  function editAction(){
+    //    $request = $this->getRequest();
+    //    $image = Model_Image::get( $request->id );
+    //    $html  = array();
+    //    
+    //    $form = new Form_EditItem( $image );      
+    //    
+    //    if( $request->isPost() ){
+    //        $post = $request->getPost();
+    //        $form->validate( $post );
+    //
+    //        if( ! $form->hasErrors() ){
+    //            if( $post->delete ){
+    //                $this->_redirect('/admin/image/delete/' . $image->id );
+    //            }
+    //
+    //            $image->name        = $post->name;
+    //            $image->description = $post->description;
+    //            $image->visible     = (bool) $post->visible;
+    //
+    //            $image->put();
+    //            $this->_redirect( '/admin/image/edit/' . $request->id );
+    //        }
+    //    }
+    //
+    //
+    //    $this->getView()->content = $form;
+    //    if( $request->id ){
+    //        $img = new Nano_Element( 'img', array('src' => $this->getView()->url(array(
+    //                'module' => null,
+    //                'action' => 'vignette',
+    //                'controller' => 'image',
+    //                'id'   => $request->id
+    //            )),
+    //            'width' => 200
+    //        ));
+    //        $form->addChild($img);
+    //    }
+    //    
+    //    $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
+    //    $html[] = $this->getView()->Link( 'upload image',
+    //        array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
+    //    $html[] = '&nbsp;';
+    //    $html[] = $this->getView()->Link( 'list images',
+    //        array('action' => 'list', 'id' => null), array('class' => 'button'));
+    //    
+    //    $this->getView()->actions = join( "\n", $html );
+    //}
 }

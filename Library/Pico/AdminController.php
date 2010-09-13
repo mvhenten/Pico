@@ -22,8 +22,78 @@ class Pico_AdminController extends Nano_Controller{
         return array();
     }
 
-    //protected function getItemForm( $item ){
-    //}
+    protected  function addAction(){
+        $this->_forward( 'edit' );
+    }
+
+    protected  function editAction(){
+        $request    = $this->getRequest();
+        $klass      = sprintf( 'Model_%s', ucfirst($request->controller) );
+        
+        $item = $klass::get( $request->id );
+        
+        if( $request->id == null ){
+            // set up defaults for new items
+            $count = $item->all()->count();
+            $item->name     = sprintf( 'New %s %d', $request->controller, $count);
+            $item->visible  = true;
+        }
+        
+        $form = new Form_EditItem( $item );
+        
+        if( $request->isPost() && $post = $request->getPost() ){
+            $form->validate( $post );
+            
+            if( $form->isValid() ){
+                $item->name        = $post->name;
+                $item->description = $post->description;
+                $item->visible     = !is_null($post->visible);
+                $id = $item->put();
+                
+                if( $post->add_content ){
+                    $content = Model_ItemContent::get();
+                    $content->item_id = (null == $item->id ? $id : $item->id);
+                    $content->put();
+                }
+                
+                foreach( $post->content as $key => $value ){
+                    $content = Model_ItemContent::get($key);
+                    if( isset($value['delete']) ){
+                        $content->delete();
+                    }
+                    else{
+                        $content->value = $value['value'];                    
+                        $content->put();                        
+                    }
+                }
+                
+                $this->_redirect( $this->getView()->Url(array(
+                    'action'    => 'edit',
+                    'id'        => (null == $item->id ? $id :$item->id )
+                )));
+                
+            }
+            else{
+                $this->getView()->errors = $form->getErrors();
+            }
+        }
+        
+        $this->getView()->headScript()->append('/js/light-rte/jquery.rte.js');
+        $this->getView()->headScript()->append(null, '$(function(){$(\'.rich-text-editor\').rte()})' );
+        $this->getView()->Style()->append( '/js/light-rte/rte.css');
+        
+        $this->getView()->content = $form;
+        $this->getView()->actions = new Nano_Element('h2', null, $item->id ?
+                        sprintf('Editing <em>%s</em>', $item->name ) : sprintf('New %s', $request->controller ));
+        
+        $this->getView()->actions .= $this->getView()->Link('add ' . $request->controller
+                                , array('action' => 'add', 'id'=>null)
+                                , array('class'=>'button'));
+        
+        $this->getView()->actions .= $this->getView()->Link(sprintf('list %ss', $request->controller)
+                                , array('action' => 'list', 'id'=>null)
+                                , array('class'=>'button'));
+    }
 
     protected function deleteAction(){
         $request = $this->getRequest();

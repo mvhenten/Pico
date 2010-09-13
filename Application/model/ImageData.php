@@ -7,8 +7,8 @@ class Model_ImageData extends Model_Item{
     const FETCH_TABLENAME   = 'image_data';
     const FETCH_PRIMARY_KEY = 'id';
 
-    const IMAGESIZE_THUMBNAIL = '96x96';
-    const IMAGESIZE_ICON      = '32x32';
+    const IMAGESIZE_THUMBNAIL = '120x120';
+    const IMAGESIZE_ICON      = '64x64';
     const IMAGESIZE_VIGNETTE   = '400x300';
 
     const TYPE_ORIGINAL       = 1;
@@ -18,16 +18,16 @@ class Model_ImageData extends Model_Item{
     const TYPE_CUSTOM         = 5;
 
 
-    //protected $_properties = array(
-    //    'type'  => 1
-    //);
-
     public static function get( $key = null, $name = __CLASS__ ){
         return parent::get( $key, $name );
     }
     
     public static function resize( $original, $type, $size = '640x480' ){
         $gd = new Nano_Gd( $original->data, false );
+        
+        //$data = $gd->getImageJPEG(100); //fixes corrupted exif data!
+        //$gd->destroy();        
+        //$gd = new Nano_Gd( $data, false );
 
         switch( $type ){
             case self::TYPE_ICON:
@@ -47,13 +47,13 @@ class Model_ImageData extends Model_Item{
                 list( $width, $height) = explode( 'x', $size );
                 break;
             default:
-                die( 'TYPE NOT FOUND ' . $type);
-
-            list( $x, $y ) = array_values($gd->getDimensions());
-            $width = ( $x > $y ) ? $width : ( $height / $y ) * $x;
-            $height = ( $x < $y ) ? $height : ( $width / $x ) * $y;
-            break;
+                die( 'TYPE NOT FOUND ' . $type);                
         }
+        
+        list( $w, $h ) = array_values( $gd->getDimensions() );        
+        $ratio = min( $width/$w, $height/$h, 1);
+        
+        list( $width, $height ) = array( min( $width, $ratio*$w), min( $height, $ratio*$h) );            
 
         $target = $gd->resize( $width, $height );
         $data   = $target->getImageJPEG();

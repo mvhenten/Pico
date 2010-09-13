@@ -107,12 +107,24 @@ body,html{
 
 
 .image-list-item a{
-    float: left;
-    width: 10em;
-    overflow:none;
-    padding:0;
+    position: relative;
     text-align:center;
+    overflow:hidden;
+    height: 96px;
+    width: 120px;
+    margin: auto;
+    float: left;
+    padding:0;
 }
+
+/*.image-list-item a img{*/
+/*    border: 1px solid blue;*/
+/*    position:aboslute;*/
+/*    bottom:0;*/
+/*    top:0;*/
+/*    left:10px;*/
+/*}*/
+
 
 /*.image-list-item img{*/
 /*    width: 10em;*/
