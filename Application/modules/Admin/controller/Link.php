@@ -1,10 +1,37 @@
 <?php
 class Controller_Admin_Link extends Pico_AdminController{
     protected function indexAction(){
-        $this->_forward('list');
+        $default  = (array) $this->getConfig()->settings->navigation['values'];
+        $search   = Model_Setting::get()->all()->where('group', 'navigation');
+        $items = array(); foreach( $items as $i ) $items[$i->name] = $i;
+        $items = array_merge( $default, $items );
+        
+        if( count($items) == 1 ){
+            $name = reset( array_keys($items) );
+            $this->_redirect( array( 'action' => 'edit', 'id' => $name ));
+        }
+
+        $html = array();
+        $html[] = new Nano_Element( 'h4', null, $this->getConfig()->settings->navigation['title'] );
+        $html[] = new Nano_Element( 'p', null, $this->getConfig()->settings->navigation['description'] );
+        
+        $links = array();
+        foreach( $items as $name => $item ){
+            $item = (object) $item;
+            $links[] = array(
+                'target' => array('action' => 'edit', 'id' => $name ),
+                'value'  => $item->value
+            );
+        }
+
+        $html[] = $this->getView()->linkList( $links );
+
+        $this->getView()->content = join( "\n", $html );
+        $this->getView()->actions = '<h2>Links</h2>';
     }
 
     protected  function listAction(){
+        return;
         $request = $this->getRequest();
         
         if( $request->id ){
@@ -74,14 +101,21 @@ class Controller_Admin_Link extends Pico_AdminController{
     protected function editAction(){
         $request = $this->getRequest();
         
-        if( $request->action == 'list' ){
-            $item = Model_Link::get();
-            $item->group = $request->id;
+        if( is_numeric( $request->id ) ){
+            $item = Model_Link::get($request->id);           
         }
         else{
-            $item = Model_Link::get($request->id);
+            $item = Model_Link::get();
+            
+            $item->test = 1;
+            
+            
+            var_dump( $item );
+            return;
+//            $item->group = 'main';
+            //$item->group = $request->id;            
         }
-
+ 
         if( $request->isPost() ){
             $post = $request->getPost();
 
@@ -181,13 +215,19 @@ class Controller_Admin_Link extends Pico_AdminController{
     }
 
     protected function getMenu(){
-        $items = Model_LinkGroup::get()->all();
+        $default  = (array) $this->getConfig()->settings->navigation['values'];
+        $search   = Model_Setting::get()->all()->where('group', 'navigation');
+        $items = array(); foreach( $items as $i ) $items[$i->name] = $i;
 
+        $items = array_merge( $default, $items );
         $links = array();
-        foreach( $items as $item ){
+        
+        
+        foreach( $items as $name => $item ){
+            $item = (object) $item;
             $links[] = array(
-                'target'=> array( 'action' => 'list', 'id' => $item->id),
-                'value'  => $item->name,
+                'target' => array('action' => 'list', 'id' => $name ),
+                'value'  => $item->value
             );
         }
 

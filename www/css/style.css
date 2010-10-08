@@ -49,6 +49,10 @@ label{
     width: 8em;
 }
 
+label.label-checkbox{
+    float:none;
+}
+
 hr{
     border: 1px solid #efefef;
 }

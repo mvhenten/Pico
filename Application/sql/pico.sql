@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50141
 Source Host           : localhost:3306
-Source Database       : pico
+Source Database       : pico2
 
 Target Server Type    : MYSQL
 Target Server Version : 50141
 File Encoding         : 65001
 
-Date: 2010-09-14 00:10:23
+Date: 2010-10-08 21:48:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -93,12 +93,12 @@ CREATE TABLE `item_content` (
 DROP TABLE IF EXISTS `link`;
 CREATE TABLE `link` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `group` varchar(255) NOT NULL,
   `parent_id` int(10) unsigned zerofill NOT NULL DEFAULT '0000000000',
   `priority` int(10) unsigned DEFAULT '0',
   `title` varchar(255) DEFAULT NULL,
   `url` varchar(4096) DEFAULT NULL,
   `description` varchar(4096) DEFAULT NULL,
-  `group` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
