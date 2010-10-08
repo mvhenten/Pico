@@ -1,3 +1,44 @@
+[settings]
+
+site.title = "Website settings"
+site.description = "Settings such as title, description and keywords. You can also activate your placeholder here"
+
+site.values.title.title  = site title
+site.values.title.value = My New Test Site
+site.values.title.type  = text
+
+site.values.maintenance.title = Activate placeholder
+site.values.maintenance.description = Activate maintenance mode
+site.values.maintenance.type = checkbox
+site.values.maintenance.value = true
+
+site.values.description.title  = Site description
+site.values.description.description = Short description
+site.values.description.value = A short description of your New Site
+site.values.description.type = textarea
+
+site.values.author.title  = Site author
+site.values.author.description = Main author of this site
+site.values.author.type = textarea
+
+site.values.keywords.title  = Site keywords
+site.values.keywords.description = Some keywords to describe your site to search-engines
+site.values.keywords.type  = textarea
+
+google.title = "Google analytics"
+google.description = "Enter your google analytics code here"
+
+google.values.analytics.type = textarea
+google.values.analytics.title  = google analytics code
+
+navigation.title = "Site navigation"
+navigation.description = "Menu entries for your site"
+navigation.values.main.title = Main menu title
+navigation.values.main.value = Main menu
+navigation.values.footer.title = Footer menu title
+navigation.values.footer.value = Footer menu
+
+
 [admin]
 username   = "admin"
 password   = "3af2aebda9543f71a714925f8716f4f0"
@@ -22,15 +63,20 @@ admin.structure = "/:controller/:action.phtml"
 admin.route   = "/admin/:controller/:action/:id/:value"
 admin.defaults.module     = "admin"
 admin.defaults.controller = "image"
-admin.defaults.action     = "list"
+admin.defaults.action     = "index"
 
 default.route = "/:controller/:id"
 default.module = ""
 default.defaults.controller = "user"
 default.defaults.action = "list"
 
+image.route = "/image/:type/:id"
+image.defaults.controller = "image"
+image.defaults.action = "view"
+
 [modules]
 admin.image = "Images"
 admin.page  = "Pages"
 admin.label = "Labels"
 admin.link = "Links"
+admin.setting = "Settings"
