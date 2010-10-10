@@ -7,24 +7,24 @@ class Helper_Pager extends Nano_View_Helper{
         if( $request->offset ){
             $items->offset( $request->offset );
         }
-        
+
         $limit  = $items->getLimit();
         $offset = $items->getOffset();
- 
+
 
         $pager = new Nano_Form_Element_Fieldset('pager', array(
             'class' => 'pager'
         ));
-        
-        
+
+
         if( $offset > 0 && ($pos = ($limit+$offset) ) ){
             $pager->addChild( $this->getView()->link(
                 sprintf( '&laquo; previous %d', $limit), array(
                 'action'    => 'list',
                 'id'        => $request->id . ($offset-$limit > 0 ? "?offset=" . ($offset-$limit) : '')
-            )));            
+            )));
         }
-        
+
         if( ($pos = ($limit+$offset)) && $pos <= $count ){
             $next = min( $pos+$limit, $pos + abs( $count - $pos ));
 
@@ -34,7 +34,7 @@ class Helper_Pager extends Nano_View_Helper{
                     'id'        => $request->id . "?offset=" . ($limit + $offset)
             )));
         }
-        
-        return $pager;        
+
+        return $pager;
     }
 }
