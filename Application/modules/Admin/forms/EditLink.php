@@ -60,7 +60,6 @@ class Form_EditLink extends Nano_Form{
                     ),
                     'delete' => ( null !== $link->id ? array(
                         'wrapper' => false,
-                        'type'  => 'submit',
                         'suffix'    => '</div>',
                         'value' => 'Delete ' . $link->title
                     ):null)

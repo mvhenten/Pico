@@ -53,84 +53,61 @@ class Controller_Admin_Link extends Pico_AdminController{
             $this->_forward( 'add' );
             return;
         }
-
     }
 
     protected  function listAction(){
-        //$form = new Form_EditLink( Model_Link::get() );
+        $request = $this->getRequest();
         $groups = $this->getGroups();
 
-        $html = array();
+        if( $request->id ){
+            $groups->where( 'name', $request->id );
 
-        foreach( $groups as $group ){
-            $html[] = $this->getView()->link( $group->description, array(
-                'action'=>'list', 'id'=>$group->name ));
+            //var_dump( $groups->current() );
+            $items = Model_Link::get()->all()
+                    ->where( 'group', $groups->current()->id )
+                    ->order( 'parent_id')
+                    ->order( 'priority' );
+
+            $tree = $this->getView()->linkTree( $items, null );
+            $this->getView()->content = $tree;//$form;
+
+        }
+        else{
+            $html = array();
+
+            foreach( $groups as $group ){
+                $html[] = $this->getView()->link( $group->description, array(
+                    'action'=>'list', 'id'=>$group->name ));
+            }
+            $this->getView()->content = $this->getView()->ul( $html );
         }
 
-
-        $this->getView()->content = $this->getView()->ul( $html );
         $this->getView()->actions = $this->getActions( Model_Link::get() );
     }
 
     protected function addAction(){
-        $request = $this->getRequest();
+        $this->_forward( 'edit' );
+    }
 
-        $form = new Form_EditLink( new Model_Link() );
+    protected function editAction(){
+        $request = $this->getRequest();
+        $model   = Model_Link::get( is_numeric($request->id)?$request->id:null );
+        $form    = new Form_EditLink( $model );
 
         if( $request->isPost() ){
             $form->validate( $request->getPost() );
         }
 
-        $this->getView()->content = $form;
-        $this->getView()->actions = $this->getActions( Model_Link::get() );
-    }
-
-    protected function editAction(){
-        $request = $this->getRequest();
-
-        if( is_numeric( $request->id ) ){
-            $item = Model_Link::get($request->id);
-        }
-        else{
-            $item = Model_Link::get();
-
-            $item->test = 1;
-
-
-            var_dump( $item );
-            return;
-//            $item->group = 'main';
-            //$item->group = $request->id;
-        }
-
-        if( $request->isPost() ){
-            $post = $request->getPost();
-
-            if( $post->delete ){
-                $this->_redirect( $this->getView()->url(array(
-                    'action'    => 'delete',
-                    'id'        => $request->id
-                )));
-            }
-
-            $item->title = $post->title;
-            $item->priority = $post->priority;
-            $item->parent_id = $post->parent_id;
-            $item->description = $post->description;
-
-            $item->put();
-        }
-
         $items = Model_Link::get()->all()
-                ->where( 'group', $item->group )
+                ->where( 'group', $model->group )
                 ->order( 'parent_id')
                 ->order( 'priority' );
 
-        $tree = $this->getView()->linkTree( $items, $item );
+        $tree = $this->getView()->linkTree( $items, $model );
 
-        $this->getView()->content = $tree;
-        $this->getView()->actions = $this->getActions( $item );
 
+        $this->getView()->content = $tree;//$form;
+        $this->getView()->actions = $this->getActions( Model_Link::get() );
         $this->getView()->headScript()->append(null, '$(function(){document.getElementById("main-content").scrollLeft = 10000})');
     }
 

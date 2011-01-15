@@ -1,13 +1,13 @@
 <?php
 class Helper_LinkTree extends Nano_View_Helper{
-    function LinkTree( $items, $current ){
+    function LinkTree( $items, $current=Null ){
         $sorted = $this->sortItems( $items, $current );
         $container = new Nano_Element( 'div', array( 'class' => 'pico-linktree'));
 
         $ul     = new Nano_Element( 'ul');
 
         foreach( $sorted as $parent ){
-            $ul->addChild( $this->renderItem( $parent, (int) $current->id ));
+            $ul->addChild( $this->renderItem( $parent, ($current?$current->id:null) ));
         }
 
 
@@ -47,7 +47,7 @@ class Helper_LinkTree extends Nano_View_Helper{
         return $li;
     }
 
-    private function sortItems( $items, $item ){
+    private function sortItems( $items, $item=null ){
         $sort = array();
         foreach( $items as $obj ) $sort[$obj->id] = (object) $obj->properties();
 
@@ -55,7 +55,7 @@ class Helper_LinkTree extends Nano_View_Helper{
         foreach( $sort as $id => $obj ){
             $id = (int) $id;
             $obj->parent_id = (int) $obj->parent_id;
-            $obj->active = $id == $item->id ? true : false;
+            $obj->active = ( $item ? ($id == $item->id ? true : false) : false);
             $obj->children = array();
 
             if( $obj->parent_id > 0 ){
