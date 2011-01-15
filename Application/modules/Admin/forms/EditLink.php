@@ -5,15 +5,17 @@ class Form_EditLink extends Nano_Form{
 
         $search = new $link;
         $search = $search->all()->where('group', $link->group );
-        $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
 
-        if( null == $link->id ){
-            $this->setAttribute( 'action', '/admin/link/add/' . $link->group );
-        }
+
+        $groups = Model_LinkGroup::get()->all();
+        $parents = array(); foreach( Model_LinkGroup::get()->all() as $g ) $parents[$g->id] = $g->title;
+        $parents = array_combine( $groups->pluck('id'), $groups->pluck('description') );
+
+        $this->setAttribute( 'action', '/admin/link/save/' . ($link->id?$link->id:''));
 
         $this->addElements(array(
             'viewport' => array(
-                'type' => 'fieldset',
+                'type'      => 'fieldset',
                 //'legend'    => $link->id ? 'Edit ' . $link->title : 'Add link',
                 //'class' => 'viewport',
                 'elements' => array(
@@ -41,13 +43,13 @@ class Form_EditLink extends Nano_Form{
                         'label' => 'Priority',
                         'required'  => false
                     ):null),
-                    'parent_id' => array(
+                    'group' => ( ! $link->id ? array(
                         'type'		=> 'select',
-                        'label'		=> 'Parent item',
+                        'label'		=> 'Menu group',
                         //'onchange'  => 'this.form.submit()',
-                        'value'     => $link->parent_id > 0 ? $link->parent_id : null,
+                        'value'     => $link->group > 0 ? $link->group : 1,
                         'options'	=> $parents
-                    ),
+                    ):null),
                     'save'  => array(
                         'prefix' => '<div class="toolbar">',
                         'suffix'    => ( null == $link->id ? '</div>' : ''),
