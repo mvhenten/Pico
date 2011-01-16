@@ -29,7 +29,7 @@ td,th{
 }
 
 tr.even{
-    background-color: #e6f6e6;    
+    background-color: #e6f6e6;
 }
 
 img{
@@ -130,8 +130,8 @@ textarea.input-text{
 }
 
 select.select-select{
-    margin-left:8em;
-    width: 165px;
+/*    margin-left:8em;
+*/    width: 165px;
 }
 
 .formElementWrapper .input-submit{
