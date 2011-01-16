@@ -53,7 +53,7 @@ class Form_ListImages extends Nano_Form{
                         'type'		=>'button',
                         'wrapper'	=> false,
                         'value'		=> 'select all',
-                        'onclick'	=> "$(this.form).select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
+                        'onclick'	=> "$(this).up('form').select('.input-checkbox').each(function(el){el.up('dl').addClassName('active');el.checked=true});"
                     ),
                     'reset' => array(
                         'type'=>'reset',
@@ -66,7 +66,7 @@ class Form_ListImages extends Nano_Form{
                         'type'		=> 'select',
                         'wrapper'	=> false,
                         'label'		=> 'With selected items do ',
-                        'onchange'  => 'this.form.submit()',
+                        'onchange'  => '$(this).up(\'form\').submit()',
                         'options'	=> array(
                             'delete'	=> 'delete',
                             'labels'	=> 'edit labels'

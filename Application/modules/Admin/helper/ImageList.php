@@ -3,30 +3,30 @@ class Helper_ImageList extends Nano_View_Helper{
     public function ImageList( $items, $actions = array('delete' => 'delete items') ){
         $request = $this->getView()->getRequest();
         $pager = $this->getView()->Pager( $items ); // copy paste for now
-        
+
         $form = new Nano_Form( 'list_items_' . $request->getRouter()->controller );
-        
+
         $viewport = new Nano_Form_Element_Fieldset( 'image-list', array(
             'tagname' => 'ul',
         ));
-        
+
         foreach( $items as $item ){
             $wrapper = new Nano_Form_Element_Fieldset( 'list-item-' . $item->id, array(
                 'tagname' => 'li',
                 'class'    => 'image-list-item'
             ));
-            
+
             $checkbox = new Nano_Form_Element_Input( 'item[' . $item->id . ']', array(
                 'type'  => 'checkbox',
                 'label' => $item->name,
                 'id'    => 'item-' . $item->id,
                 'wrapper' => $wrapper
             ));
-            
+
             //$wrapper->addChild( $checkbox );
-            
+
             $img = sprintf('<img src="/image/thumbnail/%d" class="thumbnail" />', $item->id);
-            
+
             $link = $this->getView()->Link($img,
                 array(
                     'action'=>'edit',
@@ -39,7 +39,7 @@ class Helper_ImageList extends Nano_View_Helper{
             );
 
             $wrapper->addChild($link);
-            
+
             if( $item->label_id != null ){
                 $wrapper->addChild( new Nano_Form_Element_Input('priority[' . $item->id . ']', array(
                     'class' => 'item-priority',
@@ -49,7 +49,7 @@ class Helper_ImageList extends Nano_View_Helper{
                     'wrapper' => false
                 )));
             }
-            
+
             $viewport->addChild( $checkbox );
         }
 
@@ -78,10 +78,14 @@ class Helper_ImageList extends Nano_View_Helper{
                         'delete'	=> 'delete',
                         'labels'	=> 'edit labels'
                     ),
-                )
+                ),
+                //'go' => array(
+                //    'type' => 'submit',
+                //    'value' => 'go'
+                //)
             )
         ));
-        
+
         $form->addChild( $toolbar );
         $toolbar->addChild( $pager );
         $form->addChild( $viewport );
@@ -91,12 +95,12 @@ class Helper_ImageList extends Nano_View_Helper{
         $toolbar = new Nano_Form_Element_Fieldset('toolbar-bottom', array(
             'class' => 'toolbar',
             'elements' => array(
-                'submit' => array(
+                'save' => array(
                     //'wrapper' => new Nano_Element('div', array('class'=>'toolbar')),
                     'wrapper' => false,
                     'type' => 'submit',
                     'value' => 'save'
-               )                
+               )
             )
         ));
 

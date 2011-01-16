@@ -9,7 +9,7 @@ class Controller_Admin_Link extends Pico_AdminController{
      * @return Nano_Db_Query $query
      */
     private function getGroups(){
-        $groups = Model_LinkGroup::get()->all();
+        $groups = Nano_Db_Query::get('LinkGroup');
 
         if( Null == $groups->current() ){
             $default  = (array) $this->getConfig()->settings->navigation['values'];
@@ -20,7 +20,7 @@ class Controller_Admin_Link extends Pico_AdminController{
                 $group->put();
             }
 
-            $groups = Model_LinkGroups::get()->all();
+            $groups = Nano_Db_Query::get('LinkGroup');
         }
 
         return $groups;
@@ -29,27 +29,29 @@ class Controller_Admin_Link extends Pico_AdminController{
 
     protected function saveAction(){
         $request = $this->getRequest();
-        $model   = Model_Link::get( $request->post );
+        $model   = new Model_Link( $request->id );//Nano::Model( 'Link', $request->post );
         $post    = $request->getPost();
 
         $form = new Form_EditLink( $model );
-
-
         $form->validate( $post );
 
         if( $form->isValid() ){
-            $model->title = $post->title;
-            $model->url   = $post->url;
-            $model->group = $post->group;
+            $model->title       = $post->title;
+            $model->url         = $post->url;
+            $model->group       = $post->group;
+            $model->parent_id   = $post->parent_id;
 
             $model->put();
 
-            $this->_redirect( $this->getView()->Url(array(
+
+            $this->_redirect( $request->url(array(
                 'action'    => 'edit',
-                'id'        => $model->id
+                'id'        => $model->parent_id
             )) );
+            return;
         }
         else{
+            //echo "not valid";
             $this->_forward( 'add' );
             return;
         }
@@ -63,7 +65,7 @@ class Controller_Admin_Link extends Pico_AdminController{
             $groups->where( 'name', $request->id );
 
             //var_dump( $groups->current() );
-            $items = Model_Link::get()->all()
+            $items = Nano_Db_Query::get('Link')
                     ->where( 'group', $groups->current()->id )
                     ->order( 'parent_id')
                     ->order( 'priority' );
@@ -82,7 +84,7 @@ class Controller_Admin_Link extends Pico_AdminController{
             $this->getView()->content = $this->getView()->ul( $html );
         }
 
-        $this->getView()->actions = $this->getActions( Model_Link::get() );
+        $this->getView()->actions = $this->getActions( new Model_Link() );
     }
 
     protected function addAction(){
@@ -91,33 +93,44 @@ class Controller_Admin_Link extends Pico_AdminController{
 
     protected function editAction(){
         $request = $this->getRequest();
-        $model   = Model_Link::get( is_numeric($request->id)?$request->id:null );
+
+        $model   = new Model_Link( $request->id );
+
         $form    = new Form_EditLink( $model );
+        //return;
 
         if( $request->isPost() ){
             $form->validate( $request->getPost() );
         }
 
-        $items = Model_Link::get()->all()
-                ->where( 'group', $model->group )
-                ->order( 'parent_id')
-                ->order( 'priority' );
+        if( $request->id ){
+            $items = Nano_Db_Query::get('Link')
+                    ->where( 'group', $model->group )
+                    //->order( 'parent_id')
+                    ->order( 'priority' );
 
-        $tree = $this->getView()->linkTree( $items, $model );
+            //echo $items[0]->title;
+            //return;
 
+            $html = $this->getView()->linkTree( $items, $model );
+        }
+        else{
+            $html = $form;
+        }
 
-        $this->getView()->content = $tree;//$form;
-        $this->getView()->actions = $this->getActions( Model_Link::get() );
+        $this->getView()->content = $html; // $tree;//$form;
+        $this->getView()->actions = $this->getActions( $model );
+        //return;
         $this->getView()->headScript()->append(null, '$(function(){document.getElementById("main-content").scrollLeft = 10000})');
     }
 
     protected function deleteAction(){
         $request = $this->getRequest();
 
-        $item = Model_Link::get($request->id);
+        $item = new Model_Link($request->id);
         $group = $item->group;
 
-        $children = Model_Link::get()->all()
+        $children = Nano_Db_Query::get('Link')
             ->where( 'parent_id', $request->id );
 
         foreach( $children as $child ){
@@ -134,53 +147,71 @@ class Controller_Admin_Link extends Pico_AdminController{
     }
 
     protected function getActions( $item ){
-        $group  = Model_LinkGroup::get($item->group);
-        $url    = $this->getView()->Url(array('action' => 'add', 'id' => $group->id ));
+        $request    = $this->getRequest();
+        $parent_id  = '';
 
-        $search = ModeL_Link::get()->all()->where('group', $group->id );
-        $parents = array(); foreach( $search as $i => $p ) $parents[$p->id] = $p->title;
+        if( $request->id ){
+            $form = new Nano_Form(null ,array(
+                'class'     =>  'float-right',
+                'action'    =>  $request->url(array('action'=>'save','id'=>null))
+            ));
 
-        $html[] = '<div class="float-left"><h2>' . join( ' &raquo; ',
-            array_filter(array( $group->name, $item->title ))) . '</h2>';
-        $html[] = '<span>&nbsp;&nbsp;</span>';
-        $html[] = $this->getView()->Link( 'Add link', $url, array('class'=>'button'));
-        $html[] = "</div>";
+            $parents = Nano_Db_Query::get('Link');
+            $parents = array_combine( $parents->pluck('id'), $parents->pluck('title'));
 
-        $form = new Nano_Form(null ,array(
-            'class'     =>  'float-right',
-            'action'    =>  $url
-        ));
+            if( is_numeric( $request->id ) ){
+                $parent_id = $item->id;
+                $group     = new Model_LinkGroup( $item->group );
+            }
+            else{
+                $group = Nano_Db_Query::get('LinkGroup')->where( 'name', $request->id )->current();
+                $keys = array_keys( $parents );
+                $parent_id = reset($keys);
+            }
 
-        $form->addElements(array(
-            'title'     => array(
-                'type'  => 'hidden',
-                'value' => sprintf("New %s link %d", $group->name, count($parents) )
-            ),
-            'url'   => array(
-                'type' => 'hidden',
-                'value' => '/'
-            ),
-            'parent_id' => array(
-                'wrapper' => false,
-                'type'  => 'select',
-                'label' => 'Select parent',
-                'options' => $parents,
-                'value'     => ($item->parent_id > 0 ? $item->parent_id : null )
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => 'quck add',
-                'wrapper' => false
-            )
-        ));
+            $form->addElements(array(
+                'title'     => array(
+                    'type'  => 'hidden',
+                    'value' => sprintf("New %s link %d", $group->description, count($parents) )
+                ),
+                'url'   => array(
+                    'type' => 'hidden',
+                    'value' => '/'
+                ),
+                'group'   => array(
+                    'type' => 'hidden',
+                    'value' => $group->id
+                ),
+                'parent_id' => array(
+                    'wrapper' => false,
+                    'type'  => 'select',
+                    'label' => 'Select parent',
+                    'options' => $parents,
+                    'value'     => $parent_id
+                ),
+                'submit' => array(
+                    'type'  => 'submit',
+                    'value' => 'quick add',
+                    'wrapper' => false
+                )
+            ));
 
-        $html[] = $form;
+            $html[] = $form;
+        }
+        else{
+            $html = array(
+                '<div class="float-left"><h2>Links&nbsp;&nbsp;</h2>',
+                $this->getView()->Link( 'Add link', '/admin/link/add', array('class'=>'button')).
+                '</div>'
+            );
+        }
+
         return join( "\n", $html);
     }
 
     protected function getMenu(){
         $default  = (array) $this->getConfig()->settings->navigation['values'];
-        $search   = Model_Setting::get()->all()->where('group', 'navigation');
+        $search   = Nano_Db_Query::get('Link')->where('group', 'navigation');
         $items = array(); foreach( $items as $i ) $items[$i->name] = $i;
 
         $items = array_merge( $default, $items );

@@ -8,11 +8,11 @@ class Controller_Admin_Image extends Pico_AdminController{
             ),
             array(
                 'target' => array('action' => 'list', 'id' => 'recent'),
-                'value'  => 'most recent uploads'                
+                'value'  => 'most recent uploads'
             )
         );
-        
-        $items = Model_ImageLabel::get()->all()
+
+        $items = Nano_Db_Query::get('ImageLabel')
                 ->leftJoin( 'item', 'id', 'label_id')
                 ->where('id !=', 'NULL', 'item')
                 ->group('label_id')
@@ -24,7 +24,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                 'value'  => $item->name,
             );
         }
-        
+
         return $this->getView()->linkList( $links );
     }
 
@@ -37,14 +37,14 @@ class Controller_Admin_Image extends Pico_AdminController{
                 $this->_redirect( $this->getView()->Url(array(
                     'action'    => $post->action,
                     'id'        => join( ',', array_keys( $post->item ) )
-                )));                
+                )));
             }
-            
-            $this->_forward('order');            
+
+            $this->_forward('order');
         }
-        
-        if( is_numeric( $request->id ) ){            
-            $images = Model_ImageLabel::get()->all()
+
+        if( is_numeric( $request->id ) ){
+            $images = Nano_Db_Query::get('ImageLabel')
                     ->leftJoin( 'item', 'id', 'image_id')
                     ->where( 'label_id', $request->id)
                     ->where( 'item.id !=', 'NULL' )
@@ -58,31 +58,31 @@ class Controller_Admin_Image extends Pico_AdminController{
                 . '}})})');
         }
         else{
-            $images = Model_Image::get()->all()->order('-inserted');
+            $images = Nano_Db_Query::get('Image')->order('-inserted');
         }
-        
+
         if( $images->count() == 0 ){
             $this->_redirect( $this->getView()->url( array('action'=>'add', 'id'=>null)) );
         }
-        
-    
+
+
         //$form = new Form_ListImages( $images );
         $this->getview()->content = $this->getView()->ImageList( $images, array(
             'delete' => 'delete images', 'labels' => 'edit labels'));
-    
+
         $html = array();
         $html[] = '<h2>Images</h2>&nbsp;';
         $html[] = $this->getView()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
-        
-        $this->getView()->actions = join( "\n", $html );    
+
+        $this->getView()->actions = join( "\n", $html );
     }
-    
+
     protected function orderAction(){
-        $request = $this->getRequest();        
+        $request = $this->getRequest();
         $post = $request->getPost();
         $delete_filter = array();
-        
+
 
         foreach( $post->priority as $id => $value ){
             $delete_filter[] = array(
@@ -91,10 +91,10 @@ class Controller_Admin_Image extends Pico_AdminController{
             );
         }
 
-        Model_ImageLabel::get()->delete( $delete_filter );
-        
+        Nano_Db_Query::get('ImageLabel')->delete( $delete_filter );
+
         foreach( $post->priority as $id => $value ){
-            $model = Model_ImageLabel::get();
+            $model = new Model_ImageLabel();
             $model->image_id = $id;
             $model->label_id = $request->id;
             $model->priority = intval($value);
@@ -111,8 +111,8 @@ class Controller_Admin_Image extends Pico_AdminController{
         $elements = array();
 
         $images = explode( ',', urldecode($request->id));
-        $labels = Model_Label::get()->all();
-        $filter = Model_ImageLabel::get()->all();
+        $labels = Nano_Db_Query::get('Label');
+        $filter = Nano_Db_Query::get('ImageLabel');
 
         foreach( $labels as $label ){
             foreach( $images as $id ){
@@ -137,13 +137,13 @@ class Controller_Admin_Image extends Pico_AdminController{
                     );
                 }
 
-                Model_ImageLabel::get()->delete( $delete_filter );
+                Nano_Db_Query::get('ImageLabel')->delete( $delete_filter );
             }
 
             if( count( $label_ids ) > 0 ){
                 foreach( $images as $id ){
                     foreach( $label_ids as $label_id ){
-                        $model = Model_ImageLabel::get();
+                        $model = new Model_ImageLabel();
                         $model->image_id = $id;
                         $model->label_id = $label_id;
                         $model->put();
@@ -177,7 +177,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                     'inserted'  => date('Y-m-d H:i:s')
                 ));
 
-                $id = $image->put();
+                $image->put();
 
                 if( $info[2] === IMAGETYPE_PNG ){
                     $src = $gd->getImagePNG();
@@ -188,7 +188,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                 }
 
                 $data = new Model_ImageData(array(
-                    'image_id'   => $id,
+                    'image_id'   => $image->id,
                     'size'      => $file->size,
                     'mime'      => $file->type,
                     'width'     => $width,
@@ -200,7 +200,7 @@ class Controller_Admin_Image extends Pico_AdminController{
 
                 $data->put();
 
-                $this->_redirect( '/admin/image/edit/' . $id );
+                $this->_redirect( '/admin/image/edit/' . $image->id );
             }
             else{
                 $errors[] = 'Not a valid image type: ' . $file->name;
@@ -209,8 +209,8 @@ class Controller_Admin_Image extends Pico_AdminController{
         else{
             $errors[] = 'Tampering detected: not an uploaded file';
         }
-        
-        $image = Model_Image::get();
+
+        $image = new Model_Image();
 
         $this->getview()->content = (string) $form;
         $html = array();
@@ -220,7 +220,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         $html[] = '&nbsp;';
         $html[] = $this->getView()->Link( 'list images',
             array('action' => 'list', 'id' => null), array('class' => 'button'));
-        
+
         $this->getView()->actions = join( "\n", $html );
     }
 
@@ -228,9 +228,9 @@ class Controller_Admin_Image extends Pico_AdminController{
     //    $request = $this->getRequest();
     //    $image = Model_Image::get( $request->id );
     //    $html  = array();
-    //    
-    //    $form = new Form_EditItem( $image );      
-    //    
+    //
+    //    $form = new Form_EditItem( $image );
+    //
     //    if( $request->isPost() ){
     //        $post = $request->getPost();
     //        $form->validate( $post );
@@ -262,14 +262,14 @@ class Controller_Admin_Image extends Pico_AdminController{
     //        ));
     //        $form->addChild($img);
     //    }
-    //    
+    //
     //    $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
     //    $html[] = $this->getView()->Link( 'upload image',
     //        array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
     //    $html[] = '&nbsp;';
     //    $html[] = $this->getView()->Link( 'list images',
     //        array('action' => 'list', 'id' => null), array('class' => 'button'));
-    //    
+    //
     //    $this->getView()->actions = join( "\n", $html );
     //}
 }

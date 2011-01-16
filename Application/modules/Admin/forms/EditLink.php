@@ -8,10 +8,10 @@ class Form_EditLink extends Nano_Form{
 
 
         $groups = Model_LinkGroup::get()->all();
-        $parents = array(); foreach( Model_LinkGroup::get()->all() as $g ) $parents[$g->id] = $g->title;
-        $parents = array_combine( $groups->pluck('id'), $groups->pluck('description') );
+        $groups = array_combine( $groups->pluck('id'), $groups->pluck('description') );
 
-        $this->setAttribute( 'action', '/admin/link/save/' . ($link->id?$link->id:''));
+        //var_dump( $link->id );
+        $this->setAttribute( 'action', '/admin/link/save/' . $link->id );
 
         $this->addElements(array(
             'viewport' => array(
@@ -47,22 +47,27 @@ class Form_EditLink extends Nano_Form{
                         'type'		=> 'select',
                         'label'		=> 'Menu group',
                         //'onchange'  => 'this.form.submit()',
-                        'value'     => $link->group > 0 ? $link->group : 1,
-                        'options'	=> $parents
-                    ):null),
+                        //'value'     =>
+                        'options'	=> $groups
+                    ) : array(
+                        'type' => 'hidden',
+                        'value' => $link->group
+                    )),
                     'save'  => array(
                         'prefix' => '<div class="toolbar">',
-                        'suffix'    => ( null == $link->id ? '</div>' : ''),
+                        'suffix'    => ( null == $link->id ? '</div>' :
+                            '<a href="/admin/link/delete/' .  $link->id
+                            . '">Delete &ldquo;' . $link->title . '&rdquo;</a>' ),
                         'wrapper' => false,
                         'type'  => 'submit',
                         'value' => $link->id ? 'Save changes' : 'Add link',
                         //'disabled' => 'disabled'
                     ),
-                    'delete' => ( null !== $link->id ? array(
-                        'wrapper' => false,
-                        'suffix'    => '</div>',
-                        'value' => 'Delete ' . $link->title
-                    ):null)
+                    //'delete' => ( null !== $link->id ? array(
+                    //    'wrapper' => false,
+                    //    'suffix'    => '</div>',
+                    //    'value' => 'Delete ' . $link->title
+                    //):null)
                 )
             ),
         ));
