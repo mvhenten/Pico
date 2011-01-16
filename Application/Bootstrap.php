@@ -27,13 +27,13 @@ class Bootstrap{
 
         if( null !== $router->module ){
             $module = ucfirst( $router->module );
-            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_PATH . '/Application/modules/' . $module . '/controller' );
-            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_PATH . '/Application/modules/' . $module . '/forms' );
+            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_PATH . '/Application/' . $module . '/controller' );
+            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_PATH . '/Application/' . $module . '/forms' );
 
             $name = sprintf( 'Controller_%s_%s', $module, ucfirst($request->controller ));
             $controller = new $name( $request, $config );
             $controller->setLayout('admin');
-            $controller->setHelperPath( APPLICATION_PATH . '/Application/modules/Admin/helper' );
+            $controller->setHelperPath( APPLICATION_PATH . '/Application/Admin/helper' );
         }
         else{
             Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_PATH . '/Application/controller' );
