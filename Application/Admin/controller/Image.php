@@ -25,7 +25,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             );
         }
 
-        return $this->getView()->linkList( $links );
+        return $this->template()->linkList( $links );
     }
 
 
@@ -67,15 +67,17 @@ class Controller_Admin_Image extends Pico_AdminController{
 
 
         //$form = new Form_ListImages( $images );
-        $this->getview()->content = $this->getView()->ImageList( $images, array(
+        $this->template()->content = $this->template()->ImageList( $images, array(
             'delete' => 'delete images', 'labels' => 'edit labels'));
 
         $html = array();
         $html[] = '<h2>Images</h2>&nbsp;';
-        $html[] = $this->getView()->Link( 'upload image',
+        $html[] = $this->template()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
 
-        $this->getView()->actions = join( "\n", $html );
+        $this->template()->actions = join( "\n", $html );
+        $this->response()->push( $this->template()->render( 'Application/Admin/layout' ) );
+
     }
 
     protected function orderAction(){
