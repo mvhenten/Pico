@@ -1,4 +1,5 @@
 <?php
+//@todo deprecate this and remove.
 class Pico_AdminController extends Nano_Controller{
     const ITEM_TYPE_IMAGE = 1;
     const ITEM_TYPE_PAGE  = 2;
