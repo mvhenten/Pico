@@ -80,7 +80,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         $this->template()->renderViewScript( $this->getRequest() );
 
 
-//        $this->response()->push( $this->template()->render( 'Application/Admin/layout' ) );
+        $this->response()->push( $this->template()->render( 'Application/admin/template/layout' ) );
 
     }
 

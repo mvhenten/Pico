@@ -29,7 +29,7 @@ class Bootstrap{
             Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_PATH . '/Application/' . $module . '/controller' );
             Nano_Autoloader::registerNamespace( 'Form', APPLICATION_PATH . '/Application/' . $module . '/forms' );
 
-            $name = sprintf( 'Controller_%s_%s', $module, ucfirst($request->controller ));
+            $name = sprintf( 'Controller_%s_%s', ucfirst($module), ucfirst($request->controller ));
             $controller = new $name( $request, $config );
             //$controller->setLayout('admin');
             //$controller->setHelperPath( APPLICATION_PATH . '/Application/Admin/helper' );
