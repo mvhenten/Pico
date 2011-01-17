@@ -5,16 +5,16 @@ class Controller_Image extends Nano_Controller{
         array(),
         array()
     );
-    
+
     public function preDispatch(){
-        $this->getView()->disableViewScript();
-        $this->getView()->disableLayout();
+        //$this->getView()->disableViewScript();
+        //$this->getView()->disableLayout();
     }
-    
+
     public function viewAction( $type = 'original' ){
         $request = $this->getRequest();
 
-        
+
         switch( $request->type ){
             case 'vignette':
                 $type = Model_ImageData::TYPE_VIGNETTE;
@@ -28,24 +28,24 @@ class Controller_Image extends Nano_Controller{
             default:
                 $type = Model_ImageData::TYPE_ORIGINAL;
         }
-        
+
         $image  = Model_ImageData::get()->all()
                 ->where( 'image_id', $request->id )
                 ->where( 'type', $type )
                 ->current();
-                
+
         if( null == $image ){
             $image = Model_ImageData::get()->all()
                 ->where('image_id', $request->id )
                 ->current();
-                
+
             $id = Model_ImageData::resize( $image, $type );
             $image = Model_ImageData::get( $id );
         }
-        
+
         $this->_imageOut( $image );
     }
-    
+
 
     private function _imageOut( $image, $cache = true ){
         date_default_timezone_set('Europe/Amsterdam');
@@ -62,7 +62,7 @@ class Controller_Image extends Nano_Controller{
                 exit;
             }
         }
-        
+
         //$data = $image->data;
 
         header( 'Content-Type: ' . $image->mime );

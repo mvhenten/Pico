@@ -13,7 +13,6 @@ class Bootstrap{
         Nano_Autoloader::registerNamespace( 'Model', APPLICATION_PATH . '/Application/model' );
 
         $config  = new Nano_Config_Ini( APPLICATION_PATH . '/Application/config/application.ini' );
-
         $router  = new Nano_Router( $config->route );
         $request = new Nano_Request( $router );
 
@@ -26,14 +25,16 @@ class Bootstrap{
         Nano_Db::setAdapter( $config->database );
 
         if( null !== $router->module ){
-            $module = ucfirst( $router->module );
+            $module = $router->module;
             Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_PATH . '/Application/' . $module . '/controller' );
             Nano_Autoloader::registerNamespace( 'Form', APPLICATION_PATH . '/Application/' . $module . '/forms' );
 
             $name = sprintf( 'Controller_%s_%s', $module, ucfirst($request->controller ));
             $controller = new $name( $request, $config );
-            $controller->setLayout('admin');
-            $controller->setHelperPath( APPLICATION_PATH . '/Application/Admin/helper' );
+            //$controller->setLayout('admin');
+            //$controller->setHelperPath( APPLICATION_PATH . '/Application/Admin/helper' );
+            $controller->template()->addHelperPath( 'Application/admin/helper' );
+
         }
         else{
             Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_PATH . '/Application/controller' );

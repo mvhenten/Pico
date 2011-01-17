@@ -76,7 +76,11 @@ class Controller_Admin_Image extends Pico_AdminController{
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
 
         $this->template()->actions = join( "\n", $html );
-        $this->response()->push( $this->template()->render( 'Application/Admin/layout' ) );
+
+        $this->template()->renderViewScript( $this->getRequest() );
+
+
+//        $this->response()->push( $this->template()->render( 'Application/Admin/layout' ) );
 
     }
 
