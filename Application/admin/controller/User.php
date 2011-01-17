@@ -43,7 +43,7 @@ class Controller_Admin_User extends Nano_Controller{
                 )
             ));
 
-            $this->getView()->disableLayout();
+            //$this->getView()->disableLayout();
 
             echo $form;
             exit;
