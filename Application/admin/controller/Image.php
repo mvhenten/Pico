@@ -34,7 +34,7 @@ class Controller_Admin_Image extends Pico_AdminController{
 
         if( $request->isPost() && $post = $request->getPost() ){
             if( $post->action ){
-                $this->_redirect( $this->getView()->Url(array(
+                $this->_redirect( $this->template()->Url(array(
                     'action'    => $post->action,
                     'id'        => join( ',', array_keys( $post->item ) )
                 )));
@@ -51,7 +51,7 @@ class Controller_Admin_Image extends Pico_AdminController{
                     ->order('priority')
                     ->setModel( new Model_Image() );
 
-            $this->getView()->headScript()->append(null,'$(function(){'
+            $this->template()->headScript()->append(null,'$(function(){'
                 . '$(".item-priority").hide(); '
                 . '$("#image-list").sortable({update:function(evt, ui){'
                 . '$(".item-priority").each(function(i,el){el.value = i});'
@@ -62,7 +62,7 @@ class Controller_Admin_Image extends Pico_AdminController{
         }
 
         if( $images->count() == 0 ){
-            $this->_redirect( $this->getView()->url( array('action'=>'add', 'id'=>null)) );
+            $this->_redirect( $this->template()->url( array('action'=>'add', 'id'=>null)) );
         }
 
 
@@ -106,7 +106,7 @@ class Controller_Admin_Image extends Pico_AdminController{
             $model->priority = intval($value);
             $model->put();
         }
-        $this->_redirect($this->getView()->url(array(
+        $this->_redirect($this->template()->url(array(
             'action'    => 'list',
             'id'        => $request->id
         )));
@@ -159,11 +159,11 @@ class Controller_Admin_Image extends Pico_AdminController{
             $this->_redirect( '/admin/image' );
         }
 
-        $this->getView()->content = $form;
+        $this->template()->content = $form;
     }
 
     protected function addAction(){
-        //$this->getView()->headScript()->append( '/js/upload.js');
+        //$this->template()->headScript()->append( '/js/upload.js');
         $request = $this->getRequest();
         $errors  = array();
 
@@ -221,13 +221,13 @@ class Controller_Admin_Image extends Pico_AdminController{
         $this->getview()->content = (string) $form;
         $html = array();
         $html[] = '<h2>Upload image</h2>';
-        $html[] = $this->getView()->Link( 'upload image',
+        $html[] = $this->template()->Link( 'upload image',
             array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
         $html[] = '&nbsp;';
-        $html[] = $this->getView()->Link( 'list images',
+        $html[] = $this->template()->Link( 'list images',
             array('action' => 'list', 'id' => null), array('class' => 'button'));
 
-        $this->getView()->actions = join( "\n", $html );
+        $this->template()->actions = join( "\n", $html );
     }
 
     //protected  function editAction(){
@@ -256,9 +256,9 @@ class Controller_Admin_Image extends Pico_AdminController{
     //    }
     //
     //
-    //    $this->getView()->content = $form;
+    //    $this->template()->content = $form;
     //    if( $request->id ){
-    //        $img = new Nano_Element( 'img', array('src' => $this->getView()->url(array(
+    //        $img = new Nano_Element( 'img', array('src' => $this->template()->url(array(
     //                'module' => null,
     //                'action' => 'vignette',
     //                'controller' => 'image',
@@ -270,12 +270,12 @@ class Controller_Admin_Image extends Pico_AdminController{
     //    }
     //
     //    $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
-    //    $html[] = $this->getView()->Link( 'upload image',
+    //    $html[] = $this->template()->Link( 'upload image',
     //        array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
     //    $html[] = '&nbsp;';
-    //    $html[] = $this->getView()->Link( 'list images',
+    //    $html[] = $this->template()->Link( 'list images',
     //        array('action' => 'list', 'id' => null), array('class' => 'button'));
     //
-    //    $this->getView()->actions = join( "\n", $html );
+    //    $this->template()->actions = join( "\n", $html );
     //}
 }
