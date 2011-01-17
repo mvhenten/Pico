@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><?php echo $this->getRequest()->module ?> // <?php echo $this->getRequest()->controller ?> // <?php echo $this->getRequest()->action; ?></title>
+    <script src="/js/jquery-1.4.2.min.js"></script>
+    <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
+    <link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
+    <?php echo $this->Style() ?>
+    <?php echo $this->headScript() ?>
+</head>
+<body>
+    <div id="main">
+        <?php if( Nano_Session::session()->auth == true ): ?>
+        <div id="header">
+            <a href="/">view site</a> |
+            <a href="/user/logout">logout</a>
+        </div>
+        <div id="sidebar">
+            <div id="main-menu" class="menu">
+                <?php echo $this->modules() ?>
+            </div>
+            <?php if( $this->submenu ): ?>
+            <div id="sub-menu" class="menu">
+                <?php echo $this->submenu ?>
+            </div>
+            <?php endif; ?>
+        </div>
+        <div id="main-actions">
+            <?php echo $this->actions ?>
+        </div>
+        <div id="main-content">
+            <?php echo $this->content ?>
+        </div>
+        <?php endif; ?>
+    </div>
+</body>
+</html>
