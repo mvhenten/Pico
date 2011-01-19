@@ -1,5 +1,4 @@
 [settings]
-
 site.title = "Website settings"
 site.description = "Settings such as title, description and keywords. You can also activate your placeholder here"
 
@@ -50,29 +49,40 @@ password = pico
 
 [layout]
 default.base        = APPLICATION_PATH
-default.path        = "Application/view"
+default.path        = "view"
 default.layoutPath  = "layout.phtml"
 default.structure   = "/:controller/:action.phtml"
 
 admin.base      = APPLICATION_PATH
-admin.path      = "Application/modules/Admin/"
+admin.path      = "modules/Admin/"
 admin.layoutPath    = "layout.phtml"
 admin.structure = "/:controller/:action.phtml"
 
 [route]
-admin.route   = "/admin/:controller/:action/:id/:value"
+admin.route   = "/admin/:controller/:action/:id"
 admin.defaults.module     = "admin"
 admin.defaults.controller = "image"
-admin.defaults.action     = "index"
+admin.defaults.action     = "list"
+
+admin2.route   = "/admin/:controller/:action"
+admin2.defaults.module     = "admin"
+admin2.defaults.controller = "image"
+admin2.defaults.action     = "list"
+
+user.route   = "/admin/:controller/:action"
+user.defaults.module     = "admin"
+user.defaults.controller = "user"
+user.defaults.action     = "login"
+
+image.route = "/image/:type/:id"
+image.defaults.controller = "image"
+image.defaults.action = "view"
 
 default.route = "/:controller/:id"
 default.module = ""
 default.defaults.controller = "user"
 default.defaults.action = "list"
 
-image.route = "/image/:type/:id"
-image.defaults.controller = "image"
-image.defaults.action = "view"
 
 [modules]
 admin.image = "Images"

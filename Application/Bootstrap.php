@@ -1,4 +1,7 @@
 <?php
+define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
+define( "APPLICATION_PATH", dirname( APPLICATION_ROOT )); //where the application is
+
 # require_once( APPLICATION_PATH . '/library/Nano/Bootstrap/Abstract.php');
 require_once( APPLICATION_PATH . '/Library/Nano/Autoloader.php');
 //@todo Fix APPLICATION_PATH or the Application prefix somewhere.
@@ -10,9 +13,15 @@ class Bootstrap{
         Nano_Autoloader::register();
         Nano_Autoloader::registerNamespace( 'Nano', APPLICATION_PATH . '/Library/Nano' );
         Nano_Autoloader::registerNamespace( 'Pico', APPLICATION_PATH . '/Library/Pico' );
-        Nano_Autoloader::registerNamespace( 'Model', APPLICATION_PATH . '/Application/model' );
+        Nano_Autoloader::registerNamespace( 'Model', APPLICATION_ROOT . '/model' );
 
-        $config  = new Nano_Config_Ini( APPLICATION_PATH . '/Application/config/application.ini' );
+        $test = new Nano_Config_Ini( APPLICATION_ROOT . '/plugin/Caroussel/config.ini' );
+
+        //var_dump( $test->plugin->my_value );
+        //
+        //exit();
+
+        $config  = new Nano_Config_Ini( APPLICATION_ROOT . '/config/application.ini' );
         $router  = new Nano_Router( $config->route );
         $request = new Nano_Request( $router );
 
@@ -26,23 +35,25 @@ class Bootstrap{
 
         if( null !== $router->module ){
             $module = $router->module;
-            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_PATH . '/Application/' . $module . '/controller' );
-            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_PATH . '/Application/' . $module . '/forms' );
+            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_ROOT . '/' . $module . '/controller' );
+            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_ROOT . '/' . $module . '/forms' );
 
             $name = sprintf( 'Controller_%s_%s', ucfirst($module), ucfirst($request->controller ));
             $controller = new $name( $request, $config );
             //$controller->setLayout('admin');
-            //$controller->setHelperPath( APPLICATION_PATH . '/Application/Admin/helper' );
-            $controller->template()->addHelperPath( 'Application/admin/helper' );
+            //$controller->setHelperPath( APPLICATION_ROOT . '/Admin/helper' );
+            $controller->template()->addHelperPath( 'admin/helper' );
 
         }
         else{
-            Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_PATH . '/Application/controller' );
+            Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_ROOT . '/controller' );
             $name = sprintf( 'Controller_%s', ucfirst($request->controller ));
             $controller = new $name( $request, $config );
         }
 
         $controller->dispatch();
+
+        //$controller->template()->menu = '';
 
         //if( '' == $router->module ){
         //    $base = ucfirst( $router->module );

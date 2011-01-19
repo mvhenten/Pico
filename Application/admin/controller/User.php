@@ -23,7 +23,7 @@ class Controller_Admin_User extends Nano_Controller{
             $config = $this->getConfig()->admin;
             if( $config->username == $request->name && md5($request->password) == $config->password ){
                 Nano_Session::session()->auth = true;
-                $this->_redirect('/admin');
+                $this->_redirect('/admin/image/list');
             }
 
         }
