@@ -1,0 +1,19 @@
+<?php if( null !== $this->id ): ?>
+    <?php $this->block( 'head' ); ?>
+    <script>
+    $(function(){
+        $(".item-priority").hide();
+        $("#image-list").sortable({ update: function(evt, ui){
+            $(".item-priority").each(function(i,el){
+                el.value = i
+            });
+        }});
+    });
+    </script>
+    <?php $this->endBlock('head'); ?>
+<?php endif; ?>
+
+list
+sdfsadf
+
+<h1>testar</h1>

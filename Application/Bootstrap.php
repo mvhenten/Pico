@@ -12,7 +12,7 @@ class Bootstrap{
 
         Nano_Autoloader::register();
         Nano_Autoloader::registerNamespace( 'Nano', APPLICATION_PATH . '/Library/Nano' );
-        Nano_Autoloader::registerNamespace( 'Pico', APPLICATION_PATH . '/Library/Pico' );
+        Nano_Autoloader::registerNamespace( 'Pico', APPLICATION_PATH . '/Library/Pico' );//?
         Nano_Autoloader::registerNamespace( 'Model', APPLICATION_ROOT . '/model' );
 
         $test = new Nano_Config_Ini( APPLICATION_ROOT . '/plugin/Caroussel/config.ini' );
@@ -51,7 +51,9 @@ class Bootstrap{
             $controller = new $name( $request, $config );
         }
 
-        $controller->dispatch();
+        //$controller->dispatch();
+
+        $controller->response()->out();
 
         //$controller->template()->menu = '';
 

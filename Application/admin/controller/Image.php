@@ -1,5 +1,80 @@
 <?php
-class Controller_Admin_Image extends Pico_AdminController{
+class Controller_Admin_Image extends Nano_Controller{
+    public function getList( $request, $config ){
+
+        $values = array();
+
+        //echo (string) $this->template()->render( 'image/list' )->toString();
+
+        if( is_numeric( $request->id ) ){
+            $label = new Model_Label( $request->id );
+            $images = Nano_Db_Query::get('ImageLabel')
+                    ->leftJoin( 'item', 'id', 'image_id')
+                    ->where( 'label_id', $request->id)
+                    ->where( 'item.id !=', 'NULL' )
+                    ->order('priority')
+                    ->setModel( new Model_Image() );
+        }
+        else{
+            $images = Nano_Db_Query::get('Image')->order('-inserted');
+        }
+
+        //if( $images->count() == 0 ){
+        //    $this->_redirect( $this->template()->url( array('action'=>'add', 'id'=>null)) );
+        //}
+
+
+
+
+        $this->response()->push( $this->template()->render($this->template()->path($request)) );
+
+        return;
+        // $request = $this->getRequest();
+        //
+        //
+        //if( $request->isPost() && $post = $request->getPost() ){
+        //    if( $post->action ){
+        //        $this->_redirect( $this->template()->Url(array(
+        //            'action'    => $post->action,
+        //            'id'        => join( ',', array_keys( $post->item ) )
+        //        )));
+        //    }
+        //
+        //    $this->_forward('order');
+        //}
+        //
+        //if( is_numeric( $request->id ) ){
+        //
+        //    $this->template()->headScript()->append(null,'$(function(){'
+        //        . '$(".item-priority").hide(); '
+        //        . '$("#image-list").sortable({update:function(evt, ui){'
+        //        . '$(".item-priority").each(function(i,el){el.value = i});'
+        //        . '}})})');
+        //}
+        //else{
+        //}
+        //
+        //
+        //
+        ////$form = new Form_ListImages( $images );
+        //$this->template()->content = $this->template()->ImageList( $images, array(
+        //    'delete' => 'delete images', 'labels' => 'edit labels'));
+        //
+        //$html = array();
+        //$html[] = '<h2>Images</h2>&nbsp;';
+        //$html[] = $this->template()->Link( 'upload image',
+        //    array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
+        //
+        //$this->template()->actions = join( "\n", $html );
+        //$this->response()->push( $this->template()->render( 'admin/template/layout' ) );
+
+
+    }
+    //public function get(){
+    //
+    //}
+
+/*
     protected function getMenu(){
         $links = array(
             array(
@@ -30,53 +105,6 @@ class Controller_Admin_Image extends Pico_AdminController{
 
 
     public function listAction(){
-        $request = $this->getRequest();
-
-        if( $request->isPost() && $post = $request->getPost() ){
-            if( $post->action ){
-                $this->_redirect( $this->template()->Url(array(
-                    'action'    => $post->action,
-                    'id'        => join( ',', array_keys( $post->item ) )
-                )));
-            }
-
-            $this->_forward('order');
-        }
-
-        if( is_numeric( $request->id ) ){
-            $images = Nano_Db_Query::get('ImageLabel')
-                    ->leftJoin( 'item', 'id', 'image_id')
-                    ->where( 'label_id', $request->id)
-                    ->where( 'item.id !=', 'NULL' )
-                    ->order('priority')
-                    ->setModel( new Model_Image() );
-
-            $this->template()->headScript()->append(null,'$(function(){'
-                . '$(".item-priority").hide(); '
-                . '$("#image-list").sortable({update:function(evt, ui){'
-                . '$(".item-priority").each(function(i,el){el.value = i});'
-                . '}})})');
-        }
-        else{
-            $images = Nano_Db_Query::get('Image')->order('-inserted');
-        }
-
-        if( $images->count() == 0 ){
-            $this->_redirect( $this->template()->url( array('action'=>'add', 'id'=>null)) );
-        }
-
-
-        //$form = new Form_ListImages( $images );
-        $this->template()->content = $this->template()->ImageList( $images, array(
-            'delete' => 'delete images', 'labels' => 'edit labels'));
-
-        $html = array();
-        $html[] = '<h2>Images</h2>&nbsp;';
-        $html[] = $this->template()->Link( 'upload image',
-            array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
-
-        $this->template()->actions = join( "\n", $html );
-        $this->response()->push( $this->template()->render( 'admin/template/layout' ) );
     }
 
     protected function orderAction(){
@@ -224,7 +252,7 @@ class Controller_Admin_Image extends Pico_AdminController{
 
         $this->template()->actions = join( "\n", $html );
     }
-
+*/
     //protected  function editAction(){
     //    $request = $this->getRequest();
     //    $image = Model_Image::get( $request->id );
