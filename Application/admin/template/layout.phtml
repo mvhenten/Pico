@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?php echo $this->getRequest()->module ?> // <?php echo $this->getRequest()->controller ?> // <?php echo $this->getRequest()->action; ?></title>
+    <title></title>
     <script src="/js/jquery-1.4.2.min.js"></script>
     <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
-    <link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
-    <?php echo $this->Style() ?>
-    <?php echo $this->headScript() ?>
+    <?php $this->block( 'head' ); ?>
+    <link type="text/css" rel="stylesheet" media="all" href="/css/admin/base.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="/css/admin/style.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="/css/admin/layout.css" />
+    <?php $this->endBlock( 'head' ); ?>
 </head>
 <body>
-    <div id="main">
-        <?php if( Nano_Session::session()->auth == true ): ?>
+    <div id="container">
         <div id="header">
-            <a href="/">view site</a> |
-            <a href="/user/logout">logout</a>
-        </div>
-        <div id="sidebar">
-            <div id="main-menu" class="menu">
-            <?php echo $this->modules() ?>
+            <h1><a href="index.html">Web App Theme</a></h1>
+            <div id="user-navigation">
+              <ul class="wat-cf">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#" class="logout">Logout</a></li>
+              </ul>
             </div>
-            <?php if( $this->submenu ): ?>
-            <div id="sub-menu" class="menu">
-                <?php echo $this->submenu ?>
+            <div id="main-navigation">
+              <ul class="wat-cf">
+                <li class="first"><a href="#block-text">Main Page</a></li>
+                <li class="active"><a href="#block-text">Active</a></li>
+                <li><a href="#block-login">Login</a></li>
+                <li><a href="#block-signup">Signup</a></li>
+              </ul>
             </div>
-            <?php endif; ?>
         </div>
-        <div id="main-actions">
-            <?php echo $this->actions ?>
+        <div id="wrapper" class="wat-cf">
+            <div id="main">
+                <div class="block">
+                    <div class="content">
+                    <?php $this->block('main') ?>
+
+                    <?php $this->endblock('main') ?>
+                    </div>
+                </div>
+            </div>
+            <div id="sidebar">
+                <?php $this->block('sidebar') ?>
+
+                <?php $this->endblock('sidebar') ?>
+            </div>
         </div>
-        <div id="main-content">
-            <?php echo $this->content ?>
-        </div>
-        <?php endif; ?>
+
     </div>
 </body>
 </html>

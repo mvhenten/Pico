@@ -1,19 +1,65 @@
+<?php $this->inherit('admin/template/layout') ?>
+
 <?php if( null !== $this->id ): ?>
-    <?php $this->block( 'head' ); ?>
-    <script>
-    $(function(){
-        $(".item-priority").hide();
-        $("#image-list").sortable({ update: function(evt, ui){
-            $(".item-priority").each(function(i,el){
-                el.value = i
-            });
-        }});
-    });
-    </script>
-    <?php $this->endBlock('head'); ?>
 <?php endif; ?>
+<?php $this->block( 'head' ); ?>
+<script>
+$(function(){
+    $(".item-priority").hide();
+    $("#image-list").sortable({ update: function(evt, ui){
+        $(".item-priority").each(function(i,el){
+            el.value = i
+        });
+    }});
+});
+</script>
+<?php $this->endBlock('head'); ?>
 
-list
-sdfsadf
+<?php $this->block('sidebar') ?>
+    <div class="block">
+        <h3>options</h3>
+        <div class="content">
+            <ul class="navigation">
+                <li><a href="/admin/image/recent">most recent images</a></li>
+                <li><a href="/admin/image/list">show all images</a></li>
+                <li><a href="/admin/image/upload">upload a new image</a></li>
+            </ul>
+        </div>
+    </div>
+<?php $this->endblock('sidebar') ?>
 
-<h1>testar</h1>
+<?php $this->block('main') ?>
+<h2 class="title">images</h2>
+<div class="inner">
+    <form class="form">
+        <ul class="thumbnails">
+            <?php foreach( $this->images as $image ): ?>
+            <li>
+                <dl>
+                    <dt></dt>
+                    <dd>
+                        <a href="" title="edit <?php $image->title ?>">
+                        <img src="/image/thumbnail/<?php echo $image->id ?>" alt=""/>
+                        </a>
+                    </dd>
+                </dl>
+
+            </li>
+
+            <?php endforeach; ?>
+        </ul>
+    </form>
+    <div class="actions-bar wat-cf">
+        <div class="actions">
+          <button type="submit" class="button">
+            <img alt="Delete" src="/css/admin/images/icons/cross.png"> Delete
+          </button>
+        </div>
+        <div class="pagination">
+          <span class="disabled prev_page">&laquo; revious</span>
+          <span class="current">1</span><a href="#" rel="next">2</a><a href="#">3</a><a href="#">4</a><a href="#">5</a><a href="#">6</a><a href="#">7</a><a href="#">8</a><a href="#">9</a><a href="#">10</a><a href="#">11</a>
+          <a href="#" class="next_page" rel="next">Next &raquo;</a>
+        </div>
+    </div>
+</div>
+<?php $this->endblock('main') ?>

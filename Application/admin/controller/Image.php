@@ -1,10 +1,7 @@
 <?php
 class Controller_Admin_Image extends Nano_Controller{
     public function getList( $request, $config ){
-
         $values = array();
-
-        //echo (string) $this->template()->render( 'image/list' )->toString();
 
         if( is_numeric( $request->id ) ){
             $label = new Model_Label( $request->id );
@@ -19,16 +16,13 @@ class Controller_Admin_Image extends Nano_Controller{
             $images = Nano_Db_Query::get('Image')->order('-inserted');
         }
 
-        //if( $images->count() == 0 ){
-        //    $this->_redirect( $this->template()->url( array('action'=>'add', 'id'=>null)) );
-        //}
+        $this->template()->images = $images;
 
 
+        //$this->response()->push( $this->template()->render( 'admin/template/layout' ) );
+        $this->response()->push( $this->template()->render($this->templatePath($request)));
 
-
-        $this->response()->push( $this->template()->render($this->template()->path($request)) );
-
-        return;
+        //return;
         // $request = $this->getRequest();
         //
         //
