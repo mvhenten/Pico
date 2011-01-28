@@ -1,0 +1,19 @@
+#wrapper{
+    padding:20px 0;
+}
+
+#container{
+    width: 960px;
+    margin:auto;
+}
+
+
+.thumbnails{
+    clear: bloth;
+    overflow:none;
+    padding:1em 0;
+}
+.thumbnails li{
+    float: left;
+    margin: 1em;
+}
