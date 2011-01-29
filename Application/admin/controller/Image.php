@@ -17,53 +17,62 @@ class Controller_Admin_Image extends Nano_Controller{
         }
 
         $this->template()->images = $images;
+        $this->response()->push( $this->template()->render($this->templatePath($request)));
+    }
 
+    protected  function getEdit(  $request, $config ){
+        $image = new Model_Image( $request->id );
+        $html  = array();
 
-        //$this->response()->push( $this->template()->render( 'admin/template/layout' ) );
+        $form = new Form_EditItem( $image );
+        $this->template()->image = $image;
+
+        if( $request->isPost() ){
+            $post = $request->getPost();
+            $form->validate( $post );
+
+            if( ! $form->hasErrors() ){
+                if( $post->delete ){
+                    $this->_redirect('/admin/image/delete/' . $image->id );
+                }
+
+                $image->name        = $post->name;
+                $image->description = $post->description;
+                $image->visible     = (bool) $post->visible;
+
+                $image->put();
+                $this->_redirect( '/admin/image/edit/' . $request->id );
+            }
+        }
+
+        $this->template()->form = $form;
+
         $this->response()->push( $this->template()->render($this->templatePath($request)));
 
-        //return;
-        // $request = $this->getRequest();
-        //
-        //
-        //if( $request->isPost() && $post = $request->getPost() ){
-        //    if( $post->action ){
-        //        $this->_redirect( $this->template()->Url(array(
-        //            'action'    => $post->action,
-        //            'id'        => join( ',', array_keys( $post->item ) )
-        //        )));
-        //    }
-        //
-        //    $this->_forward('order');
+
+        //$this->template()->content = $form;
+        //if( $request->id ){
+        //    $img = new Nano_Element( 'img', array('src' => $this->template()->url(array(
+        //            'module' => null,
+        //            'action' => 'vignette',
+        //            'controller' => 'image',
+        //            'id'   => $request->id
+        //        )),
+        //        'width' => 200
+        //    ));
+        //    $form->addChild($img);
         //}
         //
-        //if( is_numeric( $request->id ) ){
-        //
-        //    $this->template()->headScript()->append(null,'$(function(){'
-        //        . '$(".item-priority").hide(); '
-        //        . '$("#image-list").sortable({update:function(evt, ui){'
-        //        . '$(".item-priority").each(function(i,el){el.value = i});'
-        //        . '}})})');
-        //}
-        //else{
-        //}
-        //
-        //
-        //
-        ////$form = new Form_ListImages( $images );
-        //$this->template()->content = $this->template()->ImageList( $images, array(
-        //    'delete' => 'delete images', 'labels' => 'edit labels'));
-        //
-        //$html = array();
-        //$html[] = '<h2>Images</h2>&nbsp;';
+        //$html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
         //$html[] = $this->template()->Link( 'upload image',
         //    array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
+        //$html[] = '&nbsp;';
+        //$html[] = $this->template()->Link( 'list images',
+        //    array('action' => 'list', 'id' => null), array('class' => 'button'));
         //
         //$this->template()->actions = join( "\n", $html );
-        //$this->response()->push( $this->template()->render( 'admin/template/layout' ) );
-
-
     }
+
     //public function get(){
     //
     //}
@@ -247,52 +256,5 @@ class Controller_Admin_Image extends Nano_Controller{
         $this->template()->actions = join( "\n", $html );
     }
 */
-    //protected  function editAction(){
-    //    $request = $this->getRequest();
-    //    $image = Model_Image::get( $request->id );
-    //    $html  = array();
-    //
-    //    $form = new Form_EditItem( $image );
-    //
-    //    if( $request->isPost() ){
-    //        $post = $request->getPost();
-    //        $form->validate( $post );
-    //
-    //        if( ! $form->hasErrors() ){
-    //            if( $post->delete ){
-    //                $this->_redirect('/admin/image/delete/' . $image->id );
-    //            }
-    //
-    //            $image->name        = $post->name;
-    //            $image->description = $post->description;
-    //            $image->visible     = (bool) $post->visible;
-    //
-    //            $image->put();
-    //            $this->_redirect( '/admin/image/edit/' . $request->id );
-    //        }
-    //    }
-    //
-    //
-    //    $this->template()->content = $form;
-    //    if( $request->id ){
-    //        $img = new Nano_Element( 'img', array('src' => $this->template()->url(array(
-    //                'module' => null,
-    //                'action' => 'vignette',
-    //                'controller' => 'image',
-    //                'id'   => $request->id
-    //            )),
-    //            'width' => 200
-    //        ));
-    //        $form->addChild($img);
-    //    }
-    //
-    //    $html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
-    //    $html[] = $this->template()->Link( 'upload image',
-    //        array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
-    //    $html[] = '&nbsp;';
-    //    $html[] = $this->template()->Link( 'list images',
-    //        array('action' => 'list', 'id' => null), array('class' => 'button'));
-    //
-    //    $this->template()->actions = join( "\n", $html );
-    //}
+
 }

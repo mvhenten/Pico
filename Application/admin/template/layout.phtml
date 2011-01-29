@@ -5,15 +5,12 @@
     <script src="/js/jquery-1.4.2.min.js"></script>
     <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
     <?php $this->block( 'head' ); ?>
-    <link type="text/css" rel="stylesheet" media="all" href="/css/admin/base.css" />
-    <link type="text/css" rel="stylesheet" media="all" href="/css/admin/style.css" />
     <link type="text/css" rel="stylesheet" media="all" href="/css/admin/layout.css" />
     <?php $this->endBlock( 'head' ); ?>
 </head>
 <body>
     <div id="container">
         <div id="header">
-            <h1><a href="index.html">Web App Theme</a></h1>
             <div id="user-navigation">
               <ul class="wat-cf">
                 <li><a href="#">Profile</a></li>
@@ -21,28 +18,38 @@
                 <li><a href="#" class="logout">Logout</a></li>
               </ul>
             </div>
+            <h1><a href="index.html">pi<span style="font-weight: bold;font-size:80%;color:#0f0;">//</span>co</a></h1>
             <div id="main-navigation">
               <ul class="wat-cf">
-                <li class="first"><a href="#block-text">Main Page</a></li>
-                <li class="active"><a href="#block-text">Active</a></li>
-                <li><a href="#block-login">Login</a></li>
-                <li><a href="#block-signup">Signup</a></li>
+                <li><a href="/admin/image">images</a></li>
+                <li><a href="/admin/image">pages</a></li>
+                <li><a href="/admin/image">settings</a></li>
               </ul>
             </div>
+        </div>
+        <div id="context-navigation">
+        <?php $this->block('context-navigation') ?>
+        <!-- define module defined navigation here -->
+        <?php $this->endblock('context-navigation') ?>
         </div>
         <div id="wrapper" class="wat-cf">
             <div id="main">
                 <div class="block">
+                    <div class="secondary-navigation">
+                    <?php $this->block('secondary-navigation') ?>
+                    <!-- define module defined navigation here -->
+                    <?php $this->endblock('secondary-navigation') ?>
+                    </div>
                     <div class="content">
                     <?php $this->block('main') ?>
-
+                    <!-- define module defined content here -->
                     <?php $this->endblock('main') ?>
                     </div>
                 </div>
             </div>
             <div id="sidebar">
                 <?php $this->block('sidebar') ?>
-
+                <!-- define module defined sidebar here -->
                 <?php $this->endblock('sidebar') ?>
             </div>
         </div>

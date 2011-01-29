@@ -1,7 +1,6 @@
-<?php $this->inherit('admin/template/layout') ?>
+<?php $this->inherit('admin/template/image/image') ?>
 
-<?php if( null !== $this->id ): ?>
-<?php endif; ?>
+<?php if( null !== $this->request->id ): ?>
 <?php $this->block( 'head' ); ?>
 <script>
 $(function(){
@@ -14,18 +13,10 @@ $(function(){
 });
 </script>
 <?php $this->endBlock('head'); ?>
+<?php endif; ?>
+
 
 <?php $this->block('sidebar') ?>
-    <div class="block">
-        <h3>options</h3>
-        <div class="content">
-            <ul class="navigation">
-                <li><a href="/admin/image/recent">most recent images</a></li>
-                <li><a href="/admin/image/list">show all images</a></li>
-                <li><a href="/admin/image/upload">upload a new image</a></li>
-            </ul>
-        </div>
-    </div>
 <?php $this->endblock('sidebar') ?>
 
 <?php $this->block('main') ?>
@@ -36,20 +27,25 @@ $(function(){
             <?php foreach( $this->images as $image ): ?>
             <li>
                 <dl>
-                    <dt></dt>
+                    <dt>
+                        <input class="checkbox" type="checkbox" id="image-edit-<?php echo $image->id ?>" name="image[<?php echo $image->id ?>]" value="<?php echo $image->id ?>" />
+                        <label for="image-edit-<?php echo $image->id ?>">
+                            <span><?php echo $image->name ?></span>
+                        </label>
+                    </dt>
                     <dd>
-                        <a href="" title="edit <?php $image->title ?>">
-                        <img src="/image/thumbnail/<?php echo $image->id ?>" alt=""/>
+                        <label for="image-edit-<?php echo $image->id ?>">
+                        <a onclick="return false;" ondblclick="document.location.href=this.href" href="/admin/image/edit/<?php echo $image->id ?>" title="edit <?php $image->title ?>">
+                            <img src="/image/thumbnail/<?php echo $image->id ?>" alt=""/>
                         </a>
+                        </label>
                     </dd>
                 </dl>
-
             </li>
-
             <?php endforeach; ?>
         </ul>
     </form>
-    <div class="actions-bar wat-cf">
+<!--    <div class="actions-bar wat-cf">
         <div class="actions">
           <button type="submit" class="button">
             <img alt="Delete" src="/css/admin/images/icons/cross.png"> Delete
@@ -61,5 +57,5 @@ $(function(){
           <a href="#" class="next_page" rel="next">Next &raquo;</a>
         </div>
     </div>
-</div>
+--></div>
 <?php $this->endblock('main') ?>

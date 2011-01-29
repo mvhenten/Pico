@@ -1,16 +1,5 @@
 <?php
 class Controller_Image extends Nano_Controller{
-    //public static $sizes = array(
-    //    array(),
-    //    array(),
-    //    array()
-    //);
-    //
-    //public function preDispatch(){
-    //    //$this->getView()->disableViewScript();
-    //    //$this->getView()->disableLayout();
-    //}
-    //
     protected function get( $request, $config ){
 
         switch( $request->type ){
