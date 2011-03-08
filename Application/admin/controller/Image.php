@@ -1,6 +1,25 @@
 <?php
 class Controller_Admin_Image extends Nano_Controller{
+    public function post( $request, $config ){
+        $post = $request->getPost();
+
+        if( $request->action == 'edit' ){
+            $image = new Model_Image( $request->id );
+            $form = new Form_EditItem( $image );
+            $form->validate( $post );
+
+            if( !$form->hasErrors() ){
+                $image->name = $post->name;
+                $image->description = $post->description;
+                $image->visible = (bool)$post->visible;
+                $image->put();
+                $this->response()->redirect( '/admin/image/edit/' . $request->id );
+            }
+        }
+    }
+
     public function getList( $request, $config ){
+        $template = $this->template();
         $values = array();
 
         if( is_numeric( $request->id ) ){
@@ -17,15 +36,17 @@ class Controller_Admin_Image extends Nano_Controller{
         }
 
         $this->template()->images = $images;
-        $this->response()->push( $this->template()->render($this->templatePath($request)));
+        return $this->template()->render('admin/template/image/list');
     }
 
     protected  function getEdit(  $request, $config ){
+        $template = $this->template();
         $image = new Model_Image( $request->id );
         $html  = array();
 
         $form = new Form_EditItem( $image );
-        $this->template()->image = $image;
+        $template->image = $image;
+        //$this->template()->image = $image;
 
         if( $request->isPost() ){
             $post = $request->getPost();
@@ -45,32 +66,17 @@ class Controller_Admin_Image extends Nano_Controller{
             }
         }
 
-        $this->template()->form = $form;
+        $template->form = $form;
 
-        $this->response()->push( $this->template()->render($this->templatePath($request)));
+        $template->render( 'admin/template/image/edit');
+        return $template;
+    }
 
-
-        //$this->template()->content = $form;
-        //if( $request->id ){
-        //    $img = new Nano_Element( 'img', array('src' => $this->template()->url(array(
-        //            'module' => null,
-        //            'action' => 'vignette',
-        //            'controller' => 'image',
-        //            'id'   => $request->id
-        //        )),
-        //        'width' => 200
-        //    ));
-        //    $form->addChild($img);
-        //}
-        //
-        //$html[] = sprintf('<h2>Editing <em>%s</em></h2>&nbsp;', $image->name);
-        //$html[] = $this->template()->Link( 'upload image',
-        //    array('action' => 'add', 'id' => null), array( 'class' => 'button' ));
-        //$html[] = '&nbsp;';
-        //$html[] = $this->template()->Link( 'list images',
-        //    array('action' => 'list', 'id' => null), array('class' => 'button'));
-        //
-        //$this->template()->actions = join( "\n", $html );
+    public function getContent( $request, $config ){
+        $content = new Model_ItemContent();
+        $content->item_id = $request->id;
+        $content->put();
+        $this->response()->redirect( '/admin/image/edit/' . $request->id );
     }
 
     //public function get(){

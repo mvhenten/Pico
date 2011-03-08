@@ -5,9 +5,7 @@ class Form_EditItem extends Nano_Form{
 
         $item = ( isset($item) ? $item : new Model_Item() );
 
-        //$title = ( $item->id == null ) ? 'Create new' . $item->type : 'Editing ' . $item->name;
-        
-        
+
         $content = array();
         foreach( $item->getContent() as $value ){
             $content += array(
@@ -32,7 +30,7 @@ class Form_EditItem extends Nano_Form{
                 )
             );
         }
-        
+
         $toolbar = array(
             'save'  => array(
                 'prefix'    => '<div class="toolbar">',
@@ -53,7 +51,7 @@ class Form_EditItem extends Nano_Form{
                 'value'     => 'Delete ' . $item->name
             ):null)
         );
-        
+
         $item_form = array(
             'type' => 'fieldset',
             'class' => 'item-form',
@@ -84,21 +82,27 @@ class Form_EditItem extends Nano_Form{
                     'value' => $item->visible,
                     'label' => 'Visible'
                 ),
-            )            
+                'save-changes' => array(
+                    'prefix'    => '<div class="toolbar">',
+                    'wrapper'   => false,
+                    'type'      => 'submit',
+                    'value'     => 'Save changes'
+                )
+            )
         );
-        
-        $this->addElements( $toolbar );
-        
+
+//        $this->addElements( $toolbar );
+        $this->addElement( 'item', $item_form );
+
         if( count($content) ){
             $this->addElement( 'content-column', array(
                 'type'  => 'fieldset',
                 'tagname'   => 'div',
                 'elements' => $content
-            ));            
+            ));
         }
-        
-        $this->addElement( 'item', $item_form );
+
         //$this->addElements( $toolbar );
-        
+
     }
 }

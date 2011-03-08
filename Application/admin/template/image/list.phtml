@@ -19,12 +19,16 @@ $(function(){
 <?php $this->block('sidebar') ?>
 <?php $this->endblock('sidebar') ?>
 
-<?php $this->block('main') ?>
+<?php $this->block('titlebar') ?>
 <h2 class="title">images</h2>
+<?php $this->endblock('titlebar') ?>
+
+
+<?php $this->block('main') ?>
 <div class="inner">
     <form class="form">
         <ul class="thumbnails">
-            <?php foreach( $this->images as $image ): ?>
+            <?php foreach( $images as $image ): ?>
             <li>
                 <dl>
                     <dt>

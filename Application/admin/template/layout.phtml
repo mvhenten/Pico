@@ -4,8 +4,8 @@
     <title></title>
     <script src="/js/jquery-1.4.2.min.js"></script>
     <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
-    <?php $this->block( 'head' ); ?>
     <link type="text/css" rel="stylesheet" media="all" href="/css/admin/layout.css" />
+    <?php $this->block( 'head' ); ?>
     <?php $this->endBlock( 'head' ); ?>
 </head>
 <body>
@@ -39,6 +39,11 @@
                     <?php $this->block('secondary-navigation') ?>
                     <!-- define module defined navigation here -->
                     <?php $this->endblock('secondary-navigation') ?>
+                    </div>
+                    <div id="titlebar">
+                    <?php $this->block('titlebar') ?>
+                    <!-- define module defined navigation here -->
+                    <?php $this->endblock('titlebar') ?>
                     </div>
                     <div class="content">
                     <?php $this->block('main') ?>

@@ -12,6 +12,9 @@ class Controller_Image extends Nano_Controller{
             case 'icon':
                 $type = Model_ImageData::TYPE_ICON;
                 break;
+            case 'sd':
+                $type = Model_ImageData::TYPE_SD;
+                break;
             default:
                 $type = Model_ImageData::TYPE_ORIGINAL;
         }

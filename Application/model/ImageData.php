@@ -10,23 +10,25 @@ class Model_ImageData extends Model_Item{
     const IMAGESIZE_THUMBNAIL = '120x120';
     const IMAGESIZE_ICON      = '64x64';
     const IMAGESIZE_VIGNETTE   = '400x300';
+    const IMAGESIZE_SD         = '640x480';
 
     const TYPE_ORIGINAL       = 1;
     const TYPE_VIGNETTE       = 2;
     const TYPE_THUMBNAIL      = 3;
     const TYPE_ICON           = 4;
     const TYPE_CUSTOM         = 5;
+    const TYPE_SD             = 6;
 
 
     public static function get( $key = null, $name = __CLASS__ ){
         return parent::get( $key, $name );
     }
-    
+
     public static function resize( $original, $type, $size = '640x480' ){
         $gd = new Nano_Gd( $original->data, false );
-        
+
         //$data = $gd->getImageJPEG(100); //fixes corrupted exif data!
-        //$gd->destroy();        
+        //$gd->destroy();
         //$gd = new Nano_Gd( $data, false );
 
         switch( $type ){
@@ -42,18 +44,22 @@ class Model_ImageData extends Model_Item{
                 $typename = 'vignette';
                 list( $width, $height ) = explode( 'x', self::IMAGESIZE_VIGNETTE );
                 break;
+            case self::TYPE_SD:
+                $typename = 'vignette';
+                list( $width, $height ) = explode( 'x', self::IMAGESIZE_SD );
+                break;
             case self::TYPE_CUSTOM:
                 $typename  = $size;
                 list( $width, $height) = explode( 'x', $size );
                 break;
             default:
-                die( 'TYPE NOT FOUND ' . $type);                
+                die( 'TYPE NOT FOUND ' . $type);
         }
-        
-        list( $w, $h ) = array_values( $gd->getDimensions() );        
+
+        list( $w, $h ) = array_values( $gd->getDimensions() );
         $ratio = min( $width/$w, $height/$h, 1);
-        
-        list( $width, $height ) = array( min( $width, $ratio*$w), min( $height, $ratio*$h) );            
+
+        list( $width, $height ) = array( min( $width, $ratio*$w), min( $height, $ratio*$h) );
 
         $target = $gd->resize( $width, $height );
         $data   = $target->getImageJPEG();
@@ -61,7 +67,7 @@ class Model_ImageData extends Model_Item{
         preg_match( '/^(\w+)\.(\w+)?/', $original->filename, $match );
 
         list(,$base, $ext) = $match;
-        
+
         $new = Model_ImageData::get();
 
         $new->data     = $target->getImageJPEG();
@@ -72,13 +78,13 @@ class Model_ImageData extends Model_Item{
         $new->filename = sprintf('%s_%s.%s', $base, $typename, $ext);
         $new->image_id = $original->image_id;
         $new->type     = $type;
-        
+
         $id = $new->put();
-        
+
         return $id;
     }
 
-    
+
 }
 
 
