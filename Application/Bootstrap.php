@@ -15,12 +15,6 @@ class Bootstrap{
         Nano_Autoloader::registerNamespace( 'Pico', APPLICATION_PATH . '/Library/Pico' );//?
         Nano_Autoloader::registerNamespace( 'Model', APPLICATION_ROOT . '/model' );
 
-        $test = new Nano_Config_Ini( APPLICATION_ROOT . '/plugin/Caroussel/config.ini' );
-
-        //var_dump( $test->plugin->my_value );
-        //
-        //exit();
-
         $config  = new Nano_Config_Ini( APPLICATION_ROOT . '/config/application.ini' );
         $router  = new Nano_Router( $config->route );
         $request = new Nano_Request( $router );
@@ -40,8 +34,6 @@ class Bootstrap{
 
             $name = sprintf( 'Controller_%s_%s', ucfirst($module), ucfirst($request->controller ));
             $controller = new $name( $request, $config );
-            //$controller->setLayout('admin');
-            //$controller->setHelperPath( APPLICATION_ROOT . '/Admin/helper' );
             $controller->template()->addHelperPath( 'admin/helper' );
 
         }
@@ -51,23 +43,6 @@ class Bootstrap{
             $controller = new $name( $request, $config );
         }
 
-        //$controller->dispatch();
-
         $controller->response()->out();
-
-
-        //$controller->template()->menu = '';
-
-        //if( '' == $router->module ){
-        //    $base = ucfirst( $router->module );
-        //    Nano_Autoloader::registerNamespace( $base, APPLICATION_PATH . '/' . $base );
-        //    //$name = sprintf( '%s_%s', ucfirst( $router->module ), $name );
-        //}
-        //else{
-        //    $templatePath = APPLICATION_PATH . '/template';
-        //    Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_PATH . '/Controller' );
-        //}
-
-
     }
 }
