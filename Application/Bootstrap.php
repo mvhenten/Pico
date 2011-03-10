@@ -55,6 +55,7 @@ class Bootstrap{
 
         $controller->response()->out();
 
+
         //$controller->template()->menu = '';
 
         //if( '' == $router->module ){

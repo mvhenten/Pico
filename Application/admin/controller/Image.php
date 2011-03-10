@@ -36,6 +36,7 @@ class Controller_Admin_Image extends Nano_Controller{
         }
 
         $this->template()->images = $images;
+//        var_dump($images);
         return $this->template()->render('admin/template/image/list');
     }
 
