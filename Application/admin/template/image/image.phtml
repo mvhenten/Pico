@@ -7,8 +7,7 @@
 <?php $this->block('secondary-navigation') ?>
 <ul class="wat-cf">
     <li class="<?php echo $this->request->action == 'list' ? 'active' :'' ?>"><a href="/admin/image/list">show all images</a></li>
-    <li class="first <?php echo $this->request->action == 'recent' ? 'active' :'' ?>"><a href="/admin/image/recent">most recent images</a></li>
     <li class="<?php echo $this->request->action == 'upload' ? 'active' :'' ?>"><a href="/admin/image/upload">upload a new image</a></li>
+    <li class="<?php echo $this->request->action == 'labels' ? 'active' :'' ?>"><a href="/admin/image/labels">show labels</a></li>
 </ul>
 <?php $this->endblock('secondary-navigation') ?>
-

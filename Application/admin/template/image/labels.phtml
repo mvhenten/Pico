@@ -1,0 +1,32 @@
+<?php $this->inherit('admin/template/image/image') ?>
+
+<?php $this->block( 'head' ); ?>
+<?php $this->endBlock('head'); ?>
+
+
+<?php $this->block('sidebar') ?>
+<?php $this->endblock('sidebar') ?>
+
+<?php $this->block('titlebar') ?>
+    <h2 class="inline">labels</span></h2> <a class="" href="/image/addlabel">new label&raquo;</a>
+
+<?php $this->endblock('titlebar') ?>
+
+
+<?php $this->block('main') ?>
+<ul class="itemlist">
+    <?php foreach( $labels as $label ): ?>
+    <li>
+        <div class="fifth">
+            <h6><?php echo $label->name ?></h6>
+            <div class="buttons">
+                <a href="/admin/image/label/<?php echo $label->id ?>" class="button third">edit</a>
+                <a href="/admin/image/delete/<?php echo $label->id ?>" class="button third">delete</a>
+            </div>
+        </div>
+        <p class="half"><?php echo $this->ellipsize((string)$label->description) ?>&nbsp;</p>
+        <p class="fifth"><strong>updated:</strong><br/><?php echo $label->updated ?></p>
+    </li>
+    <?php endforeach; ?>
+</ul>
+<?php $this->endblock('main') ?>

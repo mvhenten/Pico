@@ -19,10 +19,13 @@ class Controller_Image extends Nano_Controller{
                 $type = Model_ImageData::TYPE_ORIGINAL;
         }
 
-        $image  = Model_ImageData::get()->all()
+        $imagedata = new Model_ImageData();
+
+        $image = $imagedata->all()
                 ->where( 'image_id', $request->id )
                 ->where( 'type', $type )
-                ->current();
+                ->current()
+                ;
 
         if( null == $image ){
             $image = Model_ImageData::get()->all()

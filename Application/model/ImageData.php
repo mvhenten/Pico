@@ -3,7 +3,7 @@
  * class Model_ImageData
  * @package Pico_Model
  */
-class Model_ImageData extends Model_Item{
+class Model_ImageData extends Nano_Db_Model{
     const FETCH_TABLENAME   = 'image_data';
     const FETCH_PRIMARY_KEY = 'id';
 

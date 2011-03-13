@@ -33,6 +33,10 @@ h2{
 /*    text-align: right;
 */}
 
+h6{
+    padding-bottom:1em;
+}
+
 /*big blue button*/
 .context-button,
 .context-button:hover,
@@ -53,6 +57,10 @@ h2{
 
 .wrap{
     overflow:hidden;
+}
+
+.inline{
+    display:inline;
 }
 
 .float-right{
@@ -78,6 +86,38 @@ h2{
     width: 33%;
 }
 
+.half{
+    float:left;
+    width:50%;
+
+}
+
+.third{
+    float:left;
+    width: 30%;
+}
+
+.fifth{
+    float:left;
+    width: 20%;
+}
+
+/** itemlist **/
+
+.itemlist li{
+    padding: 1em 0;
+    overflow:hidden;
+    border-bottom:1px solid #ccc;
+}
+
+.itemlist .half{
+    margin-right:2em;
+}
+
+.itemlist .button{
+
+}
+
 /**
  * gray buttons that light up green
  */
@@ -86,12 +126,21 @@ h2{
     background:-moz-linear-gradient(center top , #F4F4F4, #ECECEC) repeat scroll 0 0 transparent;
     border: 1px solid #eee;
     padding:0.2em 0.5em;
-    line-height:3em;
+    margin: 0 0.5em 0 0;
+    text-align:center;
+    line-height:2em;
     cursor:pointer;
     border-radius: 3px;
     -webkit-border-radius: 3px;
     -moz-border-radius:3px;
 }
+
+.button:hover{
+    background-color: #33AA33;
+    background:-moz-linear-gradient(center top , #33AA33, #448844) repeat scroll 0 0 transparent;
+    color: #fff;
+}
+
 
 #container{
     width: 960px;

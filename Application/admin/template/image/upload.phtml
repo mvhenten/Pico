@@ -1,0 +1,43 @@
+<?php $this->inherit('admin/template/image/image') ?>
+
+<?php $this->block('head') ?>
+<script>
+    function upload_validate(el){
+        var ext = el.value.toLowerCase().split('.').pop();
+
+        console.log(ext in {'png':1,'jpeg':1,'jpg':1})
+
+        if( ext in {'png':1,'jpeg':1,'jpg':1} ){
+            //el.disabled = true;
+
+            //console.log(el.form);
+            //el.form.disable();
+//            el.form.submit();
+        }
+        else{
+            el.value = null;
+            alert('Invalid image type: ' + ext );
+        }
+    }
+</script>
+<?php $this->endblock('head') ?>
+
+<?php $this->block('titlebar') ?>
+<div class="align-right wrap">
+    <h2 class="float-left">Upload image</h2>
+</div>
+<?php $this->endblock('titlebar') ?>
+
+
+<?php $this->block('main') ?>
+<div class="third">
+    <form class="uploadForm" action="/admin/image/upload" enctype="multipart/form-data" method="post" id="image-add">
+		<fieldset class="viewport" type="fieldset" id="viewport">
+			<div class="formElementWrapper">
+				<input onchange="upload_validate(this)" type="file" class="input-file" id="file-element-0" name="image" value="">
+			</div>
+            <input type="submit" class="input-submit" id="submit-element-1" name="upload" value="Submit">
+		</fieldset>
+	</form>
+</div>
+<?php $this->endblock('main') ?>

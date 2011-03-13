@@ -50,6 +50,11 @@ body,html{
     height: 100%;
     width: 100%;
 }
+
+.third{
+    float:left;
+    width: 32%;
+}
 /** widget.css **/
 
 /** pager **/
@@ -64,7 +69,7 @@ body,html{
     background-color:#66CC66;
     color:#fff !important;
     margin-right:0.5em;
-    padding:0.2em 0.5em;    
+    padding:0.2em 0.5em;
 }
 
 
@@ -87,11 +92,8 @@ body,html{
 .image-list-item label{
     float: right;
     width: 7.5em;
-    
-    /*height: 2em;*/
     padding:0 !important;
     overflow: hidden;
-    /*border: 1px solid green;*/
     white-space:nowrap;
 }
 
@@ -100,11 +102,6 @@ body,html{
     float: left;
     clear:none;
 }
-
-/*.image-list-item input.input, .image-list-item label.label-{*/
-/*    display:none;*/
-/*}*/
-
 
 .image-list-item a{
     position: relative;
@@ -117,25 +114,7 @@ body,html{
     padding:0;
 }
 
-/*.image-list-item a img{*/
-/*    border: 1px solid blue;*/
-/*    position:aboslute;*/
-/*    bottom:0;*/
-/*    top:0;*/
-/*    left:10px;*/
-/*}*/
-
-
-/*.image-list-item img{*/
-/*    width: 10em;*/
-/*}*/
-
-
-/*.image-list-item img{*/
-/*    width: 10em;*/
-/*}*/
-
-/** link-tree, finder linke interface **/
+/** linktree **/
 
 .pico-linktree{
     position: relative;
@@ -192,7 +171,7 @@ body,html{
     background-repeat: no-repeat;
 }
 .rte-toolbar a:hover{
-    opacity: 0.6;    
+    opacity: 0.6;
 }
 .rte-toolbar a.bold{
     background-image: url('/js/light-rte/bold.gif');
@@ -215,4 +194,3 @@ body,html{
 .rte-toolbar img{
     display:none;
 }
-
