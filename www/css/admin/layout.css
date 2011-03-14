@@ -307,6 +307,16 @@ form.form input.input-text, form.form textarea{
     width: 60%;
 }
 
+form.form fieldset fieldset{
+    border: 1px solid #E0E0E0;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius:3px;
+    padding:1em;
+    width: 60%;
+}
+
+
 .toolbar .input-submit{
     clear:none;
     margin: 1em 0.5em;

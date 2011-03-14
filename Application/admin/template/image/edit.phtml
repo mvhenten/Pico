@@ -24,11 +24,7 @@ jQuery(document).ready(function(){
 
 <?php $this->block('main') ?>
 <div class="left-pane">
-    <?php foreach($labels as $label): ?>
-        <?php var_dump($label); ?>
-    <?php endforeach; ?>
-    <?php echo new Form_EditItem( $image ); ?>
-
+    <?php echo $form; ?>
 </div>
 <div class="right-pane">
     <div id="imagecrop">

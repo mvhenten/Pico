@@ -55,6 +55,7 @@ class Form_EditItem extends Nano_Form{
         $item_form = array(
             'type' => 'fieldset',
             'class' => 'item-form',
+            'id'    => 'item-values',
             'elements' => array(
                 'type'  => array(
                     'type'  => 'hidden',
@@ -83,7 +84,6 @@ class Form_EditItem extends Nano_Form{
                     'label' => 'Visible'
                 ),
                 'save-changes' => array(
-                    'prefix'    => '<div class="toolbar">',
                     'wrapper'   => false,
                     'type'      => 'submit',
                     'value'     => 'Save changes'

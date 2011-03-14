@@ -144,9 +144,33 @@ class Controller_Admin_Image extends Nano_Controller{
         $template = $this->template();
 
         $image = new Model_Image( $request->id );
-        $template->image = $image;
-        $template->labels = $image->labels();
+        $form = new Form_EditItem( $image );
 
+        $fieldset = array(
+            'type'  => 'fieldset',
+            'elements'=>array(),
+            'label' => 'labels'
+                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\', true)" href="#all">(select all)</a>'
+                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\',0)" href="#none">(select none)</a>'
+        );
+        foreach( $image->labels() as $label ){
+            $fieldset['elements']['labels[' . $label->id . ']'] = array(
+                'type'  => 'checkbox',
+                'value' => (bool) $label->image_id,
+                'label' => $label->name
+            );
+        }
+
+        // append fieldset and move the submit button...
+        $block = current($form->children(array('id'=> 'item-values')));
+        $block->addElement('fieldset-labels', $fieldset );
+        $submit = current($form->removeChildren(array('name'=>'save-changes')));
+        $block->addChild($submit);
+
+        $form->addChild($submit);
+
+        $template->image = $image;
+        $template->form = $form;
 
         $template->render( 'admin/template/image/edit');
         return $template;
