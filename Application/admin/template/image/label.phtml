@@ -15,9 +15,9 @@ jQuery(document).ready(function(){
 
 <?php $this->block('titlebar') ?>
 <div class="align-right wrap">
-    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $this->image->name ?></span></h2>
-    <a href="/admin/image/content/<?php echo $image->id ?>" class="button">add content</a>
-    <a class="button">delete</a>
+    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $label->name ?></span></h2>
+    <a href="/admin/image/content/<?php echo $label->id ?>" class="button">add content</a>
+    <a class="button" href="/admin/image/delete/<?php echo $label->id ?>">delete</a>
 </div>
 <?php $this->endblock('titlebar') ?>
 

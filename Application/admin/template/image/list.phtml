@@ -21,12 +21,31 @@ $(function(){
 
 <?php $this->block('titlebar') ?>
 <h2 class="title">images</h2>
+<a href="/admin/image/upload" class="context-button">upload image</a>
+
 <?php $this->endblock('titlebar') ?>
 
 
 <?php $this->block('main') ?>
-<div class="inner">
-    <form class="form">
+<div class="fifth">
+    <ul class="verticalnav">
+        <li><h4>labels</h4></li>
+        <li><a class="<?php echo null == $request->id ? "active" : "" ?>" href="/admin/image/list">all available images</a></li>
+        <?php foreach( $labels as $label ): ?>
+        <li><a class="<?php echo $label->id == $request->id ? "active":"" ?>" href="/admin/image/list/<?php echo $label->id ?>"><?php echo $label->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<div class="three-fifth">
+    <form class="form" method="post">
+        <div class="toolbar" style="text-align:right;">
+            <div class="third">
+                select:
+                <a href="#select-all">all</a>,
+                <a href="#select-none">none</a>
+            </div>
+            <button class="button" value="labels" name="form-action">edit labels</button><button class="button" value="labels" name="form-action">delete</button>
+        </div>
         <ul class="thumbnails">
             <?php foreach( $images as $image ): ?>
             <li>

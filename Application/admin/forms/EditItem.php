@@ -84,7 +84,7 @@ class Form_EditItem extends Nano_Form{
                     'label' => 'Visible'
                 ),
                 'save-changes' => array(
-                    'wrapper'   => false,
+                    'wrapper'   => new Nano_Element('div', array('class'=>'submit-wrapper')),
                     'type'      => 'submit',
                     'value'     => 'Save changes'
                 )
