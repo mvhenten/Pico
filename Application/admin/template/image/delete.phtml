@@ -1,0 +1,26 @@
+<?php $this->inherit('admin/template/image/image') ?>
+
+<?php $this->block('head') ?>
+<?php $this->endblock('head') ?>
+
+<?php $this->block('titlebar') ?>
+<div class="align-right wrap">
+    <h2 class="float-left">Delete <span style="color:#000;"><?php echo $item->name ?></span></h2>
+</div>
+<?php $this->endblock('titlebar') ?>
+
+
+<?php $this->block('main') ?>
+<div class="left-pane">
+    <form method="post">
+        <p>Are you sure you wish to delete <a href=""><?php echo $item->type . " " . $item->name ?></a>?</p>
+        <br/>
+        <div class="">
+            <input type="submit" class="input-submit" name="confirm" value="Delete <?php echo $item->name ?>" />
+            <input type="submit" class="input-submit" name="cancel" value="No, No, No! Cancel!" />
+        </div>
+    </form>
+</div>
+<div class="right-pane">
+</div>
+<?php $this->endblock('main') ?>
