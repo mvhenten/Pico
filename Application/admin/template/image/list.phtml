@@ -1,16 +1,41 @@
 <?php $this->inherit('admin/template/image/image') ?>
 
+<?php $this->block( 'head' ); ?>
+<script>
+
+$(function(){
+    $('#action-labels').bind('click', function(evt){
+        var url = $('#images').attr('action');
+        $.ajax({url:url,
+            context: document.body,
+            type: "POST",
+            data: $('#images').serialize(),
+            success: function( data, status, xhr ){
+                $($(data).find('form')[0]).dialog({
+                    modal:true,
+                });
+            }
+        });
+        return false;
+    }, false);
+});
+</script>
+<?php $this->endBlock('head'); ?>
+
+
 <?php if( null !== $this->request->id ): ?>
 <?php $this->block( 'head' ); ?>
 <script>
-$(function(){
-    $(".item-priority").hide();
-    $("#image-list").sortable({ update: function(evt, ui){
-        $(".item-priority").each(function(i,el){
-            el.value = i
-        });
-    }});
-});
+//$(function(){
+//    $(".item-priority").hide();
+//    $("#image-list").sortable({ update: function(evt, ui){
+//        $(".item-priority").each(function(i,el){
+//            el.value = i
+//        });
+//    }});
+//
+//
+//});
 </script>
 <?php $this->endBlock('head'); ?>
 <?php endif; ?>
@@ -27,7 +52,7 @@ $(function(){
 
 
 <?php $this->block('main') ?>
-<div class="fifth">
+<div id="vertical-nav" class="fifth">
     <ul class="verticalnav">
         <li><h4>labels</h4></li>
         <li><a class="<?php echo null == $request->id ? "active" : "" ?>" href="/admin/image/list">all available images</a></li>
@@ -37,14 +62,15 @@ $(function(){
     </ul>
 </div>
 <div class="three-fifth">
-    <form class="form" method="post">
+    <form id="images" class="form" method="post" action="<?php echo $request->url() ?>">
         <div class="toolbar" style="text-align:right;">
             <div class="third">
                 select:
-                <a href="#select-all">all</a>,
-                <a href="#select-none">none</a>
+                <a href="#select-all" onclick="$('ul.thumbnails').find('input').attr('checked', true)">all</a>,
+                <a href="#select-none" onclick="$('ul.thumbnails').find('input').attr('checked', false)">none</a>
             </div>
-            <button class="button" value="labels" name="form-action">edit labels</button><button class="button" value="labels" name="form-action">delete</button>
+            <button id="action-labels" class="button" value="labels" name="form-action">edit labels</button>
+            <button id="action-delete" class="button" value="labels" name="form-action">delete</button>
         </div>
         <ul class="thumbnails">
             <?php foreach( $images as $image ): ?>

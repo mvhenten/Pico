@@ -84,13 +84,61 @@ class Controller_Admin_Image extends Nano_Controller{
             return $this->getDelete( $request, $config );
         }
         else if( $request->action == 'list' ){
-            
+            return $this->getLabelsBulk( $request, $config );
+        }
+        else if( $request->action == 'labelsbulk' ){
+            $post = $request->getPost();
+            $images = json_decode($post->images);
+
+            $ids = array();
+            foreach($images as $id ) $ids[] = array('image_id', $id );
+
+            Nano_Db_Query::get('ImageLabel')->delete($ids);
+
+            foreach( $post->labels as $id => $value ){
+                foreach( $images as $img_id ){
+                    $insert = new Model_ImageLabel(array(
+                        'label_id' => $id,
+                        'image_id' => $img_id
+                    ));
+                    $insert->put();
+                }
+            }
+
+            $this->response()
+                ->redirect( '/admin/image/list/' . $request->id );
         }
     }
+
 
     public function getUpload( $request, $config ){
         $template = $this->template();
         return $this->template()->render('admin/template/image/upload');
+    }
+
+    public function getLabelsBulk( $request, $config ){
+        if( ! $request->isPost() )
+            return;
+
+        $post = $request->getPost();
+
+        $labels = Nano_Db_Query::get('Item')
+            ->where('type', 'label');
+
+        $selected = Nano_Db_Query::get('ImageLabel')
+            ->group('label_id');
+
+        foreach( $post->image as $id ){
+            $selected->orWhere('image_id', $id );
+        }
+
+        $selected = $selected->pluck('label_id');
+
+        $this->template()->selected = array_flip($selected);
+        $this->template()->labels = $labels;
+        $this->template()->images = json_encode(array_keys($post->image));
+        //print "TESTA";
+        return $this->template()->render('admin/template/image/bulk');
     }
 
     public function getDelete( $request, $config ){
