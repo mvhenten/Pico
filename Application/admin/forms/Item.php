@@ -1,35 +1,9 @@
 <?php
-class Form_EditItem extends Nano_Form{
+class Form_Item extends Nano_Form{
     public function __construct( $item = null ){
         parent::__construct();
 
         $item = ( isset($item) ? $item : new Model_Item() );
-
-
-        $content = array();
-        foreach( $item->getContent() as $value ){
-            $content += array(
-                'content[' . $value->id . '][value]' => array(
-                    'wrapper'   => false,
-                    'class'     => 'rich-text-editor',
-                    'prefix'    => '<div class="item-content-wrapper">',
-                    'type'      => 'textarea',
-                    'value'     => $value->value
-                ),
-                'content[' . $value->id . '][delete]'   => array(
-                    'type'  => 'submit',
-                    'value' => 'delete',
-                    'wrapper'   => false,
-                    'prefix'    => '<div class="toolbar">'
-                ),
-                'content[' . $value->id . '][draft]'    => array(
-                    'type'  => 'submit',
-                    'value' => 'save draft',
-                    'wrapper'   => false,
-                    'suffix'    => '</div></div>'
-                )
-            );
-        }
 
         $toolbar = array(
             'save'  => array(
@@ -91,18 +65,6 @@ class Form_EditItem extends Nano_Form{
             )
         );
 
-//        $this->addElements( $toolbar );
         $this->addElement( 'item', $item_form );
-
-        if( count($content) ){
-            $this->addElement( 'content-column', array(
-                'type'  => 'fieldset',
-                'tagname'   => 'div',
-                'elements' => $content
-            ));
-        }
-
-        //$this->addElements( $toolbar );
-
     }
 }

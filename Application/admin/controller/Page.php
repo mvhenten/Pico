@@ -1,110 +1,54 @@
 <?php
-class Controller_Admin_Page extends Pico_AdminController{
-    protected function indexAction(){
-        $this->_forward('list');
+class Controller_Admin_Page extends Nano_Controller{
+    public function post( $request, $config ){
+        $post = $request->getPost();
+
+        $page =new Model_Item( array(
+            'id'            => $request->id,
+            'name'          => $post->name,
+            'description'   => $post->description,
+            'visible'       => (bool) $post->visible
+        ));
+
+        $page->put();
+        $this->response()->redirect( '/admin/page/edit/' . $page->id );
     }
 
-    protected  function listAction(){
-        $request = $this->getRequest();
+    public function getList( $request, $config ){
+        $pages = Nano_Db_Query::get( 'Item', array('type'=>'page'));
+        $this->template()->pages = $pages;
+        return $this->template()->render( 'admin/template/page/list');
+    }
 
-        if( $request->isPost() && $post = $request->getPost() ){
-            if( $post->action == 'delete' ){
-                $ids = array_keys( $post->item );
 
-                $this->_redirect( $this->getView()->url(array(
-                    'action'    => 'delete',
-                    'id'        => join(",", $ids )
-                )));
-            }
+    protected  function getEdit(  $request, $config ){
+        $template = $this->template();
+
+        $page = new Model_Item( $request->id );
+
+
+        $form = new Form_Item( $page );
+
+        $template->page = $page;
+        $template->form = $form;
+        $this->template()->pages = Nano_Db_Query::get( 'Item', array('type'=>'page'));;
+
+        return $this->template()->render( 'admin/template/page/edit');
+    }
+
+    public function getContent( $request, $config ){
+        $content = new Model_ItemContent();
+        $content->item_id = $request->id;
+        $content->put();
+
+        $item = new Model_Item( $request->id );
+
+        if( $item->type == 'label' ){
+            $this->response()->redirect( '/admin/image/label/' . $request->id );
         }
 
-        $items = Model_Page::get()->all();
-        $count = Model_Page::get()->all()->count();
-
-        if( $count == 0 ){
-            $this->_redirect( $this->getView()->Url(array(
-                'action' => 'add',
-                'id'     => null
-            )));
-        }
-
-        $this->getView()->content = $this->getView()->ItemList( $items );
-        $this->getView()->actions = new Nano_Element('h2', null,'Pages');
-        $this->getView()->actions .= $this->getView()->Link('Add page'
-                                , array('action' => 'add')
-                                , array('class'=>'button'));
+        $this->response()->redirect( '/admin/image/edit/' . $request->id );
     }
 
-    protected  function addAction(){
-        $this->_forward( 'edit' );
-    }
-
-    //protected  function editAction(){
-    //    $request = $this->getRequest();
-    //
-    //    $item = Model_Page::get( $request->id );
-    //
-    //    if( $request->id == null ){
-    //        // set up defaults for new items
-    //        $count = $item->all()->count();
-    //        $item->name     = 'New Page ' . $count;
-    //        $item->visible  = true;
-    //    }
-    //
-    //    $form = new Form_EditItem( $item );
-    //
-    //    if( $request->isPost() && $post = $request->getPost() ){
-    //        $form->validate( $post );
-    //
-    //        if( $form->isValid() ){
-    //            $item->name        = $post->name;
-    //            $item->description = $post->descriptoin;
-    //            $item->visible     = !is_null($post->visible);
-    //            $id = $item->put();
-    //
-    //            if( $post->add_content ){
-    //                $content = Model_ItemContent::get();
-    //                $content->item_id = (null == $item->id ? $id : $item->id);
-    //                $content->put();
-    //            }
-    //
-    //            foreach( $post->content as $key => $value ){
-    //                $content = Model_ItemContent::get($key);
-    //                if( isset($value['delete']) ){
-    //                    $content->delete();
-    //                }
-    //                else{
-    //                    $content->value = $value['value'];
-    //                    $content->put();
-    //                }
-    //            }
-    //
-    //            $this->_redirect( $this->getView()->Url(array(
-    //                'action'    => 'edit',
-    //                'id'        => (null == $item->id ? $id :$item->id )
-    //            )));
-    //
-    //        }
-    //        else{
-    //            $this->getView()->errors = $form->getErrors();
-    //        }
-    //    }
-    //
-    //    $this->getView()->headScript()->append('/js/light-rte/jquery.rte.js');
-    //    $this->getView()->headScript()->append(null, '$(function(){$(\'.rich-text-editor\').rte()})' );
-    //    $this->getView()->Style()->append( '/js/light-rte/rte.css');
-    //
-    //    $this->getView()->content = $form;
-    //    $this->getView()->actions = new Nano_Element('h2', null, $item->id ?
-    //                    sprintf('Editing <em>%s</em>', $item->name ) : 'Add new page');
-    //
-    //    $this->getView()->actions .= $this->getView()->Link('add page'
-    //                            , array('action' => 'add', 'id'=>null)
-    //                            , array('class'=>'button'));
-    //
-    //    $this->getView()->actions .= $this->getView()->Link('list pages'
-    //                            , array('action' => 'list', 'id'=>null)
-    //                            , array('class'=>'button'));
-    //}
 
 }

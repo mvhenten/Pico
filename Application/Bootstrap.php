@@ -1,13 +1,9 @@
 <?php
 define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
 define( "APPLICATION_PATH", dirname( APPLICATION_ROOT )); //where the application is
-
-# require_once( APPLICATION_PATH . '/library/Nano/Bootstrap/Abstract.php');
 require_once( APPLICATION_PATH . '/Library/Nano/Autoloader.php');
-//@todo Fix APPLICATION_PATH or the Application prefix somewhere.
-class Bootstrap{
-    private $_view;
 
+class Bootstrap{
     public function __construct(){
 
         Nano_Autoloader::register();
@@ -19,30 +15,25 @@ class Bootstrap{
         $router  = new Nano_Router( $config->route );
         $request = new Nano_Request( $router );
 
+        Nano_Db::setAdapter( $config->database );
         Nano_Session::start();
 
-        Nano_Registry::add( 'config', $config );
-        Nano_Registry::add( 'router', $router );
-        Nano_Registry::add( 'request', $request );
-
-        Nano_Db::setAdapter( $config->database );
-
         if( null !== $router->module ){
-            $module = $router->module;
-            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_ROOT . '/' . $module . '/controller' );
-            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_ROOT . '/' . $module . '/forms' );
-
-            $name = sprintf( 'Controller_%s_%s', ucfirst($module), ucfirst($request->controller ));
-            $controller = new $name( $request, $config );
-            $controller->template()->addHelperPath( 'admin/helper' );
-
+            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_ROOT . '/' . $router->module . '/controller' );
+            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_ROOT . '/' . $router->module . '/forms' );
         }
         else{
             Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_ROOT . '/controller' );
-            $name = sprintf( 'Controller_%s', ucfirst($request->controller ));
-            $controller = new $name( $request, $config );
         }
 
-        $controller->response()->out();
+        $klass = array('Controller', $request->module, $request->controller );
+        $klass = join( '_', array_map('ucfirst', array_filter($klass)));
+
+        if( class_exists($klass) ){
+            $view = new $klass( $request, $config );
+            $view->template()->addHelperPath( 'admin/helper' );
+            $view->response()->out();
+        }
+
     }
 }

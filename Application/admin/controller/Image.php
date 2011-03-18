@@ -3,8 +3,14 @@ class Controller_Admin_Image extends Nano_Controller{
     public function post( $request, $config ){
         $post = $request->getPost();
 
+        var_dump($post);
+
         if( $request->action == 'upload' ){
             $file = (object) $_FILES['image'];
+
+            //print_r($file);
+            //
+            //print_r($post);
 
             if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
                 $gd  = new Nano_Gd( $file->tmp_name );
@@ -39,7 +45,8 @@ class Controller_Admin_Image extends Nano_Controller{
                 ));
 
                 $data->put();
-                $this->response()->redirect('/admin/image/' . $request->action . '/' . $image->id );
+                var_dump($image);
+                $this->response()->redirect('/admin/image' );
             }
         }
         else if( $request->action == 'edit' || $request->action == 'label' ){
@@ -56,26 +63,6 @@ class Controller_Admin_Image extends Nano_Controller{
             $item->description = $post->description;
             $item->visible = (bool)$post->visible;
             $item->put();
-
-
-            foreach( $post->content as $id => $content ){
-                $item = new Model_ItemContent($id);
-
-                if( isset($content['delete']) ){
-                    $item->delete();
-                }
-                else{
-                    if( isset($content['draft']) ){
-                        $item->draft = $content['value'];
-                    }
-                    else{
-                        $item->value = $content['value'];
-                    }
-                    $item->put();
-                }
-
-            }
-
 
             $this->response()
                 ->redirect( '/admin/image/' . $request->action . '/' . $request->id );
@@ -112,7 +99,6 @@ class Controller_Admin_Image extends Nano_Controller{
 
 
     public function getUpload( $request, $config ){
-        $template = $this->template();
         return $this->template()->render('admin/template/image/upload');
     }
 
@@ -141,28 +127,6 @@ class Controller_Admin_Image extends Nano_Controller{
         return $this->template()->render('admin/template/image/bulk');
     }
 
-    public function getDelete( $request, $config ){
-        if( $request->id ){
-            $item = new Model_Item($request->id);
-
-            if( $request->isPost() ){
-                $post = $request->getPost();
-                $type = $item->type;
-
-                if( $post->confirm ){
-                    $item->delete();
-                }
-
-                $type = $type == 'label' ? 'labels' : 'list';
-
-
-                $this->response()->redirect('/admin/image/' . $type );
-            }
-            $this->template()->item = $item;
-            return $this->template()->render('admin/template/image/delete');
-        }
-    }
-
     public function getList( $request, $config ){
         $template = $this->template();
         $values = array();
@@ -186,42 +150,33 @@ class Controller_Admin_Image extends Nano_Controller{
         return $template->render('admin/template/image/list');
     }
 
-    public function getLabels( $request, $config ){
-        $label = Nano_Db_Query::get('Item')->where('type', 'label')->order('-inserted');
-        $this->template()->labels = $label;
-
-        return $this->template()->render('admin/template/image/labels');
-    }
 
     public function getLabel( $request, $config ){
         $template = $this->template();
 
         if( null == $request->id ){
-            $label = new Model_Item(array(
-                'name'        => 'New Label',
-                'description' => 'Description for a new label',
-                'type'        => 'label'
-            ));
-            $label->put();
-            $this->response()->redirect( '/admin/image/labels' );
+            $label = Nano_Db_Query::get('Item')->where('type', 'label')->order('updated');
+            $this->template()->labels = $label;
+
+            return $this->template()->render('admin/template/image/labels');
         }
+        else{
+            $label = new Model_Item( $request->id );
+            $html  = array();
 
-        $label = new Model_Item( $request->id );
-        $html  = array();
+            $form = new Form_Item( $label );
+            $template->label = $label;
+            $template->form = $form;
 
-        $form = new Form_EditItem( $label );
-        $template->label = $label;
-        $template->form = $form;
-
-        $template->render( 'admin/template/image/label');
-        return $template;
+            return $this->template()->render('admin/template/image/label');
+        }
     }
 
     protected  function getEdit(  $request, $config ){
         $template = $this->template();
 
         $image = new Model_Image( $request->id );
-        $form = new Form_EditItem( $image );
+        $form = new Form_Item( $image );
 
         $fieldset = array(
             'type'  => 'fieldset',
@@ -241,10 +196,11 @@ class Controller_Admin_Image extends Nano_Controller{
         // append fieldset and move the submit button...
         $block = current($form->children(array('id'=> 'item-values')));
         $block->addElement('fieldset-labels', $fieldset );
+
         $submit = current($form->removeChildren(array('name'=>'save-changes')));
         $block->addChild($submit);
 
-        $form->addChild($submit);
+        //$form->addChild($submit);
 
         $template->image = $image;
         $template->form = $form;
@@ -252,99 +208,4 @@ class Controller_Admin_Image extends Nano_Controller{
         $template->render( 'admin/template/image/edit');
         return $template;
     }
-
-    public function getContent( $request, $config ){
-        $content = new Model_ItemContent();
-        $content->item_id = $request->id;
-        $content->put();
-
-        $item = new Model_Item( $request->id );
-
-        if( $item->type == 'label' ){
-            $this->response()->redirect( '/admin/image/label/' . $request->id );
-        }
-
-        $this->response()->redirect( '/admin/image/edit/' . $request->id );
-    }
-
-    //
-    //protected function orderAction(){
-    //    $request = $this->getRequest();
-    //    $post = $request->getPost();
-    //    $delete_filter = array();
-    //
-    //
-    //    foreach( $post->priority as $id => $value ){
-    //        $delete_filter[] = array(
-    //            array('image_id', $id),
-    //            array('label_id', $request->id)
-    //        );
-    //    }
-    //
-    //    Nano_Db_Query::get('ImageLabel')->delete( $delete_filter );
-    //
-    //    foreach( $post->priority as $id => $value ){
-    //        $model = new Model_ImageLabel();
-    //        $model->image_id = $id;
-    //        $model->label_id = $request->id;
-    //        $model->priority = intval($value);
-    //        $model->put();
-    //    }
-    //    $this->_redirect($this->template()->url(array(
-    //        'action'    => 'list',
-    //        'id'        => $request->id
-    //    )));
-    //}
-
-    //protected function labelsAction(){
-    //    $request = $this->getRequest();
-    //    $elements = array();
-    //
-    //    $images = explode( ',', urldecode($request->id));
-    //    $labels = Nano_Db_Query::get('Label');
-    //    $filter = Nano_Db_Query::get('ImageLabel');
-    //
-    //    foreach( $labels as $label ){
-    //        foreach( $images as $id ){
-    //            $filter->orWhere(array(array( 'image_id', $id ), array('label_id', $label->id)));
-    //        }
-    //    }
-    //
-    //    $selected = array(); foreach( $filter as $f ) $selected[] = $f->label_id;
-    //    $selected = array_unique($selected);
-    //    $form = new Form_EditLabels( $labels, $selected );
-    //
-    //    if( $request->isPost() && $post = $request->getPost() ){
-    //        $label_ids = array_keys( (array) $post->selection);
-    //
-    //        if( count( $filter ) > 0 ){
-    //            $delete_filter = array();
-    //
-    //            foreach( $filter as $comb ){
-    //                $delete_filter[] = array(
-    //                    array('image_id', $comb->image_id),
-    //                    array('label_id', $comb->label_id)
-    //                );
-    //            }
-    //
-    //            Nano_Db_Query::get('ImageLabel')->delete( $delete_filter );
-    //        }
-    //
-    //        if( count( $label_ids ) > 0 ){
-    //            foreach( $images as $id ){
-    //                foreach( $label_ids as $label_id ){
-    //                    $model = new Model_ImageLabel();
-    //                    $model->image_id = $id;
-    //                    $model->label_id = $label_id;
-    //                    $model->put();
-    //                }
-    //            }
-    //        }
-    //        $this->_redirect( '/admin/image' );
-    //    }
-    //
-    //    $this->template()->content = $form;
-    //}
-    //
-
 }
