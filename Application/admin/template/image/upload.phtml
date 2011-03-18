@@ -1,4 +1,4 @@
-<?php $this->inherit('admin/template/image/image') ?>
+<?php $this->inherit('admin/template/image') ?>
 
 <?php $this->block('head') ?>
 <script>
@@ -8,15 +8,13 @@
         console.log(ext in {'png':1,'jpeg':1,'jpg':1})
 
         if( ext in {'png':1,'jpeg':1,'jpg':1} ){
-            //el.disabled = true;
-
-            //console.log(el.form);
-            //el.form.disable();
-//            el.form.submit();
+            $(el.parentNode).find('label').text("Selected " + el.value)
+            $('.input-submit').removeAttr('disabled');
         }
         else{
             el.value = null;
-            alert('Invalid image type: ' + ext );
+            $(el.parentNode).find('label').text('Invalid image type: ' + ext)
+            $('.input-submit').attr('disabled','disabled');
         }
     }
 </script>
@@ -30,14 +28,24 @@
 
 
 <?php $this->block('main') ?>
-<div class="third">
-    <form class="uploadForm" action="/admin/image/upload" enctype="multipart/form-data" method="post" id="image-add">
-		<fieldset class="viewport" type="fieldset" id="viewport">
-			<div class="formElementWrapper">
-				<input onchange="upload_validate(this)" type="file" class="input-file" id="file-element-0" name="image" value="">
+<div class="half">
+    <form class="form" action="/admin/image/upload" enctype="multipart/form-data" method="POST" id="image-add">
+            <p>
+                <em>Select an image from your computer. The allowed image types jpeg or png.</em>
+            </p>
+			<div class="input-file-wrapper">
+                <label class="button" for="file-element-0" style="cursor:pointer;" onclick="document.getElementById('file-element-0').select()">
+                    select a file to upload
+                </label>
+                <input style="opacity:0;" onchange="upload_validate(this);" type="file" class="input-file" id="file-element-0" name="image" value="">
 			</div>
-            <input type="submit" class="input-submit" id="submit-element-1" name="upload" value="Submit">
-		</fieldset>
+            <div class="toolbar">
+                <input type="submit" class="input-submit" name="cancel" value="Cancel">
+                <input type="submit" disabled="disabled" class="input-submit" id="submit-element-1" name="upload" value="Upload image">
+            </div>
+            <script>
+            console.log($('.input-submit'));
+            </script>
 	</form>
 </div>
 <?php $this->endblock('main') ?>

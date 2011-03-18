@@ -1,4 +1,4 @@
-<?php $this->inherit('admin/template/image/image') ?>
+<?php $this->inherit('admin/template/image') ?>
 
 <?php $this->block('head') ?>
 <script type="text/javascript" src="/js/light-rte/jquery.rte.js"></script>
@@ -10,14 +10,15 @@ jQuery(document).ready(function(){
     });
 
 });
+
 </script>
 <?php $this->endblock('head') ?>
 
 <?php $this->block('titlebar') ?>
 <div class="align-right wrap">
     <h2 class="float-left">Editing <span style="color:#000;"><?php echo $image->name ?></span></h2>
-    <a href="/admin/image/content/<?php echo $image->id ?>" class="button">add content</a>
-    <a class="button">delete</a>
+    <a href="/admin/content/add/<?php echo $image->id ?>" class="button">add content</a>
+    <a href="/admin/common/delete/<?php echo $image->id ?>" class="button">delete</a>
 </div>
 <?php $this->endblock('titlebar') ?>
 
@@ -25,6 +26,9 @@ jQuery(document).ready(function(){
 <?php $this->block('main') ?>
 <div class="left-pane">
     <?php echo $form; ?>
+    <?php foreach( $image->content as $content ): ?>
+        <?php echo new Form_Content( $content ); ?>
+    <?php endforeach; ?>
 </div>
 <div class="right-pane">
     <div id="imagecrop">

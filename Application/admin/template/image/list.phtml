@@ -1,4 +1,4 @@
-<?php $this->inherit('admin/template/image/image') ?>
+<?php $this->inherit('admin/template/image') ?>
 
 <?php $this->block( 'head' ); ?>
 <script>
@@ -12,13 +12,48 @@ $(function(){
             data: $('#images').serialize(),
             success: function( data, status, xhr ){
                 $($(data).find('form')[0]).dialog({
-                    modal:true,
+                    modal:true
                 });
             }
         });
         return false;
     }, false);
 });
+
+function upload_validate(el){
+    var ext = el.value.toLowerCase().split('.').pop();
+
+    console.log(ext in {'png':1,'jpeg':1,'jpg':1})
+
+    if( ext in {'png':1,'jpeg':1,'jpg':1} ){
+        $(el.parentNode).find('label').text("Selected " + el.value)
+        $('.input-submit').removeAttr('disabled');
+    }
+    else{
+        el.value = null;
+        $(el.parentNode).find('label').text('Invalid image type: ' + ext)
+        $('.input-submit').attr('disabled','disabled');
+    }
+}
+
+function ajaxify( link, search ){
+    var url = link.href;
+
+    $.ajax({
+        url: url,
+        context: document.body,
+        type: "GET",
+        success: function( data, status, xhr ){
+            $(data).find(search).dialog({
+                title: '',
+                modal:true
+            });
+        }
+    });
+    return false;
+
+}
+
 </script>
 <?php $this->endBlock('head'); ?>
 
@@ -26,6 +61,8 @@ $(function(){
 <?php if( null !== $this->request->id ): ?>
 <?php $this->block( 'head' ); ?>
 <script>
+
+
 //$(function(){
 //    $(".item-priority").hide();
 //    $("#image-list").sortable({ update: function(evt, ui){
@@ -46,7 +83,7 @@ $(function(){
 
 <?php $this->block('titlebar') ?>
 <h2 class="title">images</h2>
-<a href="/admin/image/upload" class="context-button">upload image</a>
+<a href="/admin/image/upload" onclick="ajaxify(this, 'form'); return false;" class="context-button">upload image</a>
 
 <?php $this->endblock('titlebar') ?>
 

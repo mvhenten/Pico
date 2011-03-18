@@ -1,0 +1,37 @@
+<?php $this->inherit('admin/template/image') ?>
+
+<?php $this->block( 'head' ); ?>
+<?php $this->endBlock('head'); ?>
+
+
+<?php $this->block('sidebar') ?>
+<?php $this->endblock('sidebar') ?>
+
+<?php $this->block('titlebar') ?>
+    <h2 class="title">edit labels</h2>
+<?php $this->endblock('titlebar') ?>
+
+
+<?php $this->block('main') ?>
+<div class="third">
+    <form method="post" class="form" action="/admin/image/labelsbulk/<?php echo $request->id ?>">
+        <div class="toolbar">
+            select:
+            <a href="#select-all" onclick="$('ul.itemlist').find('input').attr('checked', true)">all</a>,
+            <a href="#select-none" onclick="$('ul.itemlist').find('input').attr('checked', false)">none</a>
+        </div>
+        <ul class="itemlist">
+        <?php foreach( $labels as $label ): ?>
+            <li>
+                <input id="checkbox-<?php echo $label->id ?>" type="checkbox" <?php echo isset($selected[$label->id]) ? 'checked="checked"':'' ?> name="labels[<?php echo $label->id ?>]" value="true" />
+                <label for="checkbox-<?php echo $label->id ?>"><?php echo $label->name ?></label>
+            </li>
+        <?php endforeach; ?>
+        <input type="hidden" value='<?php echo $images ?>' name="images" />
+        </ul>
+        <div class="toolbar">
+            <input type="submit" class="input-submit" name="apply" value="Save changes">
+            <input type="submit" class="input-submit" name="cancel" value="Cancel">
+        </div>
+    </form>
+<?php $this->endblock('main') ?>

@@ -1,4 +1,4 @@
-<?php $this->inherit('admin/template/image/image') ?>
+<?php $this->inherit('admin/template/image') ?>
 
 <?php $this->block('head') ?>
 <script type="text/javascript" src="/js/light-rte/jquery.rte.js"></script>
@@ -17,7 +17,7 @@ jQuery(document).ready(function(){
 <div class="align-right wrap">
     <h2 class="float-left">Editing <span style="color:#000;"><?php echo $label->name ?></span></h2>
     <a href="/admin/image/content/<?php echo $label->id ?>" class="button">add content</a>
-    <a class="button" href="/admin/image/delete/<?php echo $label->id ?>">delete</a>
+    <a class="button" href="/admin/common/delete/<?php echo $label->id ?>">delete</a>
 </div>
 <?php $this->endblock('titlebar') ?>
 
@@ -25,6 +25,9 @@ jQuery(document).ready(function(){
 <?php $this->block('main') ?>
 <div class="left-pane">
     <?php echo $this->form ?>
+    <?php foreach( $label->content as $content ): ?>
+        <?php echo new Form_Content( $content ); ?>
+    <?php endforeach; ?>
 </div>
 <div class="right-pane">
 </div>

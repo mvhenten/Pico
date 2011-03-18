@@ -1,0 +1,39 @@
+<?php $this->inherit('admin/template/layout') ?>
+
+<?php $this->block('head') ?>
+<script type="text/javascript" src="/js/light-rte/jquery.rte.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    $('.rich-text-editor').rte({
+        content_css_url: "/js/light-rte/rte.css",
+        media_url: "",
+    });
+
+});
+</script>
+<?php $this->endblock('head') ?>
+
+<?php $this->block('titlebar') ?>
+<div class="align-right wrap">
+    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $page->name ?></span></h2>
+    <a href="/admin/content/add/<?php echo $page->id ?>" class="button">add content</a>
+    <a class="button" href="/admin/page/delete/<?php echo $page->id ?>">delete</a>
+</div>
+<?php $this->endblock('titlebar') ?>
+
+<?php $this->block('main') ?>
+<div id="vertical-nav" class="fifth">
+    <ul class="verticalnav">
+        <li><h4>pages</h4></li>
+        <?php foreach( $pages as $item ): ?>
+        <li><a class="<?php echo $item->id == $request->id ? "active":"" ?>" href="/admin/page/edit/<?php echo $item->id ?>"><?php echo $item->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<div class="three-fifth">
+    <?php echo $this->form ?>
+    <?php foreach( $page->content as $content ): ?>
+        <?php echo new Form_Content( $content ); ?>
+    <?php endforeach; ?>
+</div>
+<?php $this->endblock('main') ?>
