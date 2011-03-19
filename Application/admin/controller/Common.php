@@ -7,6 +7,7 @@ class Controller_Admin_Common extends Nano_Controller{
             $item = new Model_Item($request->id);
             $type = $item->type;
 
+
             if( $post->confirm ){
                 $item->delete();
             }

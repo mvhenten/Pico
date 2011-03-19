@@ -1,75 +1,46 @@
 <?php $this->inherit('admin/template/image') ?>
 
-<?php $this->block( 'head' ); ?>
-<script>
-
-$(function(){
-    $('#action-labels').bind('click', function(evt){
-        var url = $('#images').attr('action');
-        $.ajax({url:url,
-            context: document.body,
-            type: "POST",
-            data: $('#images').serialize(),
-            success: function( data, status, xhr ){
-                $($(data).find('form')[0]).dialog({
-                    modal:true
-                });
-            }
-        });
-        return false;
-    }, false);
-});
-
-function upload_validate(el){
-    var ext = el.value.toLowerCase().split('.').pop();
-
-    console.log(ext in {'png':1,'jpeg':1,'jpg':1})
-
-    if( ext in {'png':1,'jpeg':1,'jpg':1} ){
-        $(el.parentNode).find('label').text("Selected " + el.value)
-        $('.input-submit').removeAttr('disabled');
-    }
-    else{
-        el.value = null;
-        $(el.parentNode).find('label').text('Invalid image type: ' + ext)
-        $('.input-submit').attr('disabled','disabled');
-    }
-}
-
-function ajaxify( link, search ){
-    var url = link.href;
-
-    $.ajax({
-        url: url,
-        context: document.body,
-        type: "GET",
-        success: function( data, status, xhr ){
-            $(data).find(search).dialog({
-                title: '',
-                modal:true
-            });
-        }
-    });
-    return false;
-
-}
-
-</script>
-<?php $this->endBlock('head'); ?>
-
-
 <?php if( null !== $this->request->id ): ?>
 <?php $this->block( 'head' ); ?>
 <script>
+$(function(){
+    $(".input-priority").hide();
+    $("ul.thumbnails").sortable({ update: function(evt, ui){
+        $(".input-priority").each(function(i,el){
+            el.value = i
+        });
+        //$('#images').attr('action', '/admin/image/order/<?php echo $request->id ?>');
+        //$('#images').submit();
+        $.ajax({
+            url: '/admin/image/order/<?php echo $request->id ?>',
+            type: 'POST',
+            data: $('#images').serialize(),
+            success: function( data, status, xhr ){
+                console.log(data);
+            }
+        })
+    }});
+
+    //$('#action-labels').bind('click', function(evt){
+    //    var url = $('#images').attr('action');
+    //    $.ajax({url:url,
+    //        context: document.body,
+    //        type: "POST",
+    //        data: $('#images').serialize(),
+    //        success: function( data, status, xhr ){
+    //            $($(data).find('form')[0]).dialog({
+    //                modal:true
+    //            });
+    //        }
+    //    });
+    //    return false;
+    //}, false);
+});
+
 
 
 //$(function(){
 //    $(".item-priority").hide();
-//    $("#image-list").sortable({ update: function(evt, ui){
-//        $(".item-priority").each(function(i,el){
-//            el.value = i
-//        });
-//    }});
 //
 //
 //});
@@ -83,7 +54,7 @@ function ajaxify( link, search ){
 
 <?php $this->block('titlebar') ?>
 <h2 class="title">images</h2>
-<a href="/admin/image/upload" onclick="ajaxify(this, 'form'); return false;" class="context-button">upload image</a>
+<a href="/admin/image/upload" onclick="return nano.ahah.link(this, 'form')" class="context-button">upload image</a>
 
 <?php $this->endblock('titlebar') ?>
 
@@ -106,8 +77,8 @@ function ajaxify( link, search ){
                 <a href="#select-all" onclick="$('ul.thumbnails').find('input').attr('checked', true)">all</a>,
                 <a href="#select-none" onclick="$('ul.thumbnails').find('input').attr('checked', false)">none</a>
             </div>
-            <button id="action-labels" class="button" value="labels" name="form-action">edit labels</button>
-            <button id="action-delete" class="button" value="labels" name="form-action">delete</button>
+            <button onclick="nano.ahah.form(this.form, 'form'); return false;" id="action-labels" class="button" value="labels" name="form-action">edit labels</button>
+            <button onclick="return false;" id="action-delete" class="button" value="labels" name="form-action">delete</button>
         </div>
         <ul class="thumbnails">
             <?php foreach( $images as $image ): ?>
@@ -118,6 +89,7 @@ function ajaxify( link, search ){
                         <label for="image-edit-<?php echo $image->id ?>">
                             <span><?php echo $image->name ?></span>
                         </label>
+                        <input class="input-priority" name="priority[<?php echo $image->id ?>]" value="<?php echo intval($image->priority) ?>" />
                     </dt>
                     <dd>
                         <label for="image-edit-<?php echo $image->id ?>">
@@ -131,17 +103,4 @@ function ajaxify( link, search ){
             <?php endforeach; ?>
         </ul>
     </form>
-<!--    <div class="actions-bar wat-cf">
-        <div class="actions">
-          <button type="submit" class="button">
-            <img alt="Delete" src="/css/admin/images/icons/cross.png"> Delete
-          </button>
-        </div>
-        <div class="pagination">
-          <span class="disabled prev_page">&laquo; revious</span>
-          <span class="current">1</span><a href="#" rel="next">2</a><a href="#">3</a><a href="#">4</a><a href="#">5</a><a href="#">6</a><a href="#">7</a><a href="#">8</a><a href="#">9</a><a href="#">10</a><a href="#">11</a>
-          <a href="#" class="next_page" rel="next">Next &raquo;</a>
-        </div>
-    </div>
---></div>
 <?php $this->endblock('main') ?>

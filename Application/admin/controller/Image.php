@@ -3,14 +3,9 @@ class Controller_Admin_Image extends Nano_Controller{
     public function post( $request, $config ){
         $post = $request->getPost();
 
-        var_dump($post);
-
         if( $request->action == 'upload' ){
             $file = (object) $_FILES['image'];
 
-            //print_r($file);
-            //
-            //print_r($post);
 
             if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
                 $gd  = new Nano_Gd( $file->tmp_name );
@@ -67,9 +62,6 @@ class Controller_Admin_Image extends Nano_Controller{
             $this->response()
                 ->redirect( '/admin/image/' . $request->action . '/' . $request->id );
         }
-        else if( $request->action == 'delete' ){
-            return $this->getDelete( $request, $config );
-        }
         else if( $request->action == 'list' ){
             return $this->getLabelsBulk( $request, $config );
         }
@@ -90,6 +82,24 @@ class Controller_Admin_Image extends Nano_Controller{
                     ));
                     $insert->put();
                 }
+            }
+
+            $this->response()
+                ->redirect( '/admin/image/list/' . $request->id );
+        }
+        else if( $request->action == 'order' ){
+            $ids = array();
+            foreach($post->priority as $id => $p ) $ids[] = array('image_id', $id );
+
+            Nano_Db_Query::get('ImageLabel')->delete($ids);
+
+            foreach( $post->priority as $id => $priority ){
+                $insert = new Model_ImageLabel(array(
+                    'label_id'  => $request->id,
+                    'image_id'  => $id,
+                    'priority'  => $priority
+                ));
+                $insert->put();
             }
 
             $this->response()

@@ -5,7 +5,7 @@
 
 <?php $this->block('titlebar') ?>
 <h2 class="title">pages</h2>
-<a href="/admin/page/add" class="context-button">new page</a>
+<a href="/admin/common/add/page" class="context-button">new page</a>
 <?php $this->endblock('titlebar') ?>
 
 
@@ -21,7 +21,7 @@
             <h6><?php echo $page->name ?></h6>
             <div class="buttons">
                 <a href="/admin/page/edit/<?php echo $page->id ?>" class="button third">edit</a>
-                <a href="/admin/page/delete/<?php echo $page->id ?>" class="button third">delete</a>
+                <a onclick="return nano.ahah.link(this, '.half')" href="/admin/common/delete/<?php echo $page->id ?>" class="button third">delete</a>
             </div>
         </div>
         <p class="half"><?php echo $this->ellipsize((string)$page->description) ?>&nbsp;</p>

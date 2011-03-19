@@ -11,13 +11,13 @@
 
 
 <?php $this->block('main') ?>
-<div class="left-pane">
-    <form method="post">
+<div class="half" style="width: 480px;">
+    <form class="form" method="POST" action="/admin/common/delete/<?php echo $item->id ?>">
         <p>Are you sure you wish to delete <a href=""><?php echo $item->type . " " . $item->name ?></a>?</p>
         <br/>
-        <div class="">
-            <input type="submit" class="input-submit" name="confirm" value="Delete <?php echo $item->name ?>" />
-            <input type="submit" class="input-submit" name="cancel" value="No, No, No! Cancel!" />
+        <div class="toolbar">
+            <input type="submit" class="input-submit" name="cancel" value="No! Cancel!" />
+            <input type="submit" class="input-submit" name="confirm" value="Delete" />
         </div>
     </form>
 </div>
