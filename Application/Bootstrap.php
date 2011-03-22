@@ -1,7 +1,7 @@
 <?php
 define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
 define( "APPLICATION_PATH", dirname( APPLICATION_ROOT )); //where the application is
-require_once( APPLICATION_PATH . '/Library/Nano/Autoloader.php');
+require_once( APPLICATION_PATH . '/Nano/library/Nano/Autoloader.php');
 
 class Bootstrap{
     public function __construct(){
@@ -16,12 +16,15 @@ class Bootstrap{
         Nano_Session::start();
 
         if( null !== $router->module ){
-            Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_ROOT . '/' . $router->module . '/controller' );
-            Nano_Autoloader::registerNamespace( 'Form', APPLICATION_ROOT . '/' . $router->module . '/forms' );
+            //Nano_Autoloader::registerNamespace( 'Admin_View',
+            //    APPLICATION_ROOT . '/' . $router->module . '/View' );
+            Nano_Autoloader::registerNamespace( 'Form',
+                APPLICATION_ROOT . '/' . ucfirst($router->module) . '/Forms' );
         }
 
-        $klass = array('Controller', $request->module, $request->controller );
+        $klass = array($request->module, 'View', $request->view );
         $klass = join( '_', array_map('ucfirst', array_filter($klass)));
+
 
         if( class_exists($klass) ){
             $view = new $klass( $request, $config );

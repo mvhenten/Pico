@@ -1,5 +1,5 @@
 <?php
-class Controller_Index extends Nano_Controller{
+class View_Index extends Nano_View{
     protected function indexAction(){
         echo "HELLO WORLD";
     }

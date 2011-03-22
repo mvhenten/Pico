@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Image extends Nano_Controller{
+class Admin_View_Image extends Nano_View{
     public function post( $request, $config ){
         $post = $request->getPost();
 
@@ -109,7 +109,7 @@ class Controller_Admin_Image extends Nano_Controller{
 
 
     public function getUpload( $request, $config ){
-        return $this->template()->render('admin/template/image/upload');
+        return $this->template()->render('Admin/template/image/upload');
     }
 
     public function getLabelsBulk( $request, $config ){
@@ -134,7 +134,7 @@ class Controller_Admin_Image extends Nano_Controller{
         $this->template()->labels = $labels;
         $this->template()->images = json_encode(array_keys($post->image));
         //print "TESTA";
-        return $this->template()->render('admin/template/image/bulk');
+        return $this->template()->render('Admin/template/image/bulk');
     }
 
     public function getList( $request, $config ){
@@ -157,7 +157,7 @@ class Controller_Admin_Image extends Nano_Controller{
         $template->labels = $labels;
         $template->images = $images;
 
-        return $template->render('admin/template/image/list');
+        return $template->render('Admin/template/image/list');
     }
 
 
@@ -168,7 +168,7 @@ class Controller_Admin_Image extends Nano_Controller{
             $label = Nano_Db_Query::get('Item')->where('type', 'label')->order('updated');
             $this->template()->labels = $label;
 
-            return $this->template()->render('admin/template/image/labels');
+            return $this->template()->render('Admin/template/image/labels');
         }
         else{
             $label = new Model_Item( $request->id );
@@ -178,7 +178,7 @@ class Controller_Admin_Image extends Nano_Controller{
             $template->label = $label;
             $template->form = $form;
 
-            return $this->template()->render('admin/template/image/label');
+            return $this->template()->render('Admin/template/image/label');
         }
     }
 
@@ -215,7 +215,7 @@ class Controller_Admin_Image extends Nano_Controller{
         $template->image = $image;
         $template->form = $form;
 
-        $template->render( 'admin/template/image/edit');
+        $template->render( 'Admin/template/image/edit');
         return $template;
     }
 }

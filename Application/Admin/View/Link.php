@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Link extends Pico_AdminController{
+class Admin_View_Link extends Pico_AdminController{
 
     /**
      * utility function: Fetch all menu "groups".

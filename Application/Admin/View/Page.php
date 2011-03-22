@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Page extends Nano_Controller{
+class Admin_View_Page extends Nano_View{
     public function post( $request, $config ){
         $post = $request->getPost();
 
@@ -17,7 +17,7 @@ class Controller_Admin_Page extends Nano_Controller{
     public function getList( $request, $config ){
         $pages = Nano_Db_Query::get( 'Item', array('type'=>'page'));
         $this->template()->pages = $pages;
-        return $this->template()->render( 'admin/template/page/list');
+        return $this->template()->render( 'Admin/template/page/list');
     }
 
 
@@ -33,7 +33,7 @@ class Controller_Admin_Page extends Nano_Controller{
         $template->form = $form;
         $this->template()->pages = Nano_Db_Query::get( 'Item', array('type'=>'page'));;
 
-        return $this->template()->render( 'admin/template/page/edit');
+        return $this->template()->render( 'Admin/template/page/edit');
     }
 
     public function getContent( $request, $config ){

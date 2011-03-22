@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Common extends Nano_Controller{
+class Admin_View_Common extends Nano_View{
     public function post( $request, $config ){
         $post = $request->getPost();
 
@@ -26,7 +26,7 @@ class Controller_Admin_Common extends Nano_Controller{
             $item = new Model_Item($request->id);
 
             $this->template()->item = $item;
-            return $this->template()->render('admin/template/common/delete');
+            return $this->template()->render('Admin/template/common/delete');
         }
     }
     public function getAdd( $request, $config ){

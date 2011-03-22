@@ -1,7 +1,7 @@
 <?php
-class Controller_Page{
+class View_Page{
     static function Page(){
-        
+
     }
 
 }

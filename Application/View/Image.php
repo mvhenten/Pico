@@ -1,5 +1,5 @@
 <?php
-class Controller_Image extends Nano_Controller{
+class View_Image extends Nano_View{
     protected function get( $request, $config ){
 
         switch( $request->type ){
