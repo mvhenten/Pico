@@ -7,9 +7,6 @@ class Bootstrap{
     public function __construct(){
 
         Nano_Autoloader::register();
-        Nano_Autoloader::registerNamespace( 'Nano', APPLICATION_PATH . '/Library/Nano' );
-        Nano_Autoloader::registerNamespace( 'Pico', APPLICATION_PATH . '/Library/Pico' );//?
-        Nano_Autoloader::registerNamespace( 'Model', APPLICATION_ROOT . '/model' );
 
         $config  = new Nano_Config_Ini( APPLICATION_ROOT . '/config/application.ini' );
         $router  = new Nano_Router( $config->route );
@@ -21,9 +18,6 @@ class Bootstrap{
         if( null !== $router->module ){
             Nano_Autoloader::registerNamespace( 'Controller_Admin', APPLICATION_ROOT . '/' . $router->module . '/controller' );
             Nano_Autoloader::registerNamespace( 'Form', APPLICATION_ROOT . '/' . $router->module . '/forms' );
-        }
-        else{
-            Nano_Autoloader::registerNamespace( 'Controller', APPLICATION_ROOT . '/controller' );
         }
 
         $klass = array('Controller', $request->module, $request->controller );
