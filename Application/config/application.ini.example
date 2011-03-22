@@ -52,27 +52,26 @@ password = pico
 default.base        = APPLICATION_PATH
 default.path        = "view"
 default.layoutPath  = "layout.phtml"
-default.structure   = "/:controller/:action.phtml"
+default.structure   = "/:view/:action.phtml"
 
 admin.base      = APPLICATION_PATH
 admin.path      = "modules/Admin/"
 admin.layoutPath    = "layout.phtml"
-admin.structure = "/:controller/:action.phtml"
+admin.structure = "/:view/:action.phtml"
 
 [route]
 image.route = "/image/:type/:id"
-image.defaults.controller = "image"
+image.defaults.view = "image"
 image.defaults.action = "list"
 image.defaults.type = "image"
 image.defaults.id = "1"
 
-admin.route   = "/admin/:controller/:action/:id"
+admin.route   = "/admin/:view/:action/:id"
 admin.defaults.module     = "admin"
-admin.defaults.controller = "image"
+admin.defaults.view = "image"
 admin.defaults.action     = "list"
 
-default.route = "/:controller/:id"
+default.route = "/:view/:id"
 default.module = ""
-default.defaults.controller = "user"
+default.defaults.view = "user"
 default.defaults.action = "list"
-
