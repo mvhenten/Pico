@@ -397,7 +397,7 @@ form.form .toolbar, .list-header{
 }
 
 .formElementWrapper{
-    margin: 0 0 0.5em;
+    margin: 0 1em;
 }
 
 form.form input, form.form textarea{
@@ -471,6 +471,7 @@ input.input-file{
 
 .submit-wrapper{
     text-align:right;
+    padding:1em;
 }
 
 input.input-submit:hover{
