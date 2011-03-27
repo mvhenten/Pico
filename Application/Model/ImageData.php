@@ -9,52 +9,68 @@ class Model_ImageData extends Nano_Db_Model{
 
     const IMAGESIZE_THUMBNAIL = '120x120';
     const IMAGESIZE_ICON      = '64x64';
+    const IMAGESIZE_SMALL       = '172x144';
     const IMAGESIZE_VIGNETTE   = '400x300';
     const IMAGESIZE_SD         = '640x480';
+    const IMAGESIZE_HD        = '640x480';
 
-    const TYPE_ORIGINAL       = 1;
-    const TYPE_VIGNETTE       = 2;
-    const TYPE_THUMBNAIL      = 3;
-    const TYPE_ICON           = 4;
-    const TYPE_CUSTOM         = 5;
-    const TYPE_SD             = 6;
-
+    //const TYPE_ORIGINAL       = 1;
+    //const TYPE_VIGNETTE       = 2;
+    //const TYPE_THUMBNAIL      = 3;
+    //const TYPE_ICON           = 4;
+    //const TYPE_CUSTOM         = 5;
+    //const TYPE_SD             = 6;
+    //const TYPE_SMALL          = 7;
 
     public static function get( $key = null, $name = __CLASS__ ){
         return parent::get( $key, $name );
     }
 
-    public static function resize( $original, $type, $size = '640x480' ){
+    public static function resize( $original, $type='custom', $size = '640x480' ){
         $gd = new Nano_Gd( $original->data, false );
 
         //$data = $gd->getImageJPEG(100); //fixes corrupted exif data!
         //$gd->destroy();
         //$gd = new Nano_Gd( $data, false );
+        
+        //var_dump($type);exit();
 
         switch( $type ){
-            case self::TYPE_ICON:
+            case 'icon':
                 $typename = 'icon';
                 list( $width, $height ) = explode( 'x', self::IMAGESIZE_ICON );
                 break;
-            case self::TYPE_THUMBNAIL:
-                $typename = 'thumb';
+            case 'thumbnail':
+                $typename = 'thumbnail';
                 list( $width, $height ) = explode( 'x', self::IMAGESIZE_THUMBNAIL );
                 break;
-            case self::TYPE_VIGNETTE:
+            case 'vignette':
                 $typename = 'vignette';
                 list( $width, $height ) = explode( 'x', self::IMAGESIZE_VIGNETTE );
                 break;
-            case self::TYPE_SD:
-                $typename = 'vignette';
+            case 'sd':
+                $typename = 'sd';
                 list( $width, $height ) = explode( 'x', self::IMAGESIZE_SD );
                 break;
-            case self::TYPE_CUSTOM:
+            case 'small':
+                $typename = 'small';
+                list( $width, $height ) = explode( 'x', self::IMAGESIZE_SMALL );
+                break;
+            case 'custom':
                 $typename  = $size;
                 list( $width, $height) = explode( 'x', $size );
                 break;
             default:
-                die( 'TYPE NOT FOUND ' . $type);
+                $pieces = array_filter(array_map('intval',explode('x', $type)));
+                if( count($pieces) == 2 ){
+                    list($width,$height) = $pieces;
+                    $typename = $type;
+                }
+                else{
+                    die( 'TYPE NOT FOUND ' . $type);                    
+                }
         }
+        
 
         list( $w, $h ) = array_values( $gd->getDimensions() );
         $ratio = min( $width/$w, $height/$h, 1);
@@ -77,8 +93,7 @@ class Model_ImageData extends Nano_Db_Model{
         $new->height   = $height;
         $new->filename = sprintf('%s_%s.%s', $base, $typename, $ext);
         $new->image_id = $original->image_id;
-        $new->type     = $type;
-
+        $new->type     = $typename;
         $id = $new->put();
 
         return $id;

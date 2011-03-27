@@ -6,4 +6,18 @@ class Model_Item extends Nano_Db_Model{
     public function getContent(){
         return Nano_Db_Query::get( 'ItemContent', array('item_id'=> $this->id));
     }
+    
+    public function setSlug( $string ){
+        $count = Nano_Db_Query::get('Item')
+            ->where('id !=', $this->id )
+            ->where('slug LIKE', sprintf('%s%%', $string))
+            ->count();
+            
+        if( $count > 0 ){
+            $string .= '-' . $count++;
+        }
+        
+        $this->_properties['slug'] = $string;
+        return $this;
+    }
 }

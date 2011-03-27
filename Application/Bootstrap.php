@@ -25,7 +25,6 @@ class Bootstrap{
         $klass = array($request->module, 'View', $request->view );
         $klass = join( '_', array_map('ucfirst', array_filter($klass)));
 
-
         if( class_exists($klass) ){
             $view = new $klass( $request, $config );
             $view->template()->addHelperPath( 'admin/helper' );

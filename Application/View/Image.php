@@ -1,29 +1,12 @@
 <?php
 class View_Image extends Nano_View{
     protected function get( $request, $config ){
-
-        switch( $request->type ){
-            case 'vignette':
-                $type = Model_ImageData::TYPE_VIGNETTE;
-                break;
-            case 'thumbnail':
-                $type = Model_ImageData::TYPE_THUMBNAIL;
-                break;
-            case 'icon':
-                $type = Model_ImageData::TYPE_ICON;
-                break;
-            case 'sd':
-                $type = Model_ImageData::TYPE_SD;
-                break;
-            default:
-                $type = Model_ImageData::TYPE_ORIGINAL;
-        }
-
         $imagedata = new Model_ImageData();
-
+        //$type = $imagedata->getType($request->type);
+        
         $image = $imagedata->all()
                 ->where( 'image_id', $request->id )
-                ->where( 'type', $type )
+                ->where( 'type', $request->type )
                 ->current()
                 ;
 
@@ -32,7 +15,7 @@ class View_Image extends Nano_View{
                 ->where('image_id', $request->id )
                 ->current();
 
-            $id = Model_ImageData::resize( $image, $type );
+            $id = Model_ImageData::resize( $image, $request->type );
             $image = Model_ImageData::get( $id );
         }
 

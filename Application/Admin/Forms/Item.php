@@ -44,6 +44,15 @@ class Form_Item extends Nano_Form{
                     ),
                     'required'      => true
                 ),
+                'slug' => array(
+                    'type'          => 'text',
+                    'value'         => $item->slug,
+                    'label'         => 'Slug',
+                    'validators'    => array(
+                        array('stringLength', array(1, 64), false )
+                    ),
+                    'required'      => true
+                ),
                 'description'   => array(
                     'type'  => 'textarea',
                     'value' => $item->description,

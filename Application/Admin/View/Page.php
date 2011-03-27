@@ -2,14 +2,20 @@
 class Admin_View_Page extends Nano_View{
     public function post( $request, $config ){
         $post = $request->getPost();
-
-        $page =new Model_Item( array(
-            'id'            => $request->id,
-            'name'          => $post->name,
-            'description'   => $post->description,
-            'visible'       => (bool) $post->visible
-        ));
-
+        
+        $page = new Model_Item( $request->id );
+        
+        if( strstr( 'untitled', $page->slug ) == 0 ){
+            $page->slug = $request->slug($post->name);
+        }
+        else{
+            $page->slug = $request->slug($post->slug);           
+        }
+        
+        $page->name = $post->name;
+        $page->description = $post->description;
+        $page->visible = (bool) $post->visible;
+                
         $page->put();
         $this->response()->redirect( '/admin/page/edit/' . $page->id );
     }
@@ -25,7 +31,6 @@ class Admin_View_Page extends Nano_View{
         $template = $this->template();
 
         $page = new Model_Item( $request->id );
-
 
         $form = new Form_Item( $page );
 

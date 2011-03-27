@@ -33,7 +33,8 @@ class Admin_View_Common extends Nano_View{
         $item = new Model_Item( array(
             'name'          => 'Untitled new ' . $request->id,
             'description'   => 'Description for untitled new ' . $request->id,
-            'type'           => $request->id
+            'type'           => $request->id,
+            'slug'          => 'untitled'
         ));
 
         $item->put();

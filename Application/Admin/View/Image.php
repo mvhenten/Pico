@@ -36,7 +36,7 @@ class Admin_View_Image extends Nano_View{
                     'height'    => $height,
                     'data'      => $src,
                     'filename'  => $file->name,
-                    'type'      => 1
+                    'type'      => 'original'
                 ));
 
                 $data->put();
@@ -53,6 +53,14 @@ class Admin_View_Image extends Nano_View{
             else{
                 $item = new Model_Item( $request->id );
             }
+
+            if( strstr( 'untitled', $item->slug ) == 0 ){
+                $item->slug = $request->slug($post->name);
+            }
+            else{
+                $item->slug = $request->slug($post->slug);           
+            }
+
 
             $item->name = $post->name;
             $item->description = $post->description;
@@ -152,7 +160,7 @@ class Admin_View_Image extends Nano_View{
         else{
             $images = Nano_Db_Query::get('Item')->where('type', 'image')->order('-inserted');
         }
-        $labels = Nano_Db_Query::get('Item')->where('type', 'label')->order('name ASC');
+        $labels = Nano_Db_Query::get('Item')->where('type', 'label');
 
         $template->labels = $labels;
         $template->images = $images;
