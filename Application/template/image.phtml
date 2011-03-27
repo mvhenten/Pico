@@ -1,0 +1,11 @@
+<?php $this->inherit('template/layout') ?>
+
+<?php $this->block('masthead') ?>
+<?php $this->endBlock('masthead') ?>
+
+
+<?php $this->block('content'); ?>
+<div class="image-content">
+    <img src="/image/566x500/<?php echo $item->id ?>" />
+</div>
+<?php $this->endBlock('content'); ?>
