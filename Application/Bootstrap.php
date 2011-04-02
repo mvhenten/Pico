@@ -16,8 +16,6 @@ class Bootstrap{
         Nano_Session::start();
 
         if( null !== $router->module ){
-            //Nano_Autoloader::registerNamespace( 'Admin_View',
-            //    APPLICATION_ROOT . '/' . $router->module . '/View' );
             Nano_Autoloader::registerNamespace( 'Form',
                 APPLICATION_ROOT . '/' . ucfirst($router->module) . '/Forms' );
         }
