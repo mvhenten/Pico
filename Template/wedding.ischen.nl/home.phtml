@@ -1,1 +1,26 @@
-home is where the love is.
+<?php $this->inherit( dirname(__file__) . '/layout') ?>
+
+<?php $this->block('content'); ?>
+<div id="body-<?php echo $item->slug ?>" class="content">
+    <ul id="home-buttons">
+        <li><a href="/directions" id="button-directions" class="home-button">
+            <img src="/public/img/home-button-directions.png" alt="Directions, Anfahrt, route" />
+        </a></li>
+        <li><a href="/schedule" id="button-schedule" class="home-button">
+            <img src="/public/img/home-button-schedule.png" alt="Schedule, Tagesablauf, planning" />
+        </a></li>
+        <li><a href="/accomodation" id="button-accomodation" class="home-button">
+            <img src="/public/img/home-button-accomodation.png" alt="Accomodation, Unterkunft, accomodatie" />
+        </a>
+        <li><a href="/gifts" id="button-presents" class="home-button">
+            <img src="/public/img/home-button-presents.png" alt="Presents, Geschenke, kados" />
+        </a></li>
+    </ul>
+<?php foreach( $item->content as $key => $content ): ?>
+    <div id="content-item-<?php echo $key ?>" class="content-item">
+        <?php echo $content; ?>
+    </div>
+<?php endforeach; ?>
+</div>
+
+<?php $this->endBlock('content') ?>
