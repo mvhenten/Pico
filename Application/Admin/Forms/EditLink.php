@@ -21,7 +21,7 @@ class Form_EditLink extends Nano_Form{
                 'elements' => array(
                     'title' => array(
                         'type'  => 'text',
-                        'value'         => $link->title ? $link->title : 'New menu item',
+                        'value'         => utf8_decode($link->title ? $link->title : 'New menu item'),
                         'label'         => 'Title',
                         'validators'    => array(
                             array('stringLength', array(1, 64), false )

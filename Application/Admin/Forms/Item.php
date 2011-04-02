@@ -22,7 +22,7 @@ class Form_Item extends Nano_Form{
                 'suffix'    => '</div>',
                 'wrapper'   => false,
                 'type'      => 'submit',
-                'value'     => 'Delete ' . $item->name
+                'value'     => 'Delete ' . utf8_decode($item->name)
             ):null)
         );
 
@@ -37,7 +37,7 @@ class Form_Item extends Nano_Form{
                 ),
                 'name' => array(
                     'type'          => 'text',
-                    'value'         => $item->name,
+                    'value'         => utf8_decode($item->name),
                     'label'         => 'Title',
                     'validators'    => array(
                         array('stringLength', array(1, 64), false )
@@ -55,7 +55,7 @@ class Form_Item extends Nano_Form{
                 ),
                 'description'   => array(
                     'type'  => 'textarea',
-                    'value' => $item->description,
+                    'value' => utf8_decode($item->description),
                     'label' => 'Description',
                     'validators'    => array(
                         array('stringLength', array(0, 254), false )
