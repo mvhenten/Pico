@@ -1,0 +1,77 @@
+<?php $this->inherit( dirname(__file__) . '/layout') ?>
+
+<?php $this->block('content'); ?>
+<div id="page-header" class="<?php echo $item->slug ?>">
+    <h1 class="<?php echo $item->slug ?>"><?php echo $item->name ?></h1>
+    <menu class="page-nav">
+        <li><a href="/">home</a></li>        
+        <?php foreach( array('directions', 'schedule', 'gifts', 'accomodation') as $slug ): ?>
+        <li><a href="/<?php echo $slug ?>" class="<?php echo $slug == $item->slug ? 'active' : ''; ?>"><?php echo $slug ?></a></li>        
+        <?php endforeach; ?>
+    </menu>
+    <?php if( $request->isPost() && empty($formErrors) ): ?>
+    <div id="subtitle">
+        <span class="en">Thank You</span>
+        <span class="de">Danke</span>
+        <span class="nl">Dank je</span>
+    </div>
+    <?php else: ?>
+    <div id="subtitle">
+        <?php echo $item->description ?>
+    </div>    
+    <?php endif; ?>
+</div>
+<div id="body-wrap">
+<?php if( $request->isPost() && empty($formErrors) ): ?>
+    <div class="content-item">
+        <span class="en">Dear <?php echo $request->getPost()->name ?>, we've got your message</span><br/>
+        <span class="de">Lieber <?php echo $request->getPost()->name ?>, we've got your message</span><br/>
+        <span class="nl">Beste <?php echo $request->getPost()->name ?>, we've got your message</span><br/>
+        <em><?php echo $request->getPost()->message ?></em><br/>
+        <div><a href="/">back to home...</a></div>
+    </div>
+<?php else: ?>
+<div id="body-<?php echo $item->slug ?>" class="content">
+<?php foreach( $item->content as $key => $content ): ?>
+    <?php echo $key > 2 ? '</div><div class="additional">' : '' ?>
+    <div id="content-item-<?php echo $key ?>" class="content-item">
+        <?php echo $content; ?>
+    </div>
+<?php endforeach; ?>
+
+</div>
+<?php endif; ?>
+<div id="form-wrap">
+    <?php if( isset($formErrors) && !empty($formErrors) ): foreach($formErrors as $n => $e): ?>
+    <span class="error"><strong><?php echo $n ?></strong><?php echo $e ?></span><br/>
+    <?php endforeach; else: ?>
+        <?php $formErrors = array(); ?>
+    <?php endif; ?>
+    <?php if( $request->isPost() && empty($formErrors) ): ?>
+    <?php else: ?>
+    <form method="post" enctype="multipart/form-data">
+        <dl>
+            <dt>name</dt>
+            <dd><input class="<?php echo isset($formErrors['name']) ? 'error':''; ?>"type="text" name="name" onfocus="this.value='';this.className='focussed';this.onfocus=null" value="Your name" /></dd>
+            <dt>email</dt>
+            <dd><input type="text" name="email" onfocus="this.value='';this.className='focussed';this.onfocus=null" value="Your e-mail" /></dd>
+            <dt>headcount</dt>
+            <dd><em>how many people will you be? </em><select name="headcount">
+                <option>just me</option>
+                <option selected="selected">+1 person</option>
+                <option>+2 person</option>
+                <option>+3 person</option>
+                <option>write it down below</option>
+            </select>
+            <dt>message</dt>
+            <dd><textarea name="message" onfocus="this.value='';this.className='focussed';this.onfocus=null">Your may leave an extra comment here...</textarea></dd>
+        </dl>
+        <div class="submit">
+            <input name="submit" type="submit" value="send your message" />
+        </div>
+    </form>
+    <?php endif; ?>
+</div>
+</div>
+
+<?php $this->endBlock('content') ?>
