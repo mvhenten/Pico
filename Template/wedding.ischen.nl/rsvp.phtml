@@ -10,13 +10,13 @@
         <?php endforeach; ?>
     </menu>
     <?php if( $request->isPost() && empty($formErrors) ): ?>
-    <div id="subtitle">
+    <div class="subtitle">
         <span class="en">Thank You</span>
         <span class="de">Danke</span>
         <span class="nl">Dank je</span>
     </div>
     <?php else: ?>
-    <div id="subtitle">
+    <div class="subtitle">
         <?php echo $item->description ?>
     </div>    
     <?php endif; ?>

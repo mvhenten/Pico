@@ -21,22 +21,17 @@ h1,h2{
     font-size: 1.2em;
 }
 
-h4,#subtitle{
+h4,h3,.subtitle{
     font-family: "gesta-1","gesta-2",sans-serif;
     font-size: 1.5em;
     font-weight: bold;
 }
 
-h3{
-    font-weight:bold;
-    margin-bottom:1em;
-}
-
-#subtitle{
+.subtitle{
     margin-top:1.8em;
 }
 
-#subtitle span{
+.subtitle span{
     padding-right: 1em;
 }
 
@@ -102,6 +97,8 @@ address{
     position: absolute;
     top: 25px;
     left: 799px;
+    width:150px;
+    height:127px;
     opacity:0;
 }
 
@@ -163,7 +160,7 @@ address{
 }
 
 .content .content-item{
-    margin-bottom:2em;
+    margin-bottom:1em;
 }
 
 #content-item-1, .de{
@@ -195,11 +192,13 @@ address{
 .directions-by-car{
     padding-left:5em;
     background: url('/public/img/icon-car.png') no-repeat;
+    display:block;
 }
 
 .directions-pt{
     padding-left:5em;
     background: url('/public/img/icon-tram.png') no-repeat;
+    display:block;
 }
 
 .dist{
@@ -265,8 +264,23 @@ address{
     border-bottom:2px solid #999;
 }
 
-#page-header.gifts .content-item{
+#page-header.gifts
+.content-item{
     width: 40%;
+    margin-bottom:1em;
+}
+
+#body-gifts{
+    padding-bottom:5em;
+}
+
+.thumbnails li{
+    float:left;
+    width: 20%;
+}
+
+.thumbnails dt span{
+    display:block;
 }
 
 /** rsvp **/
@@ -331,4 +345,74 @@ address{
 .rsvp #page-header{
     height:auto;
 }
+
+/** image **/
+.image #page-header{
+    height: auto;
+}
+
+/** ui popup **/
+
+/** overrides **/
+body .ui-widget{
+    font: inherit;
+}
+
+body .ui-icon,
+body .ui-dialog .ui-dialog-titlebar-close,
+body .ui-dialog .ui-dialog-titlebar-close span {
+  background:none;
+  position:static;
+  display: inline;
+  padding:0;
+  margin: 0;
+  width:auto;
+  color:#80A33C;
+  right:0;
+  font: inherit;
+  top:0;
+  
+}
+
+body .ui-dialog .ui-dialog-titlebar {
+    text-align:right;
+    background:transparent;
+    padding: 0;
+    font-weight:normal;
+    border:none;
+    padding:0;
+    margin:0;
+}
+
+
+body .ui-dialog{
+    background: #fff;
+    padding: 1em;
+    border:1px solid #999;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+body .ui-dialog .subtitle{
+    margin-bottom:2em;
+}
+
+body .ui-dialog .ui-dialog-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    overflow: auto;
+    margin:-4em 3em 0;
+    padding:0;
+    position: relative;
+}
+
+body .ui-dialog-content{
+}
+
+.image-preview-sd{
+    float:left;
+}
+
+
 
