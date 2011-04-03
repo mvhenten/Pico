@@ -1,4 +1,6 @@
 [settings]
+template_path = Template/wedding.ischen.nl
+
 site.values.description.title  = Site description
 site.values.description.description = Short description
 site.values.description.value = A short description of your New Site
