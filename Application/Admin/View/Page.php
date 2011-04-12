@@ -5,7 +5,7 @@ class Admin_View_Page extends Nano_View{
         
         $page = new Model_Item( $request->id );
         
-        if( strstr( 'untitled', $page->slug ) == 0 ){
+        if( stripos( $page->slug,'untitled' ) == 0 ){
             $page->slug = $request->slug($post->name);
         }
         else{
