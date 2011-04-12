@@ -10,7 +10,7 @@ class Form_Content extends Nano_Form{
                     'class'     => 'rich-text-editor',
                     'prefix'    => '<div class="item-content-wrapper">',
                     'type'      => 'textarea',
-                    'value'     => $content->value
+                    'value'     => utf8_encode($content->value)
                 ),
                 'content[' . $content->id . '][save]'   => array(
                     'type'  => 'submit',
