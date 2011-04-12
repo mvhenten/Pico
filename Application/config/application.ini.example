@@ -1,17 +1,4 @@
 [settings]
-
-site.title = "Website settings"
-site.description = "Settings such as title, description and keywords. You can also activate your placeholder here"
-
-site.values.title.title  = site title
-site.values.title.value = My New Test Site
-site.values.title.type  = text
-
-site.values.maintenance.title = Activate placeholder
-site.values.maintenance.description = Activate maintenance mode
-site.values.maintenance.type = checkbox
-site.values.maintenance.value = true
-
 site.values.description.title  = Site description
 site.values.description.description = Short description
 site.values.description.value = A short description of your New Site
@@ -24,20 +11,6 @@ site.values.author.type = textarea
 site.values.keywords.title  = Site keywords
 site.values.keywords.description = Some keywords to describe your site to search-engines
 site.values.keywords.type  = textarea
-
-google.title = "Google analytics"
-google.description = "Enter your google analytics code here"
-
-google.values.analytics.type = textarea
-google.values.analytics.title  = google analytics code
-
-navigation.title = "Site navigation"
-navigation.description = "Menu entries for your site"
-navigation.values.main.title = Main menu title
-navigation.values.main.value = Main menu
-navigation.values.footer.title = Footer menu title
-navigation.values.footer.value = Footer menu
-
 
 [admin]
 username   = "admin"
@@ -71,7 +44,8 @@ admin.defaults.module     = "admin"
 admin.defaults.view = "image"
 admin.defaults.action     = "list"
 
-default.route = "/:view/:id"
-default.module = ""
-default.defaults.view = "user"
-default.defaults.action = "list"
+site.route = "/:primary/:secondary"
+site.defaults.view = "index"
+site.defaults.primary = "home"
+site.defaults.secondary = null
+
