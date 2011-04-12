@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><?php echo $item->name ?> | Matthijs & Silke 24.06.2011</title>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="http://use.typekit.com/pfe4iqu.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+        <link rel="stylesheet" type="text/css" href="/public/css/style.css" media="screen" />
+        <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico">
+        <?php $this->block('head'); ?>
+        <?php $this->endBlock('head'); ?>
+    </head>
+    <body>
+        <div id="bgtop">
+        <div id="content-wrap">
+            <div id="header">
+                <a id="button-rsvp" href="/rsvp"><img alt="rsvp" src="/public/img/button-rsvp.png" /></a>                
+            </div>
+            <div id="page-body" class="<?php echo $item->slug . ' ' . $item->type ?>">
+                <?php $this->block('content') ?>                
+                <?php $this->endBlock('content') ?>
+            </div>
+            <div id="footer">
+            </div>
+        </div>
+        </div>
+    </body>
+</html>

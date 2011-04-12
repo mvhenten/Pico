@@ -1,16 +1,5 @@
 [settings]
-site.values.description.title  = Site description
-site.values.description.description = Short description
-site.values.description.value = A short description of your New Site
-site.values.description.type = textarea
-
-site.values.author.title  = Site author
-site.values.author.description = Main author of this site
-site.values.author.type = textarea
-
-site.values.keywords.title  = Site keywords
-site.values.keywords.description = Some keywords to describe your site to search-engines
-site.values.keywords.type  = textarea
+template_path = Template/wedding.ischen.nl
 
 [admin]
 username   = "admin"

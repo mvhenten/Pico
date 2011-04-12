@@ -54,12 +54,13 @@ class Admin_View_Image extends Nano_View{
                 $item = new Model_Item( $request->id );
             }
 
-            if( strstr( 'untitled', $item->slug ) == 0 ){
+            if( stripos( $item->slug,'untitled' ) === 0 ){
                 $item->slug = $request->slug($post->name);
             }
             else{
                 $item->slug = $request->slug($post->slug);           
             }
+        
 
 
             $item->name = $post->name;
@@ -117,7 +118,7 @@ class Admin_View_Image extends Nano_View{
 
 
     public function getUpload( $request, $config ){
-        return $this->template()->render('Admin/template/image/upload');
+        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/upload');
     }
 
     public function getLabelsBulk( $request, $config ){
@@ -142,7 +143,7 @@ class Admin_View_Image extends Nano_View{
         $this->template()->labels = $labels;
         $this->template()->images = json_encode(array_keys($post->image));
         //print "TESTA";
-        return $this->template()->render('Admin/template/image/bulk');
+        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/bulk');
     }
 
     public function getList( $request, $config ){
@@ -165,7 +166,7 @@ class Admin_View_Image extends Nano_View{
         $template->labels = $labels;
         $template->images = $images;
 
-        return $template->render('Admin/template/image/list');
+        return $template->render( APPLICATION_ROOT . '/Admin/template/image/list');
     }
 
 
@@ -176,7 +177,7 @@ class Admin_View_Image extends Nano_View{
             $label = Nano_Db_Query::get('Item')->where('type', 'label')->order('updated');
             $this->template()->labels = $label;
 
-            return $this->template()->render('Admin/template/image/labels');
+            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/labels');
         }
         else{
             $label = new Model_Item( $request->id );
@@ -186,7 +187,7 @@ class Admin_View_Image extends Nano_View{
             $template->label = $label;
             $template->form = $form;
 
-            return $this->template()->render('Admin/template/image/label');
+            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/label');
         }
     }
 
@@ -223,7 +224,7 @@ class Admin_View_Image extends Nano_View{
         $template->image = $image;
         $template->form = $form;
 
-        $template->render( 'Admin/template/image/edit');
+        $template->render( APPLICATION_ROOT . '/Admin/template/image/edit');
         return $template;
     }
 }

@@ -1,0 +1,86 @@
+<?php $this->inherit( dirname(__file__) . '/layout') ?>
+
+<?php $this->block('head'); ?>
+    <link type="text/css" rel="stylesheet" media="all" href="/css/admin/jquery-ui.css" />
+    <script src="/js/jquery-1.4.2.min.js"></script>
+    <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
+    <script>
+    $().ready(function(){
+        var $im = $('<img src="/public/img/vlinder.gif />');
+        $im.css({position:'absolute'});
+        $('body').prepend($im);
+        
+        var pos = {
+            top: 0,
+            left: 0,
+            css: function(){
+                return {top: this.top + 'px', left: this.left + 'px'}
+            }
+        }
+        
+        var T = setInterval(function(){
+            pos.top+=2;
+            pos.left+=5;
+            
+            $im.css(pos.css());
+            //$(im).csss
+        }, 100);
+    });
+    </script>
+    <script>
+    var ahah ={
+        link: function( link, selector ){
+            var url = link.href;
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                context: document.body,
+                success: function( data, status, xhr ){
+                    $(data).find(selector).dialog({
+                        modal:true,
+                        minWidth:600
+                    });
+                }
+            });
+
+            return false;
+        }        
+    }
+    //$().ready(function(){})
+    </script>
+<?php $this->endBlock('head'); ?>
+
+
+<?php $this->block('content'); ?>
+<div id="page-header" class="<?php echo $item->slug ?>">
+    <h1 class="<?php echo $item->slug ?>"><?php echo $item->name ?></h1>
+    <menu class="page-nav">
+        <li><a href="/">home</a></li>        
+        <?php foreach( array('directions', 'schedule', 'gifts', 'accomodation') as $slug ): ?>
+        <li><a href="/<?php echo $slug ?>" class="<?php echo $slug == $item->slug ? 'active' : ''; ?>"><?php echo $slug ?></a></li>        
+        <?php endforeach; ?>
+    </menu>
+    <div class="subtitle">
+        <?php echo $item->description ?>
+    </div>
+    <?php foreach( $item->content as $key => $content ): ?>
+        <div id="content-item-<?php echo $key ?>" class="content-item">
+            <?php echo $content; ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+<div id="body-<?php echo $item->slug ?>" class="content">
+    <ul class="thumbnails">
+    <?php foreach( $images as $img ): ?>
+    <li>
+        <dl>
+            <dd><a onclick="return ahah.link(this, '.content')" href="/<?php echo $img->slug ?>"><img alt="<?php echo $img->name ?>" src="/image/small/<?php echo $img->id ?>" /></a></dd>
+            <dt><?php echo $img->description ?></dt>
+        </dl>
+    </li>
+    <?php endforeach; ?>
+</div>
+
+
+<?php $this->endBlock('content') ?>

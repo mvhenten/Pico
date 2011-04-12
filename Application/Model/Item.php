@@ -20,4 +20,12 @@ class Model_Item extends Nano_Db_Model{
         $this->_properties['slug'] = $string;
         return $this;
     }
+    
+    public function setName( $string ){
+        if( !mb_check_encoding($string, 'UTF-8') ){
+            $string = mb_convert_encoding($string, 'UTF-8');
+        }
+        
+        $this->_properties['name'] = $string;
+    }
 }

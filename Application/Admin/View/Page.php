@@ -5,7 +5,7 @@ class Admin_View_Page extends Nano_View{
         
         $page = new Model_Item( $request->id );
         
-        if( stripos( $page->slug,'untitled' ) == 0 ){
+        if( stripos( $page->slug,'untitled' ) === 0 ){
             $page->slug = $request->slug($post->name);
         }
         else{
@@ -23,7 +23,7 @@ class Admin_View_Page extends Nano_View{
     public function getList( $request, $config ){
         $pages = Nano_Db_Query::get( 'Item', array('type'=>'page'));
         $this->template()->pages = $pages;
-        return $this->template()->render( 'Admin/template/page/list');
+        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/page/list');
     }
 
 
@@ -38,7 +38,7 @@ class Admin_View_Page extends Nano_View{
         $template->form = $form;
         $this->template()->pages = Nano_Db_Query::get( 'Item', array('type'=>'page'));;
 
-        return $this->template()->render( 'Admin/template/page/edit');
+        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/page/edit');
     }
 
     public function getContent( $request, $config ){
@@ -54,6 +54,4 @@ class Admin_View_Page extends Nano_View{
 
         $this->response()->redirect( '/admin/image/edit/' . $request->id );
     }
-
-
 }

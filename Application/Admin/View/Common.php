@@ -26,7 +26,7 @@ class Admin_View_Common extends Nano_View{
             $item = new Model_Item($request->id);
 
             $this->template()->item = $item;
-            return $this->template()->render('Admin/template/common/delete');
+            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/common/delete');
         }
     }
     public function getAdd( $request, $config ){

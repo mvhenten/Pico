@@ -42,7 +42,7 @@ class View_Image extends Nano_View{
         //$data = $image->data;
 
         header( 'Content-Type: ' . $image->mime );
-        header( 'Content-length' .  $image->size );
+        header( 'Content-length: ' .  $image->size );
         header( 'Content-Disposition: inline; filename=' . $image->filename );
         header( 'Last-Modified: ' . date('r', $inserted ) );
         header( 'Expires: ' . date( 'r', strtotime('+1 Month', $inserted ) ) );

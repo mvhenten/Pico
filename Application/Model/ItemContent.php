@@ -12,6 +12,6 @@ class Model_ItemContent extends Nano_Db_Model{
     }
     
     public function __toString(){
-        return $this->value;
+        return (string) $this->value;
     }
 }
