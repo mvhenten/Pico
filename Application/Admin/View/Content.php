@@ -1,5 +1,5 @@
 <?php
-class Admin_View_Content extends Nano_View{
+class Admin_View_Content extends Admin_View_Base{
     public function post( $request, $config ){
         $post = $request->getPost();
 

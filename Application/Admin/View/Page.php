@@ -1,21 +1,21 @@
 <?php
-class Admin_View_Page extends Nano_View{
+class Admin_View_Page extends Admin_View_Base{
     public function post( $request, $config ){
         $post = $request->getPost();
-        
+
         $page = new Model_Item( $request->id );
-        
+
         if( stripos( $page->slug,'untitled' ) === 0 ){
             $page->slug = $request->slug($post->name);
         }
         else{
-            $page->slug = $request->slug($post->slug);           
+            $page->slug = $request->slug($post->slug);
         }
-        
+
         $page->name = $post->name;
         $page->description = $post->description;
         $page->visible = (bool) $post->visible;
-                
+
         $page->put();
         $this->response()->redirect( '/admin/page/edit/' . $page->id );
     }

@@ -1,5 +1,5 @@
 <?php
-class Admin_View_Image extends Nano_View{
+class Admin_View_Image extends Admin_View_Base{
     public function post( $request, $config ){
         $post = $request->getPost();
 
@@ -40,7 +40,7 @@ class Admin_View_Image extends Nano_View{
                 ));
 
                 $data->put();
-                var_dump($image);
+                //var_dump($image);
                 $this->response()->redirect('/admin/image' );
             }
         }
@@ -58,9 +58,9 @@ class Admin_View_Image extends Nano_View{
                 $item->slug = $request->slug($post->name);
             }
             else{
-                $item->slug = $request->slug($post->slug);           
+                $item->slug = $request->slug($post->slug);
             }
-        
+
 
 
             $item->name = $post->name;

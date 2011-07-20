@@ -1,4 +1,4 @@
-<?php $this->inherit('template/layout') ?>
+<?php $this->inherit( dirname(__file__) . '/layout') ?>
 
 <?php $this->block( 'head' ); ?>
     <script src="/js/jquery.cycle.lite.1.1.min.js"></script>
@@ -20,7 +20,7 @@
 <div class="thumbnail-nav">
     <ul class="thumbnails">
     <?php foreach( $images as $image ): ?>
-        <li><a href="/collection/<?php echo $image->slug ?>"><img src="/image/thumbnail/<?php echo $image->id ?>" /></a></li>    
+        <li><a href="/collection/<?php echo $image->slug ?>"><img src="/image/thumbnail/<?php echo $image->id ?>" /></a></li>
     <?php endforeach; ?>
     </ul>
 </div>

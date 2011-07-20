@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Please login</title>
+    <style>
+        body{
+            font: 13px sans-serif;
+        }
+        input{
+            border: 1px solid #999;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            /*IE 7 AND 8 DO NOT SUPPORT BLUR PROPERTY OF SHADOWS*/
+        }
+        #form-login{
+            margin: 15% auto;
+            width: 300px;
+            padding: 1em;
+            border: 1px solid #666;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 3px 3px 7px 3px #666;
+            -moz-box-shadow: 3px 3px 7px 3px #666;
+            box-shadow: 3px 3px 7px 3px #666;
+        }
+
+        .error{
+            padding: 1em;
+            background-color: #ffcccc;
+            border:1px solid #cc9999;
+
+        }
+    </style>
+</head>
+<body>
+    <form id="form-login" method="post">
+        <h4>Please log in</h4>
+        <?php if( $request->error ):?>
+            <div class="error">
+                Invalid password or username, <br/> Please try again.
+            </div>
+        <?php endif; ?>
+        <table>
+            <tr>
+                <td><label for="password">username</label></td>
+                <td><input type="text" id="username" name="username" value="" /></td>
+            </tr>
+            <tr>
+                <td><label for="password">password</label></td>
+                <td><input type="password" id="password" name="password" value="" /></td>
+            </tr>
+        </table>
+        <div style="text-align:right; padding: 1em 2em;">
+            <input style="" type="submit" value="submit" />
+        </div>
+    </form>
+</body>
+</html>

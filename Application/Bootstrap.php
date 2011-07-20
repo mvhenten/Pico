@@ -1,7 +1,7 @@
 <?php
 define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
 define( "APPLICATION_PATH", dirname( APPLICATION_ROOT )); //where the application is
-require_once( APPLICATION_PATH . '/Nano/library/Nano/Autoloader.php');
+require_once( dirname(APPLICATION_PATH) . '/Nano/library/Nano/Autoloader.php');
 
 class Bootstrap{
     public function __construct(){
