@@ -42,11 +42,11 @@ class View_Index extends Nano_View{
             else{
                 $item = Nano_Db_Query::get('Item')->where('slug', $request->primary)->current();
             }
+
         }
 
         if( $item ){
             $this->template()->item = $item;
-            var_dump( $item );
         }
 
         $this->template()->item = $item;

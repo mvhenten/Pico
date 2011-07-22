@@ -76,24 +76,6 @@ var nano = {
     }
 }
 
-
-////$(function(){
-////    $('#action-labels').bind('click', function(evt){
-////        var url = $('#images').attr('action');
-////        $.ajax({url:url,
-////            context: document.body,
-////            type: "POST",
-////            data: $('#images').serialize(),
-////            success: function( data, status, xhr ){
-////                $($(data).find('form')[0]).dialog({
-////                    modal:true
-////                });
-////            }
-////        });
-////        return false;
-////    }, false);
-////});
-
 function upload_validate(el){
     var ext = el.value.toLowerCase().split('.').pop();
 
