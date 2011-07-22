@@ -18,6 +18,7 @@ class Admin_View_Image extends Admin_View_Base{
                     'inserted'  => date('Y-m-d H:i:s')
                 ));
 
+                $image->slug = $file->name;
                 $image->put();
 
                 if( $info[2] == IMAGETYPE_PNG ){

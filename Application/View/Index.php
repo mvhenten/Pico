@@ -36,6 +36,7 @@ class View_Index extends Nano_View{
     }
     public function get( $request, $config ){
         if( $request->primary ){
+            error_log( $request->primary );
             if( is_numeric($request->primary) ){
                 $item = new Model_Item( $request->primary );
             }
