@@ -45,7 +45,6 @@ if(typeof $.fn.rte === "undefined") {
 
             // already created? show/hide
             if(iframe) {
-                console.log("already created");
                 textarea.hide();
                 $(iframe).contents().find("body").html(content);
                 $(iframe).show();
@@ -269,12 +268,12 @@ if(typeof $.fn.rte === "undefined") {
             }
             return node;
         };
-        
+
         // enable design mode now
         enableDesignMode();
 
     }); //return this.each
-    
+
     }; // rte
 
 } // if

@@ -51,17 +51,12 @@ var nano = {
        */
       upload: function( el, types, label, buttons ){
         var ext = el.value.toLowerCase().split('.').pop();
-        console.log(label);
-        console.log(buttons);
         label = $(el.form).find(label);
         buttons = $(el.form).find(buttons);
 
         var validate = {};
         for( i in types ) validate[types[i]] = true;
 
-        console.log(validate);
-        console.log(label);
-        console.log(buttons);
 
         if( ext in validate ){
             $(label).text("Selected " + el.value)
@@ -78,8 +73,6 @@ var nano = {
 
 function upload_validate(el){
     var ext = el.value.toLowerCase().split('.').pop();
-
-    console.log(ext in {'png':1,'jpeg':1,'jpg':1})
 
     if( ext in {'png':1,'jpeg':1,'jpg':1} ){
         $(el.parentNode).find('label').text("Selected " + el.value)
