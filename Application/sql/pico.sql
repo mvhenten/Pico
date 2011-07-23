@@ -32,7 +32,7 @@ CREATE TABLE `image_data` (
   `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `item` (`image_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of image_data
@@ -49,7 +49,7 @@ CREATE TABLE `image_label` (
   UNIQUE KEY `image_label` (`image_id`,`label_id`),
   KEY `image` (`image_id`),
   KEY `label` (`label_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of image_label
@@ -71,7 +71,7 @@ CREATE TABLE `item` (
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `inserted` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of item
@@ -89,7 +89,7 @@ CREATE TABLE `item_content` (
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `itemk` (`item_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of item_content
@@ -108,7 +108,7 @@ CREATE TABLE `link` (
   `url` varchar(4096) CHARACTER SET latin1 DEFAULT NULL,
   `description` varchar(4096) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of link
@@ -123,7 +123,7 @@ CREATE TABLE `link_group` (
   `name` varchar(255) CHARACTER SET latin1 NOT NULL,
   `description` varchar(1024) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of link_group
@@ -143,7 +143,7 @@ CREATE TABLE `setting` (
   `value` varchar(255) CHARACTER SET latin1 NOT NULL,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT ;
 
 -- ----------------------------
 -- Records of setting
