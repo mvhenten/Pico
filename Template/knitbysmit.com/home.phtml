@@ -8,7 +8,7 @@
 <?php $this->block('masthead') ?>
     <div class="caroussel">
         <?php $r = range(1,5); shuffle($r); foreach($r as $i): ?>
-        <a href="/collection"><img src="/img/banner_<?php echo $i ?>.jpg" /></a>
+        <a href="/collection"><img src="/public/img/banner_<?php echo $i ?>.jpg" /></a>
         <?php endforeach; ?>
     </div>
     <script>$('.caroussel').cycle({timeout:3000})</script>

@@ -29,7 +29,7 @@ h2{
     line-height: 110px;
     overflow:hidden;
     text-align:right;
-    background: #1b380a url('/img/nav_bg.png') no-repeat top left;
+    background: #1b380a url('../img/nav_bg.png') no-repeat top left;
 }
 
 #navigation a,
@@ -112,7 +112,7 @@ h2{
 /** labels **/
 #secondary-navigation{
     padding: 0 1em;
-    background: #fff url('/img/secnav_bg.png') no-repeat top left;
+    background: #fff url('../img/secnav_bg.png') no-repeat top left;
     height: 197px;
 }
 

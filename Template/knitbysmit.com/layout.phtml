@@ -4,7 +4,7 @@
     <title>Knit By Smith | <?php echo $item->name ?></title>
     <script src="/js/jquery-1.4.2.min.js"></script>
     <script src="/js/jquery-ui-1.8.4.custom.min.js"></script>
-    <link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="/public/css/style.css" />
     <link href='http://fonts.googleapis.com/css?family=Arvo:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
     <?php $this->block( 'head' ); ?>
     <?php $this->endBlock( 'head' ); ?>
@@ -23,7 +23,7 @@
             <a class="<?php echo $request->primary == 'waar' ? 'active':''?>" href="/waar">Waar</a>
             <div id="logo">
                 <a href="/">
-                    <img alt="Knit By Smith | Home " src="/img/logo.png" />
+                    <img alt="Knit By Smith | Home " src="/public/img/logo.png" />
                 </a>
             </div>
         <?php $this->endBlock('navigation'); ?>
