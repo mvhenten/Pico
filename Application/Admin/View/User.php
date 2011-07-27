@@ -9,7 +9,9 @@ class Admin_View_User extends Nano_View{
         }
 
 
-        if( md5( $post->password ) == $config->admin->password ){
+        if( crypt( $post->password, $config->admin->password )
+            == $config->admin->password
+        ){
             @session_start();
             $_SESSION['user'] = 1;
             $this->response()->redirect( '/admin/' );
