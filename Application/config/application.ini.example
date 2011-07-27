@@ -3,7 +3,7 @@ template_path = Template/wedding.ischen.nl
 
 [admin]
 username   = "admin"
-password   = "3af2aebda9543f71a714925f8716f4f0"
+password   = "$1$VgWvLVmk$FE9fwOSnrF8vP8iRknxly1"
 
 [database]
 dsn = "mysql:dbname=pico;host=127.0.0.1"
@@ -37,4 +37,3 @@ site.route = "/:primary/:secondary"
 site.defaults.view = "index"
 site.defaults.primary = "home"
 site.defaults.secondary = null
-
