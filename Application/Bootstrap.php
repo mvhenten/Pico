@@ -17,15 +17,6 @@ class Bootstrap{
 
         Nano_Autoloader::registerNamespace( 'Pico', APPLICATION_ROOT . '/lib');
 
-        $model = new Pico_Schema_Item(1);
-
-        $model->name = "foobar";
-        //$model = new Pico_Model_Item();
-
-        var_dump($model);
-        return;
-
-
         if( null !== $router->module ){
             Nano_Autoloader::registerNamespace( 'Form',
                 APPLICATION_ROOT . '/' . ucfirst($router->module) . '/Forms' );

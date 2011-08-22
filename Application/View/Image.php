@@ -1,22 +1,27 @@
 <?php
 class View_Image extends Nano_View{
     protected function get( $request, $config ){
-        $imagedata = new Model_ImageData();
-        //$type = $imagedata->getType($request->type);
-        
-        $image = $imagedata->all()
-                ->where( 'image_id', $request->id )
-                ->where( 'type', $request->type )
-                ->current()
-                ;
+        $imagedata = new Pico_Schema_ImageData();
 
-        if( null == $image ){
-            $image = Model_ImageData::get()->all()
-                ->where('image_id', $request->id )
-                ->current();
+        $images = $imagedata->search( array('where' => array(
+            'image_id'  => $request->id,
+            'type'      => $request->type
+        )));
 
-            $id = Model_ImageData::resize( $image, $request->type );
-            $image = Model_ImageData::get( $id );
+        if( $images->rowCount() == 0 ){
+            $images = $imagedata->search( array('where' => array(
+                'image_id'  => $request->id,
+                'type'      => 'original'
+            )));
+
+            $image = $image->fetch();
+
+            if( $image ){
+                $image->resize( $request->type );
+            }
+        }
+        else{
+            $image = $images->fetch();
         }
 
         $this->_imageOut( $image );
@@ -38,8 +43,6 @@ class View_Image extends Nano_View{
                 exit;
             }
         }
-
-        //$data = $image->data;
 
         header( 'Content-Type: ' . $image->mime );
         header( 'Content-length: ' .  $image->size );

@@ -148,10 +148,13 @@ class Admin_View_Image extends Admin_View_Base{
     }
 
     public function getList( $request, $config ){
+        $item = new Pico_Model_Item();
+
         $template = $this->template();
         $values = array();
 
         if( is_numeric( $request->id ) ){
+
             $images = Nano_Db_Query::get('ImageLabel')
                     ->leftJoin( 'item', 'id', 'image_id')
                     ->where( 'label_id', $request->id)
@@ -160,9 +163,14 @@ class Admin_View_Image extends Admin_View_Base{
                     ->setModel( new Model_Image() );
         }
         else{
-            $images = Nano_Db_Query::get('Item')->where('type', 'image')->order('-inserted');
+            $images = $item->search(array( 'where' => array('type' => 'image')));
+#            $images = Nano_Db_Query::get('Item')->where('type', 'image')->order('-inserted');
         }
-        $labels = Nano_Db_Query::get('Item')->where('type', 'label');
+
+        $labels = $item->search(array( 'where' => array('type' => 'label')));
+
+
+        //$labels = Nano_Db_Query::get('Item')->where('type', 'label');
 
         $template->labels = $labels;
         $template->images = $images;
