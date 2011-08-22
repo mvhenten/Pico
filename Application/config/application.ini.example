@@ -1,5 +1,5 @@
 [settings]
-template_path = Template/wedding.ischen.nl
+template_path = Template/Yocto
 
 [admin]
 username   = "admin"
