@@ -1,0 +1,40 @@
+<?php $this->inherit( dirname(__file__) . '/layout') ?>
+
+<?php $this->block('masthead') ?>
+<?php $this->endBlock('masthead') ?>
+
+
+<?php $this->block('content'); ?>
+<div id="narrow-column-left">
+<?php if( isset( $labels ) ): ?>
+    <div id="secondary-navigation">
+    <h2>Collectie</h2>
+    <ul class='navigation'>
+        <?php foreach( $labels as $label ): ?>
+        <li><a class="<?php echo $request->primary == $label->slug ? 'active' : '' ?>" href="/<?php echo $label->slug ?>"><?php echo $label->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+    </div>
+<?php endif; ?>
+<?php foreach( $item->content as $content ): ?>
+<div class="content">
+<?php echo $content->value ?>
+</div>
+<?php endforeach; ?>
+</div>
+
+<?php if( isset($images) ): ?>
+<ul id="image-preview-area" class="images">
+<?php foreach( $images as $image ): ?>
+    <li>
+        <div class="border-padding">
+            <a href="/<?php echo $image->slug ?>">
+                <img alt="<?php echo $image->name ?>" src="/image/small/<?php echo $image->id ?>" />
+            </a>
+            <a href="/<?php echo $image->slug ?>"><?php echo $image->name ?></a><span class="teaser"><?php echo $this->Ellipsize($image->description, 64) ?></span>
+        </div>
+    </li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+<?php $this->endBlock('content'); ?>
