@@ -17,8 +17,8 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
     );
 
     private function _getImageSize( $type ){
-        if( isset( $self->_image_sizes[$type] ) ){
-            $value = $self->_image_sizes[$type];
+        if( isset( $this->_image_sizes[$type] ) ){
+            $value = $this->_image_sizes[$type];
             return explode( 'x', $value );
         }
         else{
@@ -45,21 +45,20 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
         $target = $gd->resize( $width, $height );
         $data   = $target->getImageJPEG();
 
-        preg_match( '/^(\w+)\.(\w+)?/', $original->filename, $match );
+        preg_match( '/^(\w+)\.(\w+)?/', $this->filename, $match );
 
         list(,$base, $ext) = $match;
 
-        $new = Pico_Schema_ImageData();
+        $new = new Pico_Schema_ImageData();
 
         $new->data     = $target->getImageJPEG();
         $new->size     = strlen($data);
         $new->mime     = 'image/jpeg';
         $new->width    = $width;
         $new->height   = $height;
-        $new->filename = sprintf('%s_%s.%s', $base, $typename, $ext);
-        $new->image_id = $original->image_id;
-        $new->type     = $typename;
-
+        $new->filename = sprintf('%s_%s.%s', $base, $type, $ext);
+        $new->image_id = $this->image_id;
+        $new->type     = $type;
         $new->store();
 
         return $new;

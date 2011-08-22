@@ -1,49 +1,54 @@
 <?php
 class Admin_View_Image extends Admin_View_Base{
+    private function _procesUpload(){
+        $file = (object) $_FILES['image'];
+
+        if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
+            $gd  = new Nano_Gd( $file->tmp_name );
+            list( $width, $height ) = array_values( $gd->getDimensions() );
+
+            $image = new Pico_Model_Item(array(
+                'name'     => $file->name,
+                'visible'   => 0,
+                'type'      => 'image',
+                'inserted'  => date('Y-m-d H:i:s'),
+                'slug'      => $file->name
+            ));
+
+            $image->store();
+
+            return;
+
+            if( $info[2] == IMAGETYPE_PNG ){
+                $src = $gd->getImagePNG();
+            }
+            else{
+                $src = $gd->getImageJPEG();
+                $file->type = 'image/jpeg';
+            }
+
+            $data = new Pico_Model_ImageData(array(
+                'image_id'  => $image->id,
+                'size'      => $file->size,
+                'mime'      => $file->type,
+                'width'     => $width,
+                'height'    => $height,
+                'data'      => $src,
+                'filename'  => $file->name,
+                'type'      => 'original'
+            ));
+
+            $data->store();
+        }
+    }
+
+
     public function post( $request, $config ){
         $post = $request->getPost();
 
         if( $request->action == 'upload' ){
-            $file = (object) $_FILES['image'];
-
-
-            if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
-                $gd  = new Nano_Gd( $file->tmp_name );
-                list( $width, $height ) = array_values( $gd->getDimensions() );
-
-                $image = new Model_Item(array(
-                    'name'     => $file->name,
-                    'visible'   => 0,
-                    'type'      => 'image',
-                    'inserted'  => date('Y-m-d H:i:s')
-                ));
-
-                $image->slug = $file->name;
-                $image->put();
-
-                if( $info[2] == IMAGETYPE_PNG ){
-                    $src = $gd->getImagePNG();
-                }
-                else{
-                    $src = $gd->getImageJPEG();
-                    $file->type = 'image/jpeg';
-                }
-
-                $data = new Model_ImageData(array(
-                    'image_id'  => $image->id,
-                    'size'      => $file->size,
-                    'mime'      => $file->type,
-                    'width'     => $width,
-                    'height'    => $height,
-                    'data'      => $src,
-                    'filename'  => $file->name,
-                    'type'      => 'original'
-                ));
-
-                $data->put();
-                //var_dump($image);
-                $this->response()->redirect('/admin/image' );
-            }
+            $this->_procesUpload();
+            $this->response()->redirect('/admin/image' );
         }
         else if( $request->action == 'edit' || $request->action == 'label' ){
             if( $request->action == 'edit' ){
@@ -154,23 +159,20 @@ class Admin_View_Image extends Admin_View_Base{
         $values = array();
 
         if( is_numeric( $request->id ) ){
+            //@TODO FIXME
 
-            $images = Nano_Db_Query::get('ImageLabel')
-                    ->leftJoin( 'item', 'id', 'image_id')
-                    ->where( 'label_id', $request->id)
-                    ->where( 'item.id !=', 'NULL' )
-                    ->order('priority')
-                    ->setModel( new Model_Image() );
+            //$images = Nano_Db_Query::get('ImageLabel')
+            //        ->leftJoin( 'item', 'id', 'image_id')
+            //        ->where( 'label_id', $request->id)
+            //        ->where( 'item.id !=', 'NULL' )
+            //        ->order('priority')
+            //        ->setModel( new Model_Image() );
         }
         else{
             $images = $item->search(array( 'where' => array('type' => 'image')));
-#            $images = Nano_Db_Query::get('Item')->where('type', 'image')->order('-inserted');
         }
 
         $labels = $item->search(array( 'where' => array('type' => 'label')));
-
-
-        //$labels = Nano_Db_Query::get('Item')->where('type', 'label');
 
         $template->labels = $labels;
         $template->images = $images;

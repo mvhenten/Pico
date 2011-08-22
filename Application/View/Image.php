@@ -1,7 +1,7 @@
 <?php
 class View_Image extends Nano_View{
     protected function get( $request, $config ){
-        $imagedata = new Pico_Schema_ImageData();
+        $imagedata = new Pico_Model_ImageData();
 
         $images = $imagedata->search( array('where' => array(
             'image_id'  => $request->id,
@@ -14,10 +14,11 @@ class View_Image extends Nano_View{
                 'type'      => 'original'
             )));
 
-            $image = $image->fetch();
+            $original = $images->fetch();
 
-            if( $image ){
-                $image->resize( $request->type );
+            if( $original ){
+                $image = $original->resize( $request->type );
+                $this->_imageOut( $image );
             }
         }
         else{
