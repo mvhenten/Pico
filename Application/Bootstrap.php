@@ -22,7 +22,7 @@ class Bootstrap{
                 APPLICATION_ROOT . '/' . ucfirst($router->module) . '/Forms' );
         }
 
-        $klass = array($request->module, 'View', $request->view );
+        $klass = array($request->module ? $request->module : 'Pico', 'View', $request->view );
         $klass = join( '_', array_map('ucfirst', array_filter($klass)));
 
         if( class_exists($klass) ){
