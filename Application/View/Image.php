@@ -15,6 +15,8 @@ class View_Image extends Nano_View{
             )));
 
             $original = $images->fetch();
+            
+            error_log( 'hier' );
 
             if( $original ){
                 $image = $original->resize( $request->type );

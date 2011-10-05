@@ -35,6 +35,11 @@ class Pico_Schema_ImageLabel extends Nano_Db_Schema {
         'image_id','label_id'
     );
 
+    public function images(){
+        return $this->belongs_to( 'Pico_Model_Item', array( 'id' => 'image_id' ));
+    }
 
-
+    public function labels(){
+        return $this->belongs_to( 'Pico_Model_Item', array( 'id' => 'label_id' ));
+    }
 }

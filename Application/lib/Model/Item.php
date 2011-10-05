@@ -18,6 +18,15 @@ class Pico_Model_Item extends Pico_Schema_Item {
         //}
 
         return $string;
+    
+    
     }
-
+    
+    public function images(){
+        return $this->has_many_to_many( 'images', 'Pico_Schema_ImageLabel',
+            array( 'label_id' => 'id' ),
+            array('order' => 'priority')
+        );
+    }
+    
 }

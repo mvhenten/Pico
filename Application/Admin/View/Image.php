@@ -103,18 +103,19 @@ class Admin_View_Image extends Admin_View_Base{
                 ->redirect( '/admin/image/list/' . $request->id );
         }
         else if( $request->action == 'order' ){
-            $ids = array();
-            foreach($post->priority as $id => $p ) $ids[] = array('image_id', $id );
 
-            Nano_Db_Query::get('ImageLabel')->delete($ids);
+            $ids = array();
+            
+            $imdata = new Pico_Schema_ImageLabel();
+            $imdata->delete(array('image_id' => array( 'in', array_keys($post->priority))));
 
             foreach( $post->priority as $id => $priority ){
-                $insert = new Model_ImageLabel(array(
-                    'label_id'  => $request->id,
-                    'image_id'  => $id,
-                    'priority'  => $priority
-                ));
-                $insert->put();
+                $img_label = new Pico_Schema_ImageLabel();
+                $img_label->label_id = $request->id;
+                $img_label->image_id = $id; 
+                $img_label->priority = $priority;
+
+                $img_label->store();
             }
 
             $this->response()
@@ -159,14 +160,13 @@ class Admin_View_Image extends Admin_View_Base{
         $values = array();
 
         if( is_numeric( $request->id ) ){
-            //@TODO FIXME
-
-            //$images = Nano_Db_Query::get('ImageLabel')
-            //        ->leftJoin( 'item', 'id', 'image_id')
-            //        ->where( 'label_id', $request->id)
-            //        ->where( 'item.id !=', 'NULL' )
-            //        ->order('priority')
-            //        ->setModel( new Model_Image() );
+            $item = new Pico_Model_Item( $request->id );
+            $images = $item->images()->fetchAll();
+            
+            foreach( $images as $img ){
+                error_log( $img->id );
+            }
+            
         }
         else{
             $images = $item->search(array( 'where' => array('type' => 'image')));
@@ -181,25 +181,31 @@ class Admin_View_Image extends Admin_View_Base{
     }
 
 
-    public function getLabel( $request, $config ){
-        $template = $this->template();
+    public function getLabel( $request, $config ){        
+        $template = '/Admin/template/image/label';
 
-        if( null == $request->id ){
-            $label = Nano_Db_Query::get('Item')->where('type', 'label')->order('updated');
-            $this->template()->labels = $label;
+        if( $request->id ){
+            $item = new Pico_Model_Item( $request->id );
 
-            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/labels');
-        }
-        else{
-            $label = new Model_Item( $request->id );
             $html  = array();
 
             $form = new Form_Item( $label );
-            $template->label = $label;
-            $template->form = $form;
-
-            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/label');
+            $this->template()->label = $label;
+            $this->template()->form = $form;            
         }
+        else{
+            $item = new Pico_Model_Item();
+            $labels = $item->search(array(
+                'where' => array('type' => 'label'),
+                'order' => 'updated'
+            ));
+            
+            $this->template()->labels = $labels;
+            $template = '/Admin/template/image/labels';
+
+        }
+        
+        return $this->template()->render( APPLICATION_ROOT . $template );
     }
 
     protected  function getEdit(  $request, $config ){
