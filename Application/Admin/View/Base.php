@@ -10,5 +10,4 @@ class Admin_View_Base extends Nano_View{
 
         parent::__construct( $request, $config );
     }
-
 }

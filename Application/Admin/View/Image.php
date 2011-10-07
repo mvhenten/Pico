@@ -1,152 +1,151 @@
 <?php
 class Admin_View_Image extends Admin_View_Base{
-    private function _procesUpload(){
+    /**
+     * Handler for /admin/image/upload
+     * Stores a new item and image_data
+     */
+    public function upload( $request, $config ){
+
+        if( ! $request->isPost() ){
+            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/upload');
+        }
+
         $file = (object) $_FILES['image'];
+        $post = $request->getPost();
 
         if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
             $gd  = new Nano_Gd( $file->tmp_name );
             list( $width, $height ) = array_values( $gd->getDimensions() );
 
-            $image = new Pico_Model_Item(array(
+            $item = $this->model('Item', array(
                 'name'     => $file->name,
                 'visible'   => 0,
                 'type'      => 'image',
                 'inserted'  => date('Y-m-d H:i:s'),
                 'slug'      => $file->name
-            ));
+            ))->store();
 
-            $image->store();
+            $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG();
+            $type = ($info[2] != IMAGETYPE_PNG) ? 'image/jpeg' : $file->type;
 
-            return;
-
-            if( $info[2] == IMAGETYPE_PNG ){
-                $src = $gd->getImagePNG();
-            }
-            else{
-                $src = $gd->getImageJPEG();
-                $file->type = 'image/jpeg';
-            }
-
-            $data = new Pico_Model_ImageData(array(
-                'image_id'  => $image->id,
+            $this->model('ImageData', array(
+                'image_id'  => $item->id,
                 'size'      => $file->size,
-                'mime'      => $file->type,
+                'mime'      => $type,
                 'width'     => $width,
                 'height'    => $height,
                 'data'      => $src,
                 'filename'  => $file->name,
                 'type'      => 'original'
-            ));
-
-            $data->store();
+            ))->store();
         }
+
+        $str = ob_get_clean();
+        $this->response()->redirect('/admin/image' );
+    }
+
+    public function postLabel( $request, $config ){
+        return $this->postEdit( $request, $config );
+    }
+
+    public function postEdit( $request, $config ){
+        $post = $request->getPost();
+
+        if( $request->action == 'edit' ){
+            $item = new Model_Image($request->id);
+            $labels = array_keys((array) $post->labels);
+            $item->setLabels($labels);
+        }
+        else{
+            $item = new Model_Item( $request->id );
+        }
+
+        if( preg_match( '/^unttiled',  $post->slug ) ){
+            $item->slug = $request->slug($post->name);
+        }
+
+        if( stripos( $item->slug,'untitled' ) === 0 ){
+
+        }
+        else{
+            $item->slug = $request->slug($post->slug);
+        }
+
+        $item->name = $post->name;
+        $item->description = $post->description;
+        $item->visible = (bool)$post->visible;
+        $item->put();
+
+        $this->response()
+            ->redirect( '/admin/image/' . $request->action . '/' . $request->id );
+    }
+
+    public function postLabelsbulk( $request, $config ){
+        $post = $request->getPost();
+
+        if( $post->apply ){
+            $images = json_decode($post->images);
+            error_log( print_r( $images, true ));
+            $this->model('ImageLabel')->delete(array('image_id' => $images));
+            error_log(print_r($post->labels, true));
+
+            foreach( $post->labels as $label_id => $bool ){
+                foreach( $images as $id ){
+                    $this->model('ImageLabel', array(
+                        'image_id'  => $id,
+                        'label_id'  => $label_id
+                    ))->store();
+                }
+            }
+        }
+
+        $this->response()
+            ->redirect( '/admin/image/list/' . $request->id );
+    }
+
+    public function postOrder( $request, $config ){
+        $post = $request->getPost();
+
+        $this->model('ImageLabel')->delete(array(
+            'image_id' => array_keys($post->priority)));
+
+        foreach( $post->priority as $id => $priority ){
+            $this->model('ImageLabel', array(
+                'label_id' => $request->id,
+                'image_id' => $id,
+                'priority' => $priority
+            ))->store();
+        }
+
+        $this->response()
+            ->redirect( '/admin/image/list/' . $request->id );
     }
 
 
     public function post( $request, $config ){
         $post = $request->getPost();
 
-        if( $request->action == 'upload' ){
-            $this->_procesUpload();
-            $this->response()->redirect('/admin/image' );
-        }
-        else if( $request->action == 'edit' || $request->action == 'label' ){
-            
-            
-            if( $request->action == 'edit' ){
-                $item = new Model_Image($request->id);
-                $labels = array_keys((array) $post->labels);
-                $item->setLabels($labels);
-            }
-            else{
-                $item = new Model_Item( $request->id );
-            }
-            
-            if( preg_match( '/^unttiled',  $post->slug ) ){
-                $item->slug = $request->slug($post->name);
-            }
-
-            if( stripos( $item->slug,'untitled' ) === 0 ){
-                
-            }
-            else{
-                $item->slug = $request->slug($post->slug);
-            }
-
-
-
-            $item->name = $post->name;
-            $item->description = $post->description;
-            $item->visible = (bool)$post->visible;
-            $item->put();
-
-            $this->response()
-                ->redirect( '/admin/image/' . $request->action . '/' . $request->id );
-        }
-        else if( $request->action == 'list' ){
+        if( $request->action == 'list' ){
             return $this->getLabelsBulk( $request, $config );
         }
-        else if( $request->action == 'labelsbulk' ){
-            $post = $request->getPost();
-            
-            if( $post->apply ){
-                $images = json_decode($post->images);
-                error_log( print_r( $images, true ));
-                $this->model('ImageLabel')->delete(array('image_id' => $images));
-                error_log(print_r($post->labels, true));
-                
-                foreach( $post->labels as $label_id => $bool ){
-                    foreach( $images as $id ){
-                        $this->model('ImageLabel', array(
-                            'image_id'  => $id,
-                            'label_id'  => $label_id
-                        ))->store();                        
-                    }
-                }
-            }
-
-            $this->response()
-                ->redirect( '/admin/image/list/' . $request->id );
-        }
-        else if( $request->action == 'order' ){
-            $this->model('ImageLabel')->delete(array(
-                'image_id' => array_keys($post->priority)));
-
-            foreach( $post->priority as $id => $priority ){
-                $this->model('ImageLabel', array(
-                    label_id => $request->id,
-                    image_id => $id,
-                    priority => $priority
-                ))->store();
-
-                $img_label->store();
-            }
-
-            $this->response()
-                ->redirect( '/admin/image/list/' . $request->id );
-        }
     }
 
-
-    public function getUpload( $request, $config ){
-        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/upload');
-    }
 
     public function getLabelsBulk( $request, $config ){
         if( ! $request->isPost() )
             return;
 
-        $post = $request->getPost();        
-        
+        $post = $request->getPost();
+
         $selected_query = $this->model('ImageLabel')->search(array(
             'where' => array( 'image_id' => $post->image ),
             'group' => 'label_id'
         ));
-        
-        
+
+
         $selected_query->setFetchMode( PDO::FETCH_COLUMN, 1 );
         $selected_labels = $selected_query->fetchAll();
-        
+
         $labels = array();
         foreach( $this->model('Item')->search( array( 'where' => array('type' => 'label') ) ) as $label ){
             $labels[$label->id] = (object) array(
@@ -171,7 +170,8 @@ class Admin_View_Image extends Admin_View_Base{
         }
         else{
             $images = $this->model('Item')->search(array(
-                'where' => array('type' => 'image')));
+                'where' => array('type' => 'image'),
+                'order' => '-inserted'));
         }
 
         $labels = $this->model('Item')->search(array(
@@ -184,7 +184,7 @@ class Admin_View_Image extends Admin_View_Base{
     }
 
 
-    public function getLabel( $request, $config ){        
+    public function getLabel( $request, $config ){
         $template = '/Admin/template/image/label';
 
         if( $request->id ){
@@ -194,7 +194,7 @@ class Admin_View_Image extends Admin_View_Base{
 
             $form = new Form_Item( $label );
             $this->template()->label = $label;
-            $this->template()->form = $form;            
+            $this->template()->form = $form;
         }
         else{
             $item = new Pico_Model_Item();
@@ -202,12 +202,12 @@ class Admin_View_Image extends Admin_View_Base{
                 'where' => array('type' => 'label'),
                 'order' => 'updated'
             ));
-            
+
             $this->template()->labels = $labels;
             $template = '/Admin/template/image/labels';
 
         }
-        
+
         return $this->template()->render( APPLICATION_ROOT . $template );
     }
 

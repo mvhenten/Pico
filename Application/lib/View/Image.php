@@ -15,19 +15,29 @@ class Pico_View_Image extends Nano_View{
             )));
 
             $original = $images->fetch();
-            
-            error_log( 'hier' );
 
             if( $original ){
                 $image = $original->resize( $request->type );
-                $this->_imageOut( $image );
             }
         }
         else{
             $image = $images->fetch();
         }
 
-        $this->_imageOut( $image );
+        if( isset($image) ){
+            $this->_imageOut( $image );
+        }
+    }
+
+    private function _get_image_type( $id, $type ){
+        $images = $imagedata->search( array('where' => array(
+            'image_id'  => $id,
+            'type'      => $type
+        )));
+
+        if( $images->rowCount() ){
+            return $images->fetch();
+        }
     }
 
 
