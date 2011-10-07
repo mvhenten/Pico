@@ -51,6 +51,8 @@ class Admin_View_Image extends Admin_View_Base{
             $this->response()->redirect('/admin/image' );
         }
         else if( $request->action == 'edit' || $request->action == 'label' ){
+            
+            
             if( $request->action == 'edit' ){
                 $item = new Model_Image($request->id);
                 $labels = array_keys((array) $post->labels);
@@ -59,9 +61,13 @@ class Admin_View_Image extends Admin_View_Base{
             else{
                 $item = new Model_Item( $request->id );
             }
+            
+            if( preg_match( '/^unttiled',  $post->slug ) ){
+                $item->slug = $request->slug($post->name);
+            }
 
             if( stripos( $item->slug,'untitled' ) === 0 ){
-                $item->slug = $request->slug($post->name);
+                
             }
             else{
                 $item->slug = $request->slug($post->slug);
@@ -82,20 +88,20 @@ class Admin_View_Image extends Admin_View_Base{
         }
         else if( $request->action == 'labelsbulk' ){
             $post = $request->getPost();
-            $images = json_decode($post->images);
-
-            $ids = array();
-            foreach($images as $id ) $ids[] = array('image_id', $id );
-
-            Nano_Db_Query::get('ImageLabel')->delete($ids);
-
-            foreach( $post->labels as $id => $value ){
-                foreach( $images as $img_id ){
-                    $insert = new Model_ImageLabel(array(
-                        'label_id' => $id,
-                        'image_id' => $img_id
-                    ));
-                    $insert->put();
+            
+            if( $post->apply ){
+                $images = json_decode($post->images);
+                error_log( print_r( $images, true ));
+                $this->model('ImageLabel')->delete(array('image_id' => $images));
+                error_log(print_r($post->labels, true));
+                
+                foreach( $post->labels as $label_id => $bool ){
+                    foreach( $images as $id ){
+                        $this->model('ImageLabel', array(
+                            'image_id'  => $id,
+                            'label_id'  => $label_id
+                        ))->store();                        
+                    }
                 }
             }
 
@@ -103,17 +109,15 @@ class Admin_View_Image extends Admin_View_Base{
                 ->redirect( '/admin/image/list/' . $request->id );
         }
         else if( $request->action == 'order' ){
-
-            $ids = array();
-            
-            $imdata = new Pico_Schema_ImageLabel();
-            $imdata->delete(array('image_id' => array( 'in', array_keys($post->priority))));
+            $this->model('ImageLabel')->delete(array(
+                'image_id' => array_keys($post->priority)));
 
             foreach( $post->priority as $id => $priority ){
-                $img_label = new Pico_Schema_ImageLabel();
-                $img_label->label_id = $request->id;
-                $img_label->image_id = $id; 
-                $img_label->priority = $priority;
+                $this->model('ImageLabel', array(
+                    label_id => $request->id,
+                    image_id => $id,
+                    priority => $priority
+                ))->store();
 
                 $img_label->store();
             }
@@ -132,47 +136,46 @@ class Admin_View_Image extends Admin_View_Base{
         if( ! $request->isPost() )
             return;
 
-        $post = $request->getPost();
-
-        $labels = Nano_Db_Query::get('Item')
-            ->where('type', 'label');
-
-        $selected = Nano_Db_Query::get('ImageLabel')
-            ->group('label_id');
-
-        foreach( $post->image as $id ){
-            $selected->orWhere('image_id', $id );
+        $post = $request->getPost();        
+        
+        $selected_query = $this->model('ImageLabel')->search(array(
+            'where' => array( 'image_id' => $post->image ),
+            'group' => 'label_id'
+        ));
+        
+        
+        $selected_query->setFetchMode( PDO::FETCH_COLUMN, 1 );
+        $selected_labels = $selected_query->fetchAll();
+        
+        $labels = array();
+        foreach( $this->model('Item')->search( array( 'where' => array('type' => 'label') ) ) as $label ){
+            $labels[$label->id] = (object) array(
+                'selected'  => in_array( $label->id, $selected_labels ),
+                'name'      => $label->name,
+                'id'        => $label->id
+            );
         }
 
-        $selected = $selected->pluck('label_id');
-
-        $this->template()->selected = array_flip($selected);
         $this->template()->labels = $labels;
         $this->template()->images = json_encode(array_keys($post->image));
-        //print "TESTA";
         return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/bulk');
     }
 
     public function getList( $request, $config ){
-        $item = new Pico_Model_Item();
-
         $template = $this->template();
         $values = array();
 
         if( is_numeric( $request->id ) ){
-            $item = new Pico_Model_Item( $request->id );
-            $images = $item->images()->fetchAll();
-            
-            foreach( $images as $img ){
-                error_log( $img->id );
-            }
-            
+            $label = new Pico_Model_Item( $request->id );
+            $images = $label->images()->fetchAll();
         }
         else{
-            $images = $item->search(array( 'where' => array('type' => 'image')));
+            $images = $this->model('Item')->search(array(
+                'where' => array('type' => 'image')));
         }
 
-        $labels = $item->search(array( 'where' => array('type' => 'label')));
+        $labels = $this->model('Item')->search(array(
+            'where' => array('type' => 'label')));
 
         $template->labels = $labels;
         $template->images = $images;

@@ -23,7 +23,7 @@
         <ul class="itemlist">
         <?php foreach( $labels as $label ): ?>
             <li>
-                <input id="checkbox-<?php echo $label->id ?>" type="checkbox" <?php echo isset($selected[$label->id]) ? 'checked="checked"':'' ?> name="labels[<?php echo $label->id ?>]" value="true" />
+                <input id="checkbox-<?php echo $label->id ?>" type="checkbox" <?php echo $label->selected ? 'checked="checked"':'' ?> name="labels[<?php echo $label->id ?>]" value="true" />
                 <label for="checkbox-<?php echo $label->id ?>"><?php echo $label->name ?></label>
             </li>
         <?php endforeach; ?>
