@@ -5,7 +5,6 @@ class Admin_View_Image extends Admin_View_Base{
      * Stores a new item and image_data
      */
     public function upload( $request, $config ){
-
         if( ! $request->isPost() ){
             return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/upload');
         }
@@ -40,7 +39,6 @@ class Admin_View_Image extends Admin_View_Base{
             ))->store();
         }
 
-        $str = ob_get_clean();
         $this->response()->redirect('/admin/image' );
     }
 
@@ -80,36 +78,28 @@ class Admin_View_Image extends Admin_View_Base{
             ->redirect( '/admin/image/' . $request->action . '/' . $request->id );
     }
 
-    public function postLabelsbulk( $request, $config ){
-        $post = $request->getPost();
-
-        if( $post->apply ){
-            $images = json_decode($post->images);
-            error_log( print_r( $images, true ));
-            $this->model('ImageLabel')->delete(array('image_id' => $images));
-            error_log(print_r($post->labels, true));
-
-            foreach( $post->labels as $label_id => $bool ){
-                foreach( $images as $id ){
-                    $this->model('ImageLabel', array(
-                        'image_id'  => $id,
-                        'label_id'  => $label_id
-                    ))->store();
-                }
-            }
-        }
-
-        $this->response()
-            ->redirect( '/admin/image/list/' . $request->id );
-    }
 
     public function postOrder( $request, $config ){
         $post = $request->getPost();
-
+        
+        $label = $this->model('Item', $request->id);
+        
+        if( ! $label->id ){
+            throw new Exception('Not a valid label id');
+        }
+        
         $this->model('ImageLabel')->delete(array(
-            'image_id' => array_keys($post->priority)));
+            'image_id' => array_keys($post->priority),
+            'label_id' => $label->id
+        ));
+
+        print_r( array(
+            'image_id' => array_keys($post->priority),
+            'label_id' => $label->id
+        ));
 
         foreach( $post->priority as $id => $priority ){
+            printf( '%s => %s' . "\n", $id, $label->id );
             $this->model('ImageLabel', array(
                 'label_id' => $request->id,
                 'image_id' => $id,
@@ -121,22 +111,7 @@ class Admin_View_Image extends Admin_View_Base{
             ->redirect( '/admin/image/list/' . $request->id );
     }
 
-
-    public function post( $request, $config ){
-        $post = $request->getPost();
-
-        if( $request->action == 'list' ){
-            return $this->getLabelsBulk( $request, $config );
-        }
-    }
-
-
     public function getLabelsBulk( $request, $config ){
-        if( ! $request->isPost() )
-            return;
-
-        $post = $request->getPost();
-
         $selected_query = $this->model('ImageLabel')->search(array(
             'where' => array( 'image_id' => $post->image ),
             'group' => 'label_id'
@@ -159,6 +134,29 @@ class Admin_View_Image extends Admin_View_Base{
         $this->template()->images = json_encode(array_keys($post->image));
         return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/bulk');
     }
+
+    public function postLabelsbulk( $request, $config ){
+        $post = $request->getPost();
+
+        if( $post->apply ){
+            $images = json_decode($post->images);
+            $this->model('ImageLabel')->delete(array('image_id' => $images));
+            
+        
+            foreach( $post->labels as $label_id => $bool ){
+                foreach( $images as $id ){
+                    $this->model('ImageLabel', array(
+                        'image_id'  => $id,
+                        'label_id'  => $label_id
+                    ))->store();
+                }
+            }
+        }
+
+        $this->response()
+            ->redirect( '/admin/image/list/' . $request->id );
+    }
+
 
     public function getList( $request, $config ){
         $template = $this->template();
