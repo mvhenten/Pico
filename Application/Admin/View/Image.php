@@ -6,7 +6,7 @@ class Admin_View_Image extends Admin_View_Base{
      */
     public function upload( $request, $config ){
         if( ! $request->isPost() ){
-            return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/upload');
+            return $this->template()->render( 'image/upload');
         }
 
         $file = (object) $_FILES['image'];
@@ -48,36 +48,85 @@ class Admin_View_Image extends Admin_View_Base{
 
     public function postEdit( $request, $config ){
         $post = $request->getPost();
-
-        if( $request->action == 'edit' ){
-            $item = new Model_Image($request->id);
-            $labels = array_keys((array) $post->labels);
-            $item->setLabels($labels);
+        
+        $item = new Pico_Model_Item( $request->id );
+        
+        if( null === $item->id ){
+            throw new Exception('Invalid ID');
         }
-        else{
-            $item = new Model_Item( $request->id );
+        
+        $labels = array_keys((array) $post->labels);
+        
+        $this->model('ImageLabel')->delete(array(
+            'image_id' => $request->id
+        ));
+        
+        foreach( $labels as $id ){
+            $n = $this->model('ImageLabel', array(
+                'image_id' => $request->id,
+                'label_id' => $id,
+                'priority' => 0
+            ))->store();
         }
 
-        if( preg_match( '/^unttiled',  $post->slug ) ){
+        if( preg_match( '/^untitled/',  $post->slug ) ){
             $item->slug = $request->slug($post->name);
         }
-
-        if( stripos( $item->slug,'untitled' ) === 0 ){
-
-        }
         else{
-            $item->slug = $request->slug($post->slug);
+            $item->slug = $post->slug;
         }
 
-        $item->name = $post->name;
-        $item->description = $post->description;
-        $item->visible = (bool)$post->visible;
-        $item->put();
+        $item->name         = $post->name;
+        $item->description  = $post->description;
+        $item->visible      = (bool) $post->visible;
+        $item->store(array( id => $request->id ) );
 
         $this->response()
             ->redirect( '/admin/image/' . $request->action . '/' . $request->id );
     }
 
+    protected  function getEdit(  $request, $config ){
+        $template = $this->template();
+ 
+        $image           = new Pico_Model_Item( $request->id );
+        $labels          = $this->model('Item')->search(array('type' => 'label'));
+        $labels_selected = $image->labels();
+        
+        $labels_selected->setFetchMode( PDO::FETCH_COLUMN, 0 );
+        $labels_selected_ids = $labels_selected->fetchAll();
+        
+        $form = new Form_Item( $image );
+
+        $fieldset = array(
+            'type'  => 'fieldset',
+            'elements'=>array(),
+            'label' => 'labels'
+                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\', true)" href="#all">(select all)</a>'
+                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\',0)" href="#none">(select none)</a>'
+        );
+        
+        foreach( $labels as $label ){
+            $fieldset['elements']['labels[' . $label->id . ']'] = array(
+                'type'  => 'checkbox',
+                'value' => (bool) in_array( $label->id, $labels_selected_ids),
+                'label' => $label->name
+            );
+        }
+
+        // append fieldset and move the submit button...
+        $block = current($form->children(array('id'=> 'item-values')));
+        $block->addElement('fieldset-labels', $fieldset );
+
+        $submit = current($form->removeChildren(array('name'=>'save-changes')));
+        $block->addChild($submit);
+
+        //$form->addChild($submit);
+
+        $template->image = $image;
+        $template->form = $form;
+        $template->render('image/edit');
+        return $template;
+    }
 
     public function postOrder( $request, $config ){
         $post = $request->getPost();
@@ -111,33 +160,20 @@ class Admin_View_Image extends Admin_View_Base{
             ->redirect( '/admin/image/list/' . $request->id );
     }
 
-    public function getLabelsBulk( $request, $config ){
-        $selected_query = $this->model('ImageLabel')->search(array(
-            'where' => array( 'image_id' => $post->image ),
-            'group' => 'label_id'
-        ));
+    public function postList( $request, $config ){
+        $post = $request->getPost();
+                
+        var_dump( $post );
 
-
-        $selected_query->setFetchMode( PDO::FETCH_COLUMN, 1 );
-        $selected_labels = $selected_query->fetchAll();
-
-        $labels = array();
-        foreach( $this->model('Item')->search( array( 'where' => array('type' => 'label') ) ) as $label ){
-            $labels[$label->id] = (object) array(
-                'selected'  => in_array( $label->id, $selected_labels ),
-                'name'      => $label->name,
-                'id'        => $label->id
-            );
+        if( $post->form_action_labels ){
+            return $this->postLabelsbulk( $request, $config );
         }
-
-        $this->template()->labels = $labels;
-        $this->template()->images = json_encode(array_keys($post->image));
-        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/image/bulk');
+        
     }
 
     public function postLabelsbulk( $request, $config ){
         $post = $request->getPost();
-
+        
         if( $post->apply ){
             $images = json_decode($post->images);
             $this->model('ImageLabel')->delete(array('image_id' => $images));
@@ -152,14 +188,36 @@ class Admin_View_Image extends Admin_View_Base{
                 }
             }
         }
+        else{
+            $selected_query = $this->model('ImageLabel')->search(array(
+                'where' => array( 'image_id' => $post->image ),
+                'group' => 'label_id'
+            ));
+    
+            $selected_query->setFetchMode( PDO::FETCH_COLUMN, 1 );
+            $selected_labels = $selected_query->fetchAll();
+    
+            $labels = array();
+            foreach( $this->model('Item')->search( array( 'where' => array('type' => 'label') ) ) as $label ){
+                $labels[$label->id] = (object) array(
+                    'selected'  => in_array( $label->id, $selected_labels ),
+                    'name'      => $label->name,
+                    'id'        => $label->id
+                );
+            }
+    
+            $this->template()->labels = $labels;
+            $this->template()->images = json_encode(array_keys($post->image));
+            return $this->template()->render( 'image/bulk');            
+        }
 
         $this->response()
             ->redirect( '/admin/image/list/' . $request->id );
+
     }
 
 
     public function getList( $request, $config ){
-        $template = $this->template();
         $values = array();
 
         if( is_numeric( $request->id ) ){
@@ -175,15 +233,16 @@ class Admin_View_Image extends Admin_View_Base{
         $labels = $this->model('Item')->search(array(
             'where' => array('type' => 'label')));
 
+        $template = $this->template();
+
         $template->labels = $labels;
         $template->images = $images;
 
-        return $template->render( APPLICATION_ROOT . '/Admin/template/image/list');
+        return $template->render( 'image/list');
     }
 
 
     public function getLabel( $request, $config ){
-        $template = '/Admin/template/image/label';
 
         if( $request->id ){
             $item = new Pico_Model_Item( $request->id );
@@ -193,6 +252,8 @@ class Admin_View_Image extends Admin_View_Base{
             $form = new Form_Item( $label );
             $this->template()->label = $label;
             $this->template()->form = $form;
+
+            $tpl_path = 'image/label';
         }
         else{
             $item = new Pico_Model_Item();
@@ -202,47 +263,9 @@ class Admin_View_Image extends Admin_View_Base{
             ));
 
             $this->template()->labels = $labels;
-            $template = '/Admin/template/image/labels';
-
+            $tpl_path = 'image/labels';
         }
 
-        return $this->template()->render( APPLICATION_ROOT . $template );
-    }
-
-    protected  function getEdit(  $request, $config ){
-        $template = $this->template();
-
-        $image = new Model_Image( $request->id );
-        $form = new Form_Item( $image );
-
-        $fieldset = array(
-            'type'  => 'fieldset',
-            'elements'=>array(),
-            'label' => 'labels'
-                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\', true)" href="#all">(select all)</a>'
-                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\',0)" href="#none">(select none)</a>'
-        );
-        foreach( $image->labels() as $label ){
-            $fieldset['elements']['labels[' . $label->id . ']'] = array(
-                'type'  => 'checkbox',
-                'value' => (bool) $label->image_id,
-                'label' => $label->name
-            );
-        }
-
-        // append fieldset and move the submit button...
-        $block = current($form->children(array('id'=> 'item-values')));
-        $block->addElement('fieldset-labels', $fieldset );
-
-        $submit = current($form->removeChildren(array('name'=>'save-changes')));
-        $block->addChild($submit);
-
-        //$form->addChild($submit);
-
-        $template->image = $image;
-        $template->form = $form;
-
-        $template->render( APPLICATION_ROOT . '/Admin/template/image/edit');
-        return $template;
+        return $this->template()->render($tpl_path);
     }
 }

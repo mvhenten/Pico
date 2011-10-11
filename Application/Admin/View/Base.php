@@ -8,6 +8,9 @@ class Admin_View_Base extends Nano_View{
             $this->response()->redirect( '/admin/user/login' );
         }
 
+        $this->template()->request = $request;
+        $this->template()->templatePath = 'Application/Admin/template';
+
         parent::__construct( $request, $config );
     }
 }

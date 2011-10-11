@@ -24,15 +24,24 @@ var nano = {
          * override form submit handler: post the form and display the
          * results in a dialog
          */
-        form: function( form, selector ){
+        form: function( form, selector, origin ){
             var url     = $(form).attr('action');
             var mtd  = $(form).attr('method');
+
+            var form_data = $(form).serializeArray();
+            
+            if( origin ){
+                form_data.push({
+                    name: origin.name,
+                    value: origin.value
+                });
+            }
 
             $.ajax({
                 url: url,
                 type: mtd,
                 context: document.body,
-                data: $(form).serialize(),
+                data: form_data,
                 success: function( data, status, xhr ){
                     $(data).find(selector).dialog({
                         modal:true

@@ -1,4 +1,4 @@
-<?php $this->inherit( dirname(__FILE__) . '/../image') ?>
+<?php $this->inherit( 'image') ?>
 
 <?php if( null !== $this->request->id ): ?>
 <?php $this->block( 'head' ); ?>
@@ -19,31 +19,7 @@ $(function(){
                 console.log(data);
             }
         })
-    }});
-
-    //$('#action-labels').bind('click', function(evt){
-    //    var url = $('#images').attr('action');
-    //    $.ajax({url:url,
-    //        context: document.body,
-    //        type: "POST",
-    //        data: $('#images').serialize(),
-    //        success: function( data, status, xhr ){
-    //            $($(data).find('form')[0]).dialog({
-    //                modal:true
-    //            });
-    //        }
-    //    });
-    //    return false;
-    //}, false);
-});
-
-
-
-//$(function(){
-//    $(".item-priority").hide();
-//
-//
-//});
+}})});
 </script>
 <?php $this->endBlock('head'); ?>
 <?php endif; ?>
@@ -77,8 +53,8 @@ $(function(){
                 <a href="#select-all" onclick="$('ul.thumbnails').find('input').attr('checked', true)">all</a>,
                 <a href="#select-none" onclick="$('ul.thumbnails').find('input').attr('checked', false)">none</a>
             </div>
-            <button onclick="nano.ahah.form(this.form, 'form'); return false;" id="action-labels" class="button" value="labels" name="form-action">edit labels</button>
-            <button onclick="return false;" id="action-delete" class="button" value="labels" name="form-action">delete</button>
+            <button onclick="nano.ahah.form(this.form, 'form', this); return false;" id="action-labels" class="button" value="labels" name="form_action_labels">edit labels</button>
+            <button onclick="return false;" id="action-delete" class="button" value="labels" name="form_action_delete">delete</button>
         </div>
         <ul class="thumbnails">
             <?php foreach( $images as $image ): ?>
