@@ -1,0 +1,14 @@
+<img src="/image/sd/<?php echo $item->id ?>" />
+
+
+<?php foreach( $item->labels() as $label ): ?>
+    <ul><h4><?php echo $label->name ?></h4>
+        <?php foreach( $label->images() as $image ): ?>
+            <li><a href="/<?php echo $image->slug ?>">
+                <img src="/image/thumbnail/<?php echo $image->id ?>" alt="" />
+            </a></li>
+        <?php endforeach; ?>
+    </ul>
+
+<?php endforeach; ?>
+

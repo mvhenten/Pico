@@ -1,0 +1,7 @@
+<h1>hier</h1>
+
+<ul>
+<?php foreach( $this->images() as $image ): ?>
+    <li><a href="/<?php echo $image->slug ?>"><img src="/image/thumbnail/<?php echo $image->id ?>" alt="" /></a></li>
+<?php endforeach; ?>
+</ul>
