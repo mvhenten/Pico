@@ -7,31 +7,6 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
     const IMAGESIZE_SD          = '640x480';
     const IMAGESIZE_HD          = '640x480';
 
-    private $_image_sizes = array(
-        'thumbnail' => self::IMAGESIZE_THUMBNAIL,
-        'icon'      => self::IMAGESIZE_ICON,
-        'small'     => self::IMAGESIZE_SMALL,
-        'vignette'  => self::IMAGESIZE_VIGNETTE,
-        'sd'        => self::IMAGESIZE_SD,
-        'hd'        => self::IMAGESIZE_HD
-    );
-
-    private function _getImageSize( $type ){
-        if( isset( $this->_image_sizes[$type] ) ){
-            $value = $this->_image_sizes[$type];
-            return explode( 'x', $value );
-        }
-        else{
-            $pieces = array_filter(array_map('intval',explode('x', $type)));
-            if( count($pieces) == 2 ){
-                return $pieces;
-            }
-            else{
-                die( 'INVALID TYPE OR SIZE ' . $type);
-            }
-        }
-    }
-
     public function resize( $type ){
         $gd = new Nano_Gd( $this->data, false );
 
@@ -44,23 +19,45 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
 
         $target = $gd->resize( $width, $height );
         $data   = $target->getImageJPEG();
+        $basename = basename( $this->filename );
+        $name_pieces = explode( '.', $basename );
 
-        preg_match( '/^(\w+)\.(\w+)?/', $this->filename, $match );
-
+        preg_match( '/^(.+)\.(\w{3,4})?/', $this->filename, $match );
         list(,$base, $ext) = $match;
 
-        $new = new Pico_Schema_ImageData();
+        $new = new Pico_Schema_ImageData(array(
+            'data'    => $target->getImageJPEG(),
+            'size'    => strlen($data),
+            'mime'    => 'image/jpeg',
+            'width'   => $width,
+            'height'  => $height,
+            'filename'=> sprintf('%s_%s.%s', $base, $type, $ext),
+            'image_id'=> $this->image_id,
+            'type'    => $type
+        ));
 
-        $new->data     = $target->getImageJPEG();
-        $new->size     = strlen($data);
-        $new->mime     = 'image/jpeg';
-        $new->width    = $width;
-        $new->height   = $height;
-        $new->filename = sprintf('%s_%s.%s', $base, $type, $ext);
-        $new->image_id = $this->image_id;
-        $new->type     = $type;
-        $new->store();
-
-        return $new;
+        return $new->store();
     }
+
+    private function _getImageSize( $type ){
+        $_defaults = array(
+            'thumbnail' => Nano_Gd::IMAGESIZE_THUMBNAIL,
+            'icon'      => Nano_Gd::IMAGESIZE_ICON,
+            'small'     => Nano_Gd::IMAGESIZE_SMALL,
+            'vignette'  => Nano_Gd::IMAGESIZE_VIGNETTE,
+            'sd'        => Nano_Gd::IMAGESIZE_SD,
+            'hd'        => Nano_Gd::IMAGESIZE_HD
+        );
+
+        if( preg_match( '/\d+x\d+/', $type, $match) ){
+            list( $__, $width, $height ) = $match;
+        }
+        else{
+            $size = isset( $_defaults[$type] ) ? $_defaults[$type] : $_defaults['thumbnail'];
+            list( $width, $height ) = explode('x', $size );
+        }
+
+        return array( $width, $height );
+    }
+
 }
