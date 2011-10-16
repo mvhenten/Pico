@@ -1,43 +1,43 @@
 <?php
 class Pico_View_Image extends Nano_View{
     protected function get( $request, $config ){
-        $imagedata = new Pico_Model_ImageData();
+        $image = $this->_getImageType( $request->id, $request->type );
 
-        $images = $imagedata->search( array('where' => array(
-            'image_id'  => $request->id,
-            'type'      => $request->type
-        )));
 
-        if( $images->rowCount() == 0 ){
-            $images = $imagedata->search( array('where' => array(
-                'image_id'  => $request->id,
-                'type'      => 'original'
-            )));
-
-            $original = $images->fetch();
-
-            if( $original ){
-                $image = $original->resize( $request->type );
-            }
-        }
-        else{
-            $image = $images->fetch();
-        }
-
-        if( isset($image) ){
-            $this->_imageOut( $image );
-        }
+        $this->_imageOut( $image );
     }
 
-    private function _get_image_type( $id, $type ){
+    private function _getImageType( $id, $type ){
+        $imagedata = new Pico_Model_ImageData();
+
         $images = $imagedata->search( array('where' => array(
             'image_id'  => $id,
             'type'      => $type
         )));
 
-        if( $images->rowCount() ){
-            return $images->fetch();
+
+        if( $images->rowCount() == 0 ){
+            return $this->_createImageType( $id, $type );
         }
+
+        return $images->fetch();
+    }
+
+    private function _createImageType( $id, $type ){
+        $imagedata = new Pico_Model_ImageData();
+
+        $images = $imagedata->search( array('where' => array(
+            'image_id'  => $id,
+            'type'      => 'original'
+        )));
+
+        $original = $images->fetch();
+
+        if( $original ){
+            $image = $original->resize( $type );
+        }
+
+        return $this->_getImageType( $id, $type );
     }
 
 
