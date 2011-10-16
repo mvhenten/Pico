@@ -14,11 +14,12 @@ class Admin_View_User extends Nano_View{
             $_SESSION['user'] = 1;
             $this->response()->redirect( '/admin/' );
         }
+
+        $this->response()->redirect( '/admin/user/login?error=1' );
     }
 
     public function get( $request, $config ){
         @session_start();
-
 
         if( $request->action == 'logout' ){
             @session_destroy();
