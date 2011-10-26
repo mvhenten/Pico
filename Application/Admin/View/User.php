@@ -3,13 +3,11 @@ class Admin_View_User extends Nano_View{
     public function post( $request, $config ){
         $post = $request->getPost();
 
-
         if( $post->username != $config->admin->username ){
             $this->response()->redirect( '/admin/user/login?error=1' );
         }
 
-
-        if( md5( $post->password ) == $config->admin->password ){
+        if( crypt( $post->password, $config->admin->password ) == $config->admin->password ){
             @session_start();
             $_SESSION['user'] = 1;
             $this->response()->redirect( '/admin/' );

@@ -84,7 +84,7 @@ class Admin_View_Image extends Admin_View_Base{
     public function postEdit( $request, $config ){
         $post = $request->getPost();
 
-        $item = new Pico_Model_Item( $request->id );
+        $item = $this->model('Item', $request->id );
 
         if( null === $item->id ){
             throw new Exception('Invalid ID');
@@ -198,8 +198,6 @@ class Admin_View_Image extends Admin_View_Base{
     public function postList( $request, $config ){
         $post = $request->getPost();
 
-        var_dump( $post );
-
         if( $post->form_action_labels ){
             return $this->postLabelsbulk( $request, $config );
         }
@@ -256,22 +254,21 @@ class Admin_View_Image extends Admin_View_Base{
         $values = array();
 
         if( is_numeric( $request->id ) ){
-            $label = new Pico_Model_Item( $request->id );
-            $images = $label->images()->fetchAll();
+            $label = $this->model('Item', $request->id);
+            $pager = $label->pager('images');
         }
         else{
-            $images = $this->model('Item')->search(array(
-                'where' => array('type' => 'image'),
-                'order' => '-inserted'));
+            $where = array('type' => 'image','order' => '-inserted');
+            $pager  = $this->model('Item')->pager('search', $where );
         }
 
-        $labels = $this->model('Item')->search(array(
-            'where' => array('type' => 'label')));
+        $labels = $this->model('Item')->search( array('type' => 'label') );
 
         $template = $this->template();
 
         $template->labels = $labels;
-        $template->images = $images;
+        $template->images = $pager->getPage($request->page);
+        $template->pager  = $pager;
 
         return $template->render( 'image/list');
     }
@@ -280,7 +277,7 @@ class Admin_View_Image extends Admin_View_Base{
     public function getLabel( $request, $config ){
 
         if( $request->id ){
-            $item = new Pico_Model_Item( $request->id );
+            $label = $this->model('Item', $request->id );
 
             $html  = array();
 
@@ -291,8 +288,7 @@ class Admin_View_Image extends Admin_View_Base{
             $tpl_path = 'image/label';
         }
         else{
-            $item = new Pico_Model_Item();
-            $labels = $item->search(array(
+            $labels = $this->model('Item')->search(array(
                 'where' => array('type' => 'label'),
                 'order' => 'updated'
             ));

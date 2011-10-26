@@ -606,3 +606,26 @@ iframe.rich-text-editor{
     padding:0;
     margin:0;
 }
+
+.pager {
+    overflow:hidden;
+}
+
+.pager ul {
+    text-align:center;
+    list-style: none;
+}
+
+.pager li{
+    display: inline;
+    margin: 0 3px;
+}
+
+.pager li a.active{
+    padding: 0 3px;
+    color: #ccc;
+}
+
+.disabled {
+    color: #ccc;
+}
