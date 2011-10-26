@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL | E_STRICT);
 class Admin_View_Image extends Admin_View_Base{
     /**
      * Handler for /admin/image/upload
@@ -10,36 +11,70 @@ class Admin_View_Image extends Admin_View_Base{
         }
 
         $file = (object) $_FILES['image'];
+
+        if( $file->error ){
+            $this->response()->redirect('/admin/image?error=' . $file->error );
+        }
+
         $post = $request->getPost();
 
         if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
-            $gd  = new Nano_Gd( $file->tmp_name );
-            list( $width, $height ) = array_values( $gd->getDimensions() );
-
             $item = $this->model('Item', array(
                 'name'     => $file->name,
                 'visible'   => 0,
                 'type'      => 'image',
                 'inserted'  => date('Y-m-d H:i:s'),
-                'slug'      => $file->name
+                'slug'      => $request->slug($file->name)
             ))->store();
 
-            $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG();
-            $type = ($info[2] != IMAGETYPE_PNG) ? 'image/jpeg' : $file->type;
-
-            $this->model('ImageData', array(
-                'image_id'  => $item->id,
-                'size'      => $file->size,
-                'mime'      => $type,
-                'width'     => $width,
-                'height'    => $height,
-                'data'      => $src,
-                'filename'  => $file->name,
-                'type'      => 'original'
-            ))->store();
+            $this->_storeImageData( $item, $file );
         }
 
         $this->response()->redirect('/admin/image' );
+        exit;
+    }
+
+    private function _storeImageData( $item, $file ){
+        $gd  = new Nano_Gd( $file->tmp_name );
+
+        list( $width, $height ) = array_values( $gd->getDimensions() );
+        $exif = new Nano_Exif( $file->tmp_name );
+
+        $gd   = $this->_rotateImageData( $exif, $gd );
+        $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG();
+        $type = ($info[2] != IMAGETYPE_PNG) ? 'image/jpeg' : $file->type;
+
+        $this->model('ImageData', array(
+            'image_id'  => $item->id,
+            'size'      => $file->size,
+            'mime'      => $type,
+            'width'     => $width,
+            'height'    => $height,
+            'data'      => $src,
+            'filename'  => $file->name,
+            'type'      => 'original'
+        ))->store();
+    }
+
+    private function _rotateImageData( Nano_Exif $exif, Nano_Gd $gd ){
+        switch( $exif->orientation() ){
+            case 2:
+                return $gd->flipHorizontal();
+            case 3:
+                return $gd->rotate( 180 );
+            case 4:
+                return $gd->flipVertical();
+            case 5:
+                return $gd->flipVertical()->rotate(90);
+            case 6:
+                return $gd->rotate( -90 );
+            case 7:
+                return $gd->flipHorizontal()->rotate( -90 );
+            case 8:
+                return $gd->rotate( 90 );
+        }
+
+        return $gd;
     }
 
     public function postLabel( $request, $config ){
@@ -48,19 +83,19 @@ class Admin_View_Image extends Admin_View_Base{
 
     public function postEdit( $request, $config ){
         $post = $request->getPost();
-        
+
         $item = new Pico_Model_Item( $request->id );
-        
+
         if( null === $item->id ){
             throw new Exception('Invalid ID');
         }
-        
+
         $labels = array_keys((array) $post->labels);
-        
+
         $this->model('ImageLabel')->delete(array(
             'image_id' => $request->id
         ));
-        
+
         foreach( $labels as $id ){
             $n = $this->model('ImageLabel', array(
                 'image_id' => $request->id,
@@ -87,14 +122,14 @@ class Admin_View_Image extends Admin_View_Base{
 
     protected  function getEdit(  $request, $config ){
         $template = $this->template();
- 
+
         $image           = new Pico_Model_Item( $request->id );
         $labels          = $this->model('Item')->search(array('type' => 'label'));
         $labels_selected = $image->labels();
-        
+
         $labels_selected->setFetchMode( PDO::FETCH_COLUMN, 0 );
         $labels_selected_ids = $labels_selected->fetchAll();
-        
+
         $form = new Form_Item( $image );
 
         $fieldset = array(
@@ -104,7 +139,7 @@ class Admin_View_Image extends Admin_View_Base{
                 .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\', true)" href="#all">(select all)</a>'
                 .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\',0)" href="#none">(select none)</a>'
         );
-        
+
         foreach( $labels as $label ){
             $fieldset['elements']['labels[' . $label->id . ']'] = array(
                 'type'  => 'checkbox',
@@ -130,13 +165,13 @@ class Admin_View_Image extends Admin_View_Base{
 
     public function postOrder( $request, $config ){
         $post = $request->getPost();
-        
+
         $label = $this->model('Item', $request->id);
-        
+
         if( ! $label->id ){
             throw new Exception('Not a valid label id');
         }
-        
+
         $this->model('ImageLabel')->delete(array(
             'image_id' => array_keys($post->priority),
             'label_id' => $label->id
@@ -162,23 +197,23 @@ class Admin_View_Image extends Admin_View_Base{
 
     public function postList( $request, $config ){
         $post = $request->getPost();
-                
+
         var_dump( $post );
 
         if( $post->form_action_labels ){
             return $this->postLabelsbulk( $request, $config );
         }
-        
+
     }
 
     public function postLabelsbulk( $request, $config ){
         $post = $request->getPost();
-        
+
         if( $post->apply ){
             $images = json_decode($post->images);
             $this->model('ImageLabel')->delete(array('image_id' => $images));
-            
-        
+
+
             foreach( $post->labels as $label_id => $bool ){
                 foreach( $images as $id ){
                     $this->model('ImageLabel', array(
@@ -193,10 +228,10 @@ class Admin_View_Image extends Admin_View_Base{
                 'where' => array( 'image_id' => $post->image ),
                 'group' => 'label_id'
             ));
-    
+
             $selected_query->setFetchMode( PDO::FETCH_COLUMN, 1 );
             $selected_labels = $selected_query->fetchAll();
-    
+
             $labels = array();
             foreach( $this->model('Item')->search( array( 'where' => array('type' => 'label') ) ) as $label ){
                 $labels[$label->id] = (object) array(
@@ -205,10 +240,10 @@ class Admin_View_Image extends Admin_View_Base{
                     'id'        => $label->id
                 );
             }
-    
+
             $this->template()->labels = $labels;
             $this->template()->images = json_encode(array_keys($post->image));
-            return $this->template()->render( 'image/bulk');            
+            return $this->template()->render( 'image/bulk');
         }
 
         $this->response()

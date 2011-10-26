@@ -59,5 +59,4 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
 
         return array( $width, $height );
     }
-
 }

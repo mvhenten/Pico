@@ -5,6 +5,8 @@ class Pico_View_Base extends Nano_View{
         $this->template()->request = $request;
         $this->template()->templatePath = $config->settings->template_path;
 
+        Nano_Log::error($request);
+
         if( $request->secondary || ($request->primary != 'home' )){
             $id = ($request->secondary) ? $request->secondary : $request->primary;
 
