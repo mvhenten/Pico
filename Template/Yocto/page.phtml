@@ -1,33 +1,11 @@
-<?php $this->inherit( dirname(__file__) . '/layout') ?>
-
-<?php $this->block( 'head' ); ?>
-    <script src="/js/jquery.cycle.lite.1.1.min.js"></script>
-<?php $this->endBlock( 'head' ); ?>
-
-
-<?php $this->block('masthead') ?>
-    <div class="caroussel">
-        <?php $r = range(1,5); shuffle($r); foreach($r as $i): ?>
-        <a href="/collection"><img src="/img/banner_<?php echo $i ?>.jpg" /></a>
-        <?php endforeach; ?>
-    </div>
-    <script>$('.caroussel').cycle({timeout:3000})</script>
-<?php $this->endBlock('masthead') ?>
-
+<?php $this->inherit( 'layout')  ?>
 
 <?php $this->block('content'); ?>
-<?php if( isset($images) && count($images) > 0 ): ?>
-<div class="thumbnail-nav">
-    <ul class="thumbnails">
-    <?php foreach( $images as $image ): ?>
-        <li><a href="/collection/<?php echo $image->slug ?>"><img src="/image/thumbnail/<?php echo $image->id ?>" /></a></li>
-    <?php endforeach; ?>
-    </ul>
-</div>
-<?php endif; ?>
+
 <?php foreach( $item->content as $content ): ?>
     <div class="content-item">
     <?php echo $content->value ?>
     </div>
 <?php endforeach; ?>
+
 <?php $this->endBlock('content'); ?>

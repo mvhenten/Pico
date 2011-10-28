@@ -6,15 +6,28 @@ class Pico_View_Index extends Pico_View_Base{
     public function get( $request, $config ){
         $tpl_path = 'home';
 
+        if( $request->secondary || ($request->primary != 'home' )){
+            $id = ($request->secondary) ? $request->secondary : $request->primary;
 
-        if( $request->primary !== 'home' ){
-            $item = $this->template()->item;
-            $type = $item->type;
+            $item = $this->model('Item')->search(array(
+                'where' => array('slug' => $id )
+            ))->fetch();
 
-            if( method_exists( $this, "_get_$type" ) ){
-                $method = "_get_$type";
-                return $this->$method( $request, $config );
-            }
+        }
+        else{
+            $item = $this->template()->item = $this->model('Item')->search(array(
+                'type'    => 'label',
+                'limit'   => 1
+            ))->fetch();            
+        }
+
+        $type = $item->type;
+        $this->template()->item     = $item;
+        $this->template()->labels   = $this->model('Item')->search(array('type' => 'label'))->fetchAll(); 
+
+        if( method_exists( $this, "_get_$type" ) ){
+            $method = "_get_$type";
+            return $this->$method( $request, $config );
         }
 
         return $this->template()->render($tpl_path);

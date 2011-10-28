@@ -1,0 +1,118 @@
+@import "reset.css";
+
+body {
+
+    font: 14px Arial, Helvetica, sans-serif;
+}
+
+#page {
+    width: 975px;
+    margin:auto;
+}
+
+#navigation {
+    padding: 1em 0 1em;
+    border-bottom: 1px solid #999;
+}
+
+#navigation li {
+    display: inline;
+}
+
+#navigation li a {
+    display: inline;
+    font-size: 2em;
+    font-weight: bold;
+    text-transform: lowercase;
+    color: #777;
+}
+
+#navigation li:first-child a {
+    color: #444;
+}
+
+#navigation li:last-child a {
+    color: #999;
+}
+
+#imgbox {
+    margin-top: 3.6em;
+}
+
+#imgbox img {
+    border: 1px solid #999;
+    display:block;
+    margin:auto;
+}
+
+/* hva */
+a, a:hover, a:visited, a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.imagelist ul{
+    list-style: none;
+    clear: both;
+    overflow: auto;
+}
+
+.imagelist ul li{
+    margin: 0 3em 3em;
+    float: left;
+}
+
+.imagelist ul li.left{
+    float: left;
+    margin-left:0;
+}
+
+.imagelist ul li.right{
+    float: left;
+    margin-right:0;
+}
+
+.imagelist li a {
+    display:block;
+    width: 260px;
+    overflow:hidden;
+    height: 190px;
+    background-repeat: no-repeat;
+    background-color: #999;
+    background-position: center center;
+}
+
+.imagelist li a img {
+    display:none;
+}
+
+.pager {
+    margin: 0.5em 0 1em;
+    overflow:hidden;
+    line-height:1.8em;
+}
+
+.pager ul {
+    text-align:center;
+    list-style: none;
+}
+
+.pager li{
+    display: inline;
+}
+
+.pager li a {
+    border: 1px solid #ccc;
+    padding:3px;    
+}
+
+.pager li a.active{
+    color: #ccc;
+}
+
+.pager li .disabled {
+    border: 1px solid #eee;
+    padding:3px;    
+    color: #ccc;
+}
+

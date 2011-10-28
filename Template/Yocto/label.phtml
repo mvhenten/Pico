@@ -1,54 +1,6 @@
-<style>
+<?php $this->inherit( 'layout')  ?>
 
-.imagelist ul{
-    list-style: none;
-    clear: both;
-    overflow: auto;
-}
-
-.imagelist ul li{
-    margin: 2em 3em;
-    float: left;
-}
-
-.imagelist li a {
-    display:block;
-    width: 240px;
-    overflow:hidden;
-    height: 180px;
-    background-repeat: no-repeat;
-    background-color: #999;
-    background-position: center center;
-}
-
-.imagelist li a img {
-    display:none;
-}
-
-.pager {
-    overflow:hidden;
-}
-
-.pager ul {
-    text-align:center;
-    list-style: none;
-}
-
-.pager li{
-    display: inline;
-    margin: 0 3px;
-}
-
-.pager li a.active{
-    padding: 0 3px;
-    color: #ccc;
-}
-
-.disabled {
-    color: #ccc;
-}
-</style>
-<h1><?php echo $label->name ?></h1>
+<?php $this->block('content'); ?>
 <div class="pager">
     <ul class="pager">
         <li><a href="?page=<?php echo $pager->firstPage ?>">&laquo; first</a>
@@ -75,7 +27,7 @@
 <div class="imagelist">
     <ul class="imagelist">
     <?php foreach( $images as $image ): ?>
-        <li>
+        <li class="<?php echo $this->cycle('left', 'center', 'right') ?>">
             <a style="background-image: url('/image/vignette/<?php echo $image->id ?>')" href="/<?php echo $image->slug ?>">
                 <img src="/image/vignette/<?php echo $image->id ?>" alt="" />
             </a>
@@ -106,3 +58,4 @@
         <li><a href="?page=<?php echo $pager->lastPage ?>">last &raquo;</a></li>
     </ul>
 </div>
+<?php $this->endBlock('content'); ?>

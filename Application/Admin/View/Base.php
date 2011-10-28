@@ -10,7 +10,29 @@ class Admin_View_Base extends Nano_View{
 
         $this->template()->request = $request;
         $this->template()->templatePath = 'Application/Admin/template';
-
+        
         parent::__construct( $request, $config );
     }
+    
+    public function delete( $request, $config ){
+        if( $request->id ){
+            $item = $this->model('Item', $request->id );
+            
+            $item->delete();
+    
+            //$this->template()->item = $item;
+            //return $this->template()->render( APPLICATION_ROOT . '/Admin/template/common/delete');
+        }
+    }
+
+
+    //public function getDelete( $request, $config ){
+    //    if( $request->id ){
+    //        $item = $this->model('Item', $request->id );
+    //
+    //        $this->template()->item = $item;
+    //        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/common/delete');
+    //    }
+    //}
+
 }

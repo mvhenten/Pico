@@ -1,3 +1,10 @@
-<img src="/image/hd/<?php echo $item->id ?>" />
+<?php $this->inherit( 'layout')  ?>
 
+<?php $this->block('content'); ?>
+
+<div id="imgbox">
+    <img src="/image/hd/<?php echo $item->id ?>" />
+</div>
+
+<?php $this->endBlock('content'); ?>
 
