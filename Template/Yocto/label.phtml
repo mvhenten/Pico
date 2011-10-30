@@ -1,29 +1,7 @@
-<?php $this->inherit( 'layout')  ?>
+<?php $this->wrapper( 'layout')  ?>
 
 <?php $this->block('content'); ?>
-<div class="pager">
-    <ul class="pager">
-        <li><a href="?page=<?php echo $pager->firstPage ?>">&laquo; first</a>
-        <li>
-        <?php if($pager->previousPage): ?>
-            <a href="?page=<?php echo $pager->previousPage ?>">&laquo; previous</a>
-        <?php else: ?>
-            <span class="disabled">&laquo; previous</span>
-        <?php endif; ?>
-        </li>
-        <?php foreach( $pager->range(20) as $i ): ?>
-        <li><a class="<?php echo $pager->currentPage == $i ? 'active' : '' ?>" href="?page=<?php echo $i ?>"><?php echo $i ?></a></li>
-        <?php endforeach; ?>
-        <li>
-        <?php if($pager->nextPage): ?>
-            <a href="?page=<?php echo $pager->nextPage ?>">next &raquo;</a>
-        <?php else: ?>
-            <span class="disabled">next &raquo;</span>
-        <?php endif; ?>
-        </li>
-        <li><a href="?page=<?php echo $pager->lastPage ?>">last &raquo;</a></li>
-    </ul>
-</div>
+<?php $this->process( 'blocks/pager'); ?>
 <div class="imagelist">
     <ul class="imagelist">
     <?php foreach( $images as $image ): ?>
@@ -35,27 +13,5 @@
     <?php endforeach; ?>
     </ul>
 </div>
-<div class="pager">
-    <ul class="pager">
-        <li><a href="?page=<?php echo $pager->firstPage ?>">&laquo; first</a>
-        <li>
-        <?php if($pager->previousPage): ?>
-            <a href="?page=<?php echo $pager->previousPage ?>">&laquo; previous</a>
-        <?php else: ?>
-            <span class="disabled">&laquo; previous</span>
-        <?php endif; ?>
-        </li>
-        <?php foreach( $pager->range(20) as $i ): ?>
-        <li><a class="<?php echo $pager->currentPage == $i ? 'active' : '' ?>" href="?page=<?php echo $i ?>"><?php echo $i ?></a></li>
-        <?php endforeach; ?>
-        <li>
-        <?php if($pager->nextPage): ?>
-            <a href="?page=<?php echo $pager->nextPage ?>">next &raquo;</a>
-        <?php else: ?>
-            <span class="disabled">next &raquo;</span>
-        <?php endif; ?>
-        </li>
-        <li><a href="?page=<?php echo $pager->lastPage ?>">last &raquo;</a></li>
-    </ul>
-</div>
+<?php $this->process( 'blocks/pager'); ?>
 <?php $this->endBlock('content'); ?>
