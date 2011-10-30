@@ -21,6 +21,8 @@ class Pico_View_Index extends Pico_View_Base{
             ))->fetch();            
         }
 
+
+        Nano_Log::error($item);
         $type = $item->type;
         $this->template()->item     = $item;
         $this->template()->labels   = $this->model('Item')->search(array('type' => 'label'))->fetchAll(); 
