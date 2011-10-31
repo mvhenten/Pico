@@ -18,14 +18,14 @@ class Pico_View_Index extends Pico_View_Base{
             $item = $this->template()->item = $this->model('Item')->search(array(
                 'type'    => 'label',
                 'limit'   => 1
-            ))->fetch();            
+            ))->fetch();
         }
 
 
         Nano_Log::error($item);
         $type = $item->type;
         $this->template()->item     = $item;
-        $this->template()->labels   = $this->model('Item')->search(array('type' => 'label'))->fetchAll(); 
+        $this->template()->labels   = $this->model('Item')->search(array('type' => 'label'))->fetchAll();
 
         if( method_exists( $this, "_get_$type" ) ){
             $method = "_get_$type";
@@ -51,8 +51,20 @@ class Pico_View_Index extends Pico_View_Base{
 
     private function _get_image( $request, $config ){
         $image = $this->template()->item;
+//        $this->template()->image  = $image;
 
-        $this->template()->image  = $image;
+        $label = $this->model('Item')->search(array(
+            'slug' => $request->primary ))->fetch();
+
+
+        if( $label ){
+            $pager = $label->pager('images', array(), array('page_size' => 1));
+
+            $this->template()->pager = $pager;
+            $this->template()->image  = $pager->getPage($request->page)->fetch();
+        }
+
+
 
         return $this->template()->render('image');
     }

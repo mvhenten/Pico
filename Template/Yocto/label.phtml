@@ -4,9 +4,9 @@
 <?php $this->process( 'blocks/pager'); ?>
 <div class="imagelist">
     <ul class="imagelist">
-    <?php foreach( $images as $image ): ?>
+    <?php foreach( $images as $offset => $image ): ?>
         <li class="<?php echo $this->cycle('left', 'center', 'right') ?>">
-            <a style="background-image: url('/image/vignette/<?php echo $image->id ?>')" href="/<?php echo $image->slug ?>">
+            <a style="background-image: url('/image/vignette/<?php echo $image->id ?>')" href="/<?php echo $this->join( '/', $label->slug, $image->slug ) ?>?page=<?php echo $pager->offset + $offset + 1 ?>">
                 <img src="/image/vignette/<?php echo $image->id ?>" alt="" />
             </a>
         </li>

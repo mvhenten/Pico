@@ -1,10 +1,10 @@
 <?php $this->wrapper( 'layout')  ?>
 
 <?php $this->block('content'); ?>
+<?php $this->process( 'blocks/pager'); ?>
 
 <div id="imgbox">
-    <img src="/image/hd/<?php echo $item->id ?>" />
+    <img src="/image/hd/<?php echo $image->id ?>" />
 </div>
 
 <?php $this->endBlock('content'); ?>
-
