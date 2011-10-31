@@ -51,20 +51,25 @@ class Pico_View_Index extends Pico_View_Base{
 
     private function _get_image( $request, $config ){
         $image = $this->template()->item;
-//        $this->template()->image  = $image;
-
         $label = $this->model('Item')->search(array(
             'slug' => $request->primary ))->fetch();
 
 
         if( $label ){
+
             $pager = $label->pager('images', array(), array('page_size' => 1));
 
-            $this->template()->pager = $pager;
+            $this->template()->pager  = $pager;
             $this->template()->image  = $pager->getPage($request->page)->fetch();
+            $this->template()->label  = $label;
+
+            $pager_range  = $pager->range(8);
+            $thumb_page   = 1 + intval($pager_range[0]/8);
+            
+            $thumb_pager = $label->pager('images', array(), array('page_size' => 8 ));
+            $this->template()->thumbnails = $thumb_pager->getPage($thumb_page);
+            $this->template()->thumb_pager = $thumb_pager;
         }
-
-
 
         return $this->template()->render('image');
     }

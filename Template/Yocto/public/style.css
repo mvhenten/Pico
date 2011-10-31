@@ -36,13 +36,26 @@ body {
 }
 
 #imgbox {
-    margin-top: 3.6em;
+    width: 640px;
+    float: left;
 }
 
 #imgbox img {
     border: 1px solid #999;
     display:block;
     margin:auto;
+}
+
+#img-thumbs {
+    float:right;
+    width: 320px;
+    height: 100%;
+}
+
+.thumbs-wrapper li {
+    width: 120px;
+    float: left;
+    margin: 0.5em;
 }
 
 /* hva */
