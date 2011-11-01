@@ -18,6 +18,7 @@ Nano_Autoloader::registerNamespace( 'Model', APPLICATION_PATH . '/Application/Mo
 
 
 $files = array_slice( $argv, 1 );  //is_dir( $argv[1] ) ? scandir( $argv[1] ) : null;
+
 $iter = 0;
 $images = array();
 
@@ -44,22 +45,23 @@ function rotate_img( Nano_Exif $exif, Nano_Gd $gd ){
     return $gd;
 }
 
-
-while( $files && ( $file = array_shift($files))  && ( $info = Nano_Gd::getInfo( $file ))  ){
-    $iter++;
+foreach( $files as $iter => $file ){
+    printf( "Working on file %d of %d: %s\n", $iter, count($files)-1, basename($file) );
+    
+    $info = Nano_Gd::getInfo( $file );
+    
     $gd  = new Nano_Gd( $file );
     $src = $gd->getImageJPEG();
-
-
-    printf( "Working on file %d of %d: %s\n", $iter, count($files), basename($file) );
 
     list( $width, $height ) = array_values( $gd->getDimensions() );
 
     $exif = new Nano_Exif( $file );
     $gd = rotate_img( $exif, $gd );
+    
+    $name = strtolower(current(explode('.', basename($file))));
 
     $image = new Pico_Model_Item(array(
-        'name'     => $file,
+        'name'     => $name,
         'visible'   => 0,
         'type'      => 'image',
         'inserted'  => date('Y-m-d H:i:s')
@@ -84,7 +86,7 @@ while( $files && ( $file = array_shift($files))  && ( $info = Nano_Gd::getInfo( 
         'width'     => $width,
         'height'    => $height,
         'data'      => $src,
-        'filename'  => basename($file),
+        'filename'  => strtolower(basename($file)),
         'type'      => 'original'
     ));
 
