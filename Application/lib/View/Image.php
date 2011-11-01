@@ -35,9 +35,11 @@ class Pico_View_Image extends Nano_View{
 
         if( $original ){
             $image = $original->resize( $type );
+            return $image;
         }
+        
+        throw new Exception( "Image $id cannot be found" );
 
-        return $this->_getImageType( $id, $type );
     }
 
 
