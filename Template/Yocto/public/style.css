@@ -58,6 +58,19 @@ body {
     margin: 0.5em;
 }
 
+.thumbs-wrapper li a{
+    display:block;
+    width: 100%;
+    height:100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #eec;
+}
+
+.thumbs-wrapper li img{
+    visibility:hidden;
+}
+
 /* hva */
 a, a:hover, a:visited, a:active {
     text-decoration: none;

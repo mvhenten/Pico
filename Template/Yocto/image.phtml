@@ -4,13 +4,13 @@
 <?php $this->process( 'blocks/pager'); ?>
 
 <div id="imgbox">
-    <img src="/image/sd/<?php echo $image->id ?>" />
+    <img onclick="$('<img src=\'/image/hd/<?php echo $image->id ?>\'>').dialog({position: 'top', modal:true,title:'',minWidth: 960})" src="/image/sd/<?php echo $image->id ?>" />
 </div>
 <div id="img-thumbs">
     <ul class="thumbs-wrapper">
         <?php foreach( $thumbnails as $offset => $thumb ): ?>
         <li>
-            <a style="background-image: url(/image/thumb/<?php echo $thumb0>id ?>)" href="/<?php echo $this->join('/', $label->slug, $image->slug ) ?>?page=<?php echo $thumb_pager->offset + $offset + 1 ?>">
+            <a style="background-image: url(/image/thumb/<?php echo $thumb->id ?>)" href="/<?php echo $this->join('/', $label->slug, $image->slug ) ?>?page=<?php echo $thumb_pager->offset + $offset + 1 ?>">
                 <img height="79" src="/image/thumb/<?php echo $thumb->id ?>" alt="<?php $thumb->name ?>" />
             </a>
         </li>
