@@ -33,11 +33,12 @@ class Pico_View_Image extends Nano_View{
 
         $original = $images->fetch();
 
-        if( $original ){
-            $image = $original->resize( $type );
+        if( ! $original ){
+            confess("Cannot find original image for '$type' => $id");
         }
 
-        return $this->_getImageType( $id, $type );
+        $image = $original->resize( $type );
+        return $image;
     }
 
 
