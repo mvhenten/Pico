@@ -32,7 +32,7 @@ class Pico_View_Admin_Page extends Pico_View_Admin_Base{
 
         $page = new Model_Item( $request->id );
 
-        $form = new Form_Item( $page );
+        $form = new Pico_Form_Item( $page );
 
         $template->page = $page;
         $template->form = $form;

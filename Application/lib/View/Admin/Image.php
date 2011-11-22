@@ -130,7 +130,7 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         $labels_selected->setFetchMode( PDO::FETCH_COLUMN, 0 );
         $labels_selected_ids = $labels_selected->fetchAll();
 
-        $form = new Form_Item( $image );
+        $form = new Pico_Form_Item( $image );
 
         $fieldset = array(
             'type'  => 'fieldset',
@@ -198,7 +198,7 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     public function postList( $request, $config ){
         $post = $request->getPost();
 
-        if( $post->form_action_labels ){
+        if( $post->Pico_Form_action_labels ){
             return $this->postLabelsbulk( $request, $config );
         }
 
@@ -281,7 +281,7 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
 
             $html  = array();
 
-            $form = new Form_Item( $label );
+            $form = new Pico_Form_Item( $label );
             $this->template()->label = $label;
             $this->template()->form = $form;
 

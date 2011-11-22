@@ -1,5 +1,5 @@
 <?php
-class Form_EditLink extends Nano_Form{
+class Pico_Form_EditLink extends Nano_Form{
     public function __construct( Model_Link $link ){
         parent::__construct(null, array('class'=>'link-form'));
 

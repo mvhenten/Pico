@@ -32,7 +32,7 @@ class Pico_View_Admin_Link extends Pico_View_Admin_Base{
         $model   = new Model_Link( $request->id );//Nano::Model( 'Link', $request->post );
         $post    = $request->getPost();
 
-        $form = new Form_EditLink( $model );
+        $form = new Pico_Form_EditLink( $model );
         $form->validate( $post );
 
         if( $form->isValid() ){
@@ -96,7 +96,7 @@ class Pico_View_Admin_Link extends Pico_View_Admin_Base{
 
         $model   = new Model_Link( $request->id );
 
-        $form    = new Form_EditLink( $model );
+        $form    = new Pico_Form_EditLink( $model );
         //return;
 
         if( $request->isPost() ){

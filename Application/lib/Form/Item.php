@@ -1,5 +1,5 @@
 <?php
-class Form_Item extends Nano_Form{
+class Pico_Form_Item extends Nano_Form{
     public function __construct( $item = null ){
         parent::__construct();
 
