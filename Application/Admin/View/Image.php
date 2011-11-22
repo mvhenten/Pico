@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
-class Admin_View_Image extends Admin_View_Base{
+class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     /**
      * Handler for /admin/image/upload
      * Stores a new item and image_data

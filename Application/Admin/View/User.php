@@ -1,5 +1,5 @@
 <?php
-class Admin_View_User extends Nano_View{
+class Pico_View_Admin_User extends Nano_View{
     public function post( $request, $config ){
         $post = $request->getPost();
 

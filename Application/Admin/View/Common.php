@@ -1,5 +1,5 @@
 <?php
-class Admin_View_Common extends Admin_View_Base{
+class Pico_View_Admin_Common extends Pico_View_Admin_Base{
     //public function post( $request, $config ){
     //    $post = $request->getPost();
     //
