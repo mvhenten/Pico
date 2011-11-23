@@ -20,20 +20,3 @@ admin.base      = APPLICATION_PATH
 admin.path      = "modules/Admin/"
 admin.layoutPath    = "layout.phtml"
 admin.structure = "/:view/:action.phtml"
-
-[route]
-image.route = "/image/:type/:id"
-image.defaults.view = "image"
-image.defaults.action = "list"
-image.defaults.type = "image"
-image.defaults.id = "1"
-
-admin.route   = "/admin/:view/:action/:id"
-admin.defaults.module     = "admin"
-admin.defaults.view = "image"
-admin.defaults.action     = "list"
-
-site.route = "/:primary/:secondary"
-site.defaults.view = "index"
-site.defaults.primary = "home"
-site.defaults.secondary = null

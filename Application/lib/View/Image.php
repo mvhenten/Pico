@@ -39,7 +39,6 @@ class Pico_View_Image extends Nano_View{
         }
         
         throw new Exception( "Image $id cannot be found" );
-
     }
 
 

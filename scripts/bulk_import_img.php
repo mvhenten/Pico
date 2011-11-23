@@ -22,7 +22,7 @@ $files = array_slice( $argv, 1 );  //is_dir( $argv[1] ) ? scandir( $argv[1] ) : 
 $iter = 0;
 $images = array();
 
-$label_name = 'import ' . basename(dirname( $files[0] )) . ' on ' . date('Y-m-d H:m:s');
+$label_name = basename(dirname( $files[0] ));
 
 function rotate_img( Nano_Exif $exif, Nano_Gd $gd ){
     switch( $exif->orientation() ){
@@ -107,11 +107,11 @@ $label->slug = preg_replace( '/[\s_\W]/', '-', $label_name );
 $label->store();
 
 
-foreach( $images as $img_id ){
+foreach( $images as $priority => $id ){
     $insert = new Pico_Schema_ImageLabel(array(
         'label_id' => $label->id,
-        'image_id' => $img_id,
-        'priority' => 100,
+        'image_id' => $id,
+        'priority' => $priority,
     ));
     $insert->store();
 }

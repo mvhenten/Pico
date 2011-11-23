@@ -13,8 +13,9 @@
     <div id="page">
         <div id="navigation">
         <?php $this->block('navigation'); ?>
-            <ul><?php foreach( $labels as $label ): ?>
-                <li><a class="<?php $label->slug ?>" href="/<?php echo $label->slug ?>"><?php echo $label->name ?></a></li>
+        <?php echo var_dump($label) ?>
+            <ul><?php foreach( $labels as $c_label ): ?>
+                <li><a class="<?php $c_label->slug ?> <?php echo $label->id == $c_label->id ? 'active' : ''?>" href="/<?php echo $c_label->slug ?>"><?php echo $c_label->name ?></a></li>
             <?php endforeach; ?>
             </ul>
         <?php $this->endBlock('navigation'); ?>
