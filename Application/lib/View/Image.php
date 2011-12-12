@@ -1,5 +1,5 @@
 <?php
-class Pico_View_Image extends Nano_View{
+class Pico_View_Image extends Nano_App_View{
     protected function get( $request, $config ){
         $image = $this->_getImageType( $request->id, $request->type );
 

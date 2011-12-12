@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', "true");
+ini_set('display_warnings', "true");
+ini_set('upload_max_filesize', '16M');
+ini_set('post_max_size', '16M');
+
 define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
 define( "APPLICATION_PATH", dirname( APPLICATION_ROOT )); //where the application is
 
@@ -14,36 +19,8 @@ Nano_App::Bootstrap(array(
         'password'  => $config->database->password,
     ),
     'router'   => array (
-        'image' =>
-            array (
-                'route' => '/image/:type/:id',
-                'defaults' =>
-                array (
-                    'view' => 'image',
-                    'action' => 'list',
-                    'type' => 'image',
-                    'id' => '1',
-                ),
-        ),
-        'admin' =>
-            array (
-                'route' => '/admin/:view/:action/:id',
-                'defaults' =>
-                array (
-                    'module' => 'admin',
-                    'view' => 'image',
-                    'action' => 'list',
-                ),
-        ),
-        'site' =>
-            array (
-                'route' => '/:primary/:secondary',
-                'defaults' =>
-            array (
-                'view' => 'index',
-                'primary' => 'home',
-                'secondary' => '',
-        ),
-  ),
-)
-))->dispatch();
+        '/image/\w+/\d+'    => 'Pico_View_Image',
+        '/admin/image(/\d+)?' => 'Pico_View_Admin_Image',
+        '/(\w+)?'             => 'Pico_View_Index',
+  ))
+)->dispatch();

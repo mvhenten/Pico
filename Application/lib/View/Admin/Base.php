@@ -1,5 +1,5 @@
 <?php
-class Pico_View_Admin_Base extends Nano_View{
+class Pico_View_Admin_Base extends Nano_App_View{
     public function __construct( $request, $config ){
         // awful hacks here, for now.
         @session_start();

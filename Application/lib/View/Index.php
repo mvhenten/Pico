@@ -1,38 +1,39 @@
 <?php
-class Pico_View_Index extends Pico_View_Base{
-    public function post( $request, $config ){
+class Pico_View_Index extends Nano_App_View{
+    public function __construct( Nano_App_Request $request, $config ){
+        $this->template()->request      = $request;
+        $this->template()->templatePath = $config['config']['settings']['template_path'];
+
+        parent::__construct( $request, $config );
     }
 
-    public function get( $request, $config ){
-        $tpl_path = 'home';
+    public function post( Nano_App_Request $request, $config ){
+    }
 
-        if( $request->secondary || ($request->primary != 'home' )){
-            $id = ($request->secondary) ? $request->secondary : $request->primary;
+    public function get( Nano_App_Request $request, $config ){
+        list( $primary, $secondary ) = $request->pathParts(2);
 
-            $item = $this->model('Item')->search(array(
-                'where' => array('slug' => $id )
-            ))->fetch();
+        $slug = $primary ? $primary : 'home';
 
-        }
-        else{
-            $item = $this->template()->item = $this->model('Item')->search(array(
-                'type'    => 'label',
-                'limit'   => 1
-            ))->fetch();
+        if( $secondary ){
+            $slug = $secondary;
         }
 
+        $item = $this->model('Item')->search(array(
+            'where' => array(
+                'slug' => $slug
+            )
+        ))->fetch();
 
-        Nano_Log::error($item);
-        $type = $item->type;
         $this->template()->item     = $item;
         $this->template()->labels   = $this->model('Item')->search(array('type' => 'label'))->fetchAll();
 
-        if( method_exists( $this, "_get_$type" ) ){
+        if( $item && ($type = $item->type ) && method_exists($this, "_get_$type" ) ){
             $method = "_get_$type";
             return $this->$method( $request, $config );
         }
 
-        return $this->template()->render($tpl_path);
+        return $this->template()->render('home');
     }
 
     private function _get_label( $request, $config ){
@@ -65,7 +66,7 @@ class Pico_View_Index extends Pico_View_Base{
 
             $pager_range  = $pager->range(8);
             $thumb_page   = 1 + intval($pager_range[0]/8);
-            
+
             $thumb_pager = $label->pager('images', array(), array('page_size' => 8 ));
             $this->template()->thumbnails = $thumb_pager->getPage($thumb_page);
             $this->template()->thumb_pager = $thumb_pager;
