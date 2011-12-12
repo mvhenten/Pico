@@ -1,21 +1,11 @@
-<?php $this->wrapper( 'layout')  ?>
+<?php $this->inherit( dirname(__file__) . '/layout') ?>
+
+<?php $this->block('masthead') ?>
+<?php $this->endBlock('masthead') ?>
+
 
 <?php $this->block('content'); ?>
-<?php $this->process( 'blocks/pager'); ?>
-
-<div id="imgbox">
-    <img onclick="$('<img src=\'/image/original/<?php echo $image->id ?>\'>').dialog({show:'fade',position: 'top', modal:true,title:'',minWidth: 960})" src="/image/sd/<?php echo $image->id ?>" />
+<div class="image-content">
+    <img src="/image/566x500/<?php echo $item->id ?>" />
 </div>
-<div id="img-thumbs">
-    <ul class="thumbs-wrapper">
-        <?php foreach( $thumbnails as $offset => $thumb ): ?>
-        <li>
-            <a style="background-image: url(/image/thumb/<?php echo $thumb->id ?>)" href="/<?php echo $this->join('/', $label->slug, $image->slug ) ?>?page=<?php echo $thumb_pager->offset + $offset + 1 ?>">
-                <img height="79" src="/image/thumb/<?php echo $thumb->id ?>" alt="<?php $thumb->name ?>" />
-            </a>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-</div>
-
 <?php $this->endBlock('content'); ?>
