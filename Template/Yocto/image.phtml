@@ -1,6 +1,7 @@
-<?php $this->inherit( dirname(__file__) . '/layout') ?>
+<?php $this->wrapper( 'layout' ) ?>
 
 <?php $this->block('masthead') ?>
+    <h1>Image <?php echo $item->name ?></h1>
 <?php $this->endBlock('masthead') ?>
 
 

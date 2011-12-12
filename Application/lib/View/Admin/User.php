@@ -1,7 +1,7 @@
 <?php
 class Pico_View_Admin_User extends Nano_App_View{
-    public function post( $request, $config ){
-        $post = $request->getPost();
+    public function post( Nano_App_Request $request, $config ){
+        $post = $request->post();
 
         if( $post->username != $config->admin->username ){
             $this->response()->redirect( '/admin/user/login?error=1' );
@@ -16,7 +16,7 @@ class Pico_View_Admin_User extends Nano_App_View{
         $this->response()->redirect( '/admin/user/login?error=1' );
     }
 
-    public function get( $request, $config ){
+    public function get( Nano_App_Request $request, $config ){
         @session_start();
 
         if( $request->action == 'logout' ){

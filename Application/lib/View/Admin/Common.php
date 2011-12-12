@@ -1,7 +1,7 @@
 <?php
 class Pico_View_Admin_Common extends Pico_View_Admin_Base{
     //public function post( $request, $config ){
-    //    $post = $request->getPost();
+    //    $post = $request->post();
     //
     //    if( $request->action == 'delete' && $post->confirm ){
     //        $item = $this->model('Item', $request->id );

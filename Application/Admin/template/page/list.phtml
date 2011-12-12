@@ -1,11 +1,11 @@
-<?php $this->wrapper( dirname(__FILE__) . '/../layout') ?>
+<?php $this->wrapper('layout') ?>
 
 <?php $this->block( 'head' ); ?>
 <?php $this->endBlock('head'); ?>
 
 <?php $this->block('titlebar') ?>
 <h2 class="title">pages</h2>
-<a href="/admin/common/add/page" class="context-button">new page</a>
+<a href="/admin/page/create" class="context-button">new page</a>
 <?php $this->endblock('titlebar') ?>
 
 
@@ -15,13 +15,13 @@
         <strong class="fifth">Title</strong>
         <strong class="half">Description</strong>
     </li>
-    <?php foreach( $pages as $page ): ?>
+    <?php foreach( $this->items('page') as $page ): ?>
     <li>
         <div class="fifth">
             <h6><?php echo $page->name ?></h6>
             <div class="buttons">
                 <a href="/admin/page/edit/<?php echo $page->id ?>" class="button third">edit</a>
-                <a onclick="return nano.ahah.link(this, '.half')" href="/admin/common/delete/<?php echo $page->id ?>" class="button third">delete</a>
+                <a href="/admin/page/delete/<?php echo $page->id ?>" class="button third">delete</a>
             </div>
         </div>
         <p class="half"><?php echo $this->ellipsize((string)$page->description) ?>&nbsp;</p>

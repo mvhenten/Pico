@@ -1,58 +1,73 @@
 <?php
 class Pico_View_Admin_Content extends Pico_View_Admin_Base{
-    public function post( $request, $config ){
-        $post = $request->getPost();
+    public function save( Nano_App_Request $request, $config ){
 
-        $content = new Model_ItemContent( $request->id );
-
-        if( $request->action == 'save' ){
-            $content->value = $post->content[$request->id]['value'];
-        }
-        else if( $request->action == 'draft' ){
-            $content->draft = $post->content[$request->id]['draft'];
-        }
-        else if( $request->action == 'delete' ){
-            if( $post->confirm ){
-                $content->delete();
-            }
-        }
-
-        $content->put();
-
-        $item = new Model_Item( $content->item_id );
-
-        if( $item->type == 'label' ){
-            $this->response()->redirect( '/admin/image/label/' . $item->id );
-        }
-        $this->response()->redirect( '/admin/' . $item->type . '/edit/' . $item->id );
     }
 
-    public function getAdd( $request, $config ){
-        $content = new Model_ItemContent();
-        $content->item_id = $request->id;
-        $content->put();
+    public function delete( Nano_App_Request $request, $config ){
+        @list( , $controller, $action, $id ) = $request->pathParts();
 
-        $item = new Model_Item( $request->id );
+        $this->model('ItemContent', $id )->delete();
 
-        if( $item->type == 'label' ){
-            $this->response()->redirect( '/admin/image/label/' . $request->id );
+        if( $request->target ){
+            $this->response()
+                ->redirect( $request->target );
         }
-
-        $this->response()->redirect( '/admin/' . $item->type . '/edit/' . $request->id );
     }
 
-    public function getDelete( $request, $config ){
-        $content = new Model_ItemContent( $request->id );
-        $item = new Model_Item( $content->item_id );
-
-
-        $content->delete();
-
-        if( $item->type == 'label' ){
-            $this->response()->redirect( '/admin/image/label/' . $item->id );
-        }
-
-        $this->response()->redirect( '/admin/' . $item->type . '/edit/' . $item->id );
-    }
+    //public function post( $request, $config ){
+    //    $post = $request->post();
+    //
+    //    $content = new Model_ItemContent( $request->id );
+    //
+    //    if( $request->action == 'save' ){
+    //        $content->value = $post->content[$request->id]['value'];
+    //    }
+    //    else if( $request->action == 'draft' ){
+    //        $content->draft = $post->content[$request->id]['draft'];
+    //    }
+    //    else if( $request->action == 'delete' ){
+    //        if( $post->confirm ){
+    //            $content->delete();
+    //        }
+    //    }
+    //
+    //    $content->put();
+    //
+    //    $item = new Model_Item( $content->item_id );
+    //
+    //    if( $item->type == 'label' ){
+    //        $this->response()->redirect( '/admin/image/label/' . $item->id );
+    //    }
+    //    $this->response()->redirect( '/admin/' . $item->type . '/edit/' . $item->id );
+    //}
+    //
+    //public function getAdd( $request, $config ){
+    //    $content = new Model_ItemContent();
+    //    $content->item_id = $request->id;
+    //    $content->put();
+    //
+    //    $item = new Model_Item( $request->id );
+    //
+    //    if( $item->type == 'label' ){
+    //        $this->response()->redirect( '/admin/image/label/' . $request->id );
+    //    }
+    //
+    //    $this->response()->redirect( '/admin/' . $item->type . '/edit/' . $request->id );
+    //}
+    //
+    //public function getDelete( $request, $config ){
+    //    $content = new Model_ItemContent( $request->id );
+    //    $item = new Model_Item( $content->item_id );
+    //
+    //
+    //    $content->delete();
+    //
+    //    if( $item->type == 'label' ){
+    //        $this->response()->redirect( '/admin/image/label/' . $item->id );
+    //    }
+    //
+    //    $this->response()->redirect( '/admin/' . $item->type . '/edit/' . $item->id );
+    //}
 
 }

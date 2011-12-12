@@ -9,7 +9,7 @@
 
 <?php $this->block('titlebar') ?>
     <h2 class="title">labels</h2>
-    <a href="/admin/common/add/label" class="context-button">create label</a>
+    <a href="/admin/label/create" class="context-button">create label</a>
 <?php $this->endblock('titlebar') ?>
 
 
@@ -20,7 +20,7 @@
         <div class="fifth">
             <h6><?php echo $label->name ?></h6>
             <div class="buttons">
-                <a href="/admin/image/label/<?php echo $label->id ?>" class="button third">edit</a>
+                <a href="/admin/label/edit/<?php echo $label->id ?>" class="button third">edit</a>
                 <a onclick="return nano.ahah.link(this, '.half')" href="/admin/common/delete/<?php echo $label->id ?>" class="button third">delete</a>
             </div>
         </div>

@@ -14,14 +14,14 @@
 
 <?php $this->block('main') ?>
 <div class="third">
-    <form method="post" class="form" action="/admin/image/labelsbulk/<?php echo $request->id ?>">
+    <form method="post" class="form" action="/admin/image/labels/<?php echo $label_id ?>">
         <div class="toolbar">
             select:
             <a href="#select-all" onclick="$('ul.itemlist').find('input').attr('checked', true)">all</a>,
             <a href="#select-none" onclick="$('ul.itemlist').find('input').attr('checked', false)">none</a>
         </div>
         <ul class="itemlist">
-        <?php foreach( $labels as $label ): ?>
+        <?php foreach( $label_items as $label ): ?>
             <li>
                 <input id="checkbox-<?php echo $label->id ?>" type="checkbox" <?php echo $label->selected ? 'checked="checked"':'' ?> name="labels[<?php echo $label->id ?>]" value="true" />
                 <label for="checkbox-<?php echo $label->id ?>"><?php echo $label->name ?></label>

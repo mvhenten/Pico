@@ -20,6 +20,13 @@ class Pico_Model_Item extends Pico_Schema_Item {
         return $string;
     }
 
+
+    public function content( array $args = array() ){
+        return $this->has_many( 'Pico_Model_ItemContent', array(
+            'item_id' => 'id'
+        ), $args );
+    }
+
     public function images( array $args = array() ){
         return $this->has_many_to_many( 'images', 'Pico_Schema_ImageLabel',
             array( 'label_id' => 'id' ),

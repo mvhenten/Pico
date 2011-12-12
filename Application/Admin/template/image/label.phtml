@@ -16,8 +16,8 @@ jQuery(document).ready(function(){
 <?php $this->block('titlebar') ?>
 <div class="align-right wrap">
     <h2 class="float-left">Editing <span style="color:#000;"><?php echo $label->name ?></span></h2>
-    <a href="/admin/content/add/<?php echo $label->id ?>" class="button">add content</a>
-    <a class="button" href="/admin/common/delete/<?php echo $label->id ?>">delete</a>
+    <a href="/admin/label/content/<?php echo $label->id ?>" class="button">add content</a>
+    <a class="button" href="/admin/label/delete/<?php echo $label->id ?>">delete</a>
 </div>
 <?php $this->endblock('titlebar') ?>
 
@@ -25,8 +25,8 @@ jQuery(document).ready(function(){
 <?php $this->block('main') ?>
 <div class="left-pane">
     <?php echo $this->form ?>
-    <?php foreach( $label->content as $content ): ?>
-        <?php echo new Form_Content( $content ); ?>
+    <?php foreach( $label->content() as $content ): ?>
+        <?php echo new Pico_Form_Content( $content ); ?>
     <?php endforeach; ?>
 </div>
 <div class="right-pane">

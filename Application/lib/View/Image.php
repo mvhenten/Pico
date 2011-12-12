@@ -1,7 +1,11 @@
 <?php
 class Pico_View_Image extends Nano_App_View{
-    protected function get( $request, $config ){
-        $image = $this->_getImageType( $request->id, $request->type );
+    public function get( Nano_App_Request $request, $config ){
+        list( $_, $type, $id ) = $request->pathParts();
+
+
+
+        $image = $this->_getImageType( $id, $type );
 
 
         $this->_imageOut( $image );
@@ -37,7 +41,7 @@ class Pico_View_Image extends Nano_App_View{
             $image = $original->resize( $type );
             return $image;
         }
-        
+
         throw new Exception( "Image $id cannot be found" );
     }
 

@@ -19,8 +19,13 @@ Nano_App::Bootstrap(array(
         'password'  => $config->database->password,
     ),
     'router'   => array (
-        '/image/\w+/\d+'    => 'Pico_View_Image',
-        '/admin/image(/\d+)?' => 'Pico_View_Admin_Image',
-        '/(\w+)?'             => 'Pico_View_Index',
+        '/image/\w+/\d+'               => 'Pico_View_Image',
+        '/admin/image(/\w+)?(/\d+)?'   => 'Pico_View_Admin_Image',
+        '/admin/label(/\w+)?(/\d+)?'   => 'Pico_View_Admin_Label',
+        '/admin/page(/\w+)?(/\d+)?'    => 'Pico_View_Admin_Page',
+        '/admin/content/\w+/\d+'       => 'Pico_View_Admin_Content',
+        '/admin/user(/\w+)?'           => 'Pico_View_Admin_User',
+        '/admin'                       => 'Pico_View_Admin_Image',
+        '/(\w+)?'                      => 'Pico_View_Index',
   ))
 )->dispatch();

@@ -1,6 +1,6 @@
 <?
 class Pico_Schema_ItemContent extends Nano_Db_Schema {
-    protected $_tableName = 'item';
+    protected $_tableName = 'item_content';
 
     protected $_schema = array(
         'id' => array(
@@ -60,6 +60,6 @@ class Pico_Schema_ItemContent extends Nano_Db_Schema {
            'foreign_key' => 'id'
        ));
    }
-            
+
 
 }
