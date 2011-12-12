@@ -29,6 +29,8 @@ jQuery(document).ready(function(){
         <li><a class="<?php echo $item->id == $page->id ? "active":"" ?>" href="/admin/page/edit/<?php echo $item->id ?>"><?php echo $item->name ?></a></li>
         <?php endforeach; ?>
     </ul>
+    <?php $this->block('sidebar') ?>
+    <?php $this->endblock('sidebar') ?>
 </div>
 <div class="three-fifth">
     <?php echo $this->form ?>
