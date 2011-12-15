@@ -17,7 +17,7 @@ class Pico_View_Admin_Label extends Pico_View_Admin_Base{
         $label = $this->model('Item', $id );
 
         $form = new Pico_Form_Item( $label );
-        $this->template()->label = $label;
+        $this->template()->item = $label;
         $this->template()->form = $form;
 
         return $this->template()->render('image/label');

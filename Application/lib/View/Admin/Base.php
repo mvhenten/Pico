@@ -35,6 +35,8 @@ class Pico_View_Admin_Base extends Nano_App_View{
     public function delete( Nano_App_Request $request, $config ){
         @list( , $controller, $action, $id ) = $request->pathParts();
 
+
+
         $this->model('Item', $id )->delete();
 
         $this->response()

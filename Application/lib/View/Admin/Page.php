@@ -10,7 +10,7 @@ class Pico_View_Admin_Page extends Pico_View_Admin_Base{
         $item = $this->model('Item', $id );
 
         $form = new Pico_Form_Item( $item );
-        $this->template()->page = $item;
+        $this->template()->item = $item;
         $this->template()->form = $form;
 
         return $this->template()->render('page/edit');

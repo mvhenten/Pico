@@ -1,0 +1,49 @@
+<?php
+class Pico_Model_Item extends Pico_Schema_Item {
+    public function _filter_slug( $string ){
+        $string = preg_replace('/[\W_]/', '-',$string);
+        return $string;
+    }
+
+    public function appendix(){
+        $appendix = $this->get('appendix');
+
+        if( null == $appendix ){
+            $this->__set( 'appendix', new StdClass() );
+        }
+
+        if( is_string( $appendix ) ){
+            $this->__set( 'appendix',json_decode($appendix));
+        }
+
+        return $this->get('appendix');
+    }
+
+
+    public function _filter_appendix( $appendix ){
+        if( is_object( $appendix ) ){
+            return json_encode($appendix);
+        }
+    }
+
+
+    public function content( array $args = array() ){
+        return $this->has_many( 'Pico_Model_ItemContent', array(
+            'item_id' => 'id'
+        ), $args );
+    }
+
+    public function images( array $args = array() ){
+        return $this->has_many_to_many( 'images', 'Pico_Schema_ImageLabel',
+            array( 'label_id' => 'id' ),
+            array_merge( $args, array('order' => 'priority'))
+        );
+    }
+
+    public function labels( array $args = array() ){
+        return $this->has_many_to_many( 'labels', 'Pico_Schema_ImageLabel',
+            array( 'image_id' => 'id' ),
+            array_merge( $args, array('order' => 'priority'))
+        );
+    }
+}
