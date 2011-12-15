@@ -1,0 +1,49 @@
+.fakefile label {
+    display:block;
+    overflow:hidden;
+    position:relative;
+    padding: 0 5px;
+    margin: 3px 5px;
+    background: #F4F4F4;
+    background: -moz-linear-gradient(top,#F4F4F4, #ECECEC);
+    background: -webkit-gradient(linear, top, from(#F4F4F4),to(#ECECEC));
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid #eee;
+    box-shadow: 1px 3px 3px #ccc;
+    -moz-box-shadow: 1px 3px 3px #ccc;
+    -webkit-box-shadow: 1px 3px 3px #ccc;
+}
+
+.fakefile label:hover {
+    background-color: #33AA33;
+    background:-moz-linear-gradient(center top , #33AA33, #448844) repeat scroll 0 0 transparent;
+    color: #fff;
+}
+
+.fakefile .hidden {
+    opacity: 0;
+    position:absolute;
+    top: 0;
+    left:0;
+    height:3em;
+}
+
+.thumbnail-holder{
+    margin:7px;
+    padding:3px;
+    text-align:center;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid #eee;
+}
+
+.fakefile .button {
+    width:35px;
+    float:left;
+    box-shadow: 1px 3px 3px #ccc;
+    -moz-box-shadow: 1px 3px 3px #ccc;
+    -webkit-box-shadow: 1px 3px 3px #ccc;
+}
