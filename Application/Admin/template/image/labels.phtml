@@ -21,7 +21,7 @@
             <h6><?php echo $label->name ?></h6>
             <div class="buttons">
                 <a href="/admin/label/edit/<?php echo $label->id ?>" class="button third">edit</a>
-                <a onclick="return nano.ahah.link(this, '.half')" href="/admin/common/delete/<?php echo $label->id ?>" class="button third">delete</a>
+                <a href="/admin/label/delete/<?php echo $label->id ?>" class="button third">delete</a>
             </div>
         </div>
         <p class="half"><?php echo $this->ellipsize((string)$label->description) ?>&nbsp;</p>

@@ -5,6 +5,7 @@
 
 <?php $this->block('secondary-navigation') ?>
 <ul class="wat-cf">
+    <?php @list( , $controller, $action, $item_id ) = $request->pathParts ?>
     <li class="<?php echo $action == 'list' ? 'active' :'' ?>"><a href="/admin/image/list">show all images</a></li>
     <li class="<?php echo $action == 'label' ? 'active' :'' ?>"><a href="/admin/label">show labels</a></li>
 </ul>
