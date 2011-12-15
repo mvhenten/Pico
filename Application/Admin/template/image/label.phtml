@@ -15,20 +15,27 @@ jQuery(document).ready(function(){
 
 <?php $this->block('titlebar') ?>
 <div class="align-right wrap">
-    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $label->name ?></span></h2>
-    <a href="/admin/label/content/<?php echo $label->id ?>" class="button">add content</a>
-    <a class="button" href="/admin/label/delete/<?php echo $label->id ?>">delete</a>
+    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $item->name ?></span></h2>
+    <a href="/admin/page/content/<?php echo $item->id ?>" class="button">add content</a>
+    <a class="button" href="/admin/page/delete/<?php echo $item->id ?>">delete</a>
 </div>
 <?php $this->endblock('titlebar') ?>
 
-
 <?php $this->block('main') ?>
-<div class="left-pane">
+<div id="vertical-nav" class="fifth">
+    <ul class="verticalnav">
+        <li><h4>Labels</h4></li>
+        <?php foreach( $this->items('label') as $label ): ?>
+        <li><a class="<?php echo $label->id == $item->id ? "active":"" ?>" href="/admin/label/edit/<?php echo $label->id ?>"><?php echo $label->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php $this->block('sidebar') ?>
+    <?php $this->endblock('sidebar') ?>
+</div>
+<div class="three-fifth">
     <?php echo $this->form ?>
-    <?php foreach( $label->content() as $content ): ?>
+    <?php foreach( $item->content() as $content ): ?>
         <?php echo new Pico_Form_Content( $content ); ?>
     <?php endforeach; ?>
-</div>
-<div class="right-pane">
 </div>
 <?php $this->endblock('main') ?>
