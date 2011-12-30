@@ -99,8 +99,17 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
 	private function _storeImageData( $item, $file ) {
 		list( $width, $height ) = $this->_thumbnailDimensions;
 		$gd  = new Nano_Gd( $file->tmp_name );
-		$gd  = $gd->resize( null, $width )->crop( $width, $height );
 
+        $size = $gd->dimensions;
+
+        if( $size['width'] < $size['height'] ){
+            $gd  = $gd->resize( $width, null );
+        }
+        else{
+            $gd  = $gd->resize( null, $height );
+        }
+
+        $gd = $gd->crop( $width, $height );
 		$data  = $gd->getImageJPEG();
 
 		$image_data = $this->model('ImageData', array(

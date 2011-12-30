@@ -10,6 +10,9 @@ dsn = "mysql:dbname=pico;host=127.0.0.1"
 username = pico
 password = pico
 
+[plugins]
+ItemThumbnail = 1
+
 [layout]
 default.base        = APPLICATION_PATH
 default.path        = "view"

@@ -15,7 +15,7 @@ $ini_config = parse_ini_file( APPLICATION_ROOT . '/config/application.ini', true
 Nano_App::Bootstrap(array(
     'namespace'   => array( 'Pico' => dirname(__FILE__) . '/lib' ),
     'config'      => $config,
-    'plugins'     => $ini_config['plugins'],
+    'plugins'     => isset($ini_config['plugins']) ? $ini_config['plugins'] : array(),
     'nano_db'     => $ini_config['database'],
     'router'   => array (
         '/image/\w+/\d+'               => 'Pico_View_Image',
