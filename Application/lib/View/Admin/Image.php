@@ -146,14 +146,15 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
 
     public function bulk( Nano_App_Request $request, $extra ){
         @list( , , , $label_id ) = $request->pathParts();
-        $post = $request->post();
+        $post = $request->post;
 
         if( isset( $post['action-labels'] ) ){
             return $this->labels( $request, $extra );
         }
         else if( isset( $post['apply'] ) ){
-            $image_ids  = json_decode($post->images);
-            $labels     = array_keys( $post->labels );
+            $image_ids  = (array) json_decode($post['images']);
+            $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();
+
             $this->_updateLabels( $image_ids, $labels );
         }
 
@@ -163,7 +164,7 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
 
     public function labels( $request, $config ){
         @list( , , , $label_id ) = $request->pathParts();
-        $post = (object) $request->post();
+        $post   = (object) $request->post();
 
         $selected_query = $this->model('ImageLabel')->search(array(
             'where' => array( 'image_id' => $post->image ),
@@ -184,9 +185,9 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         }
 
         $template = $this->template();
-        
+
         $template->labels   = $labels;
-        $template->images   = json_encode(array_keys($post->image));
+        $template->images   = json_encode($post->image);
         $template->label_id = $label_id;
 
         return $this->template()->render( 'image/bulk');
