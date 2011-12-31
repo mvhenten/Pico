@@ -7,7 +7,7 @@
 
 
 class ItemThumb_Plugin extends Pico_View_Admin_Base {
-	private $_thumbnailDimensions = array(120, 120);
+	private $_thumbnailDimensions = array(179, 144);
 
 
 	/**

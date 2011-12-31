@@ -1,6 +1,7 @@
 <?php
 class Pico_View_Index extends Nano_App_View{
     public function __construct( Nano_App_Request $request, $config ){
+
         $this->template()->request      = $request;
         $this->template()->templatePath = $config['config']['settings']['template_path'];
 
