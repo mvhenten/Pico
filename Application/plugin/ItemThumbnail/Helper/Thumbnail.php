@@ -7,9 +7,10 @@ class ItemThumb_Helper_Thumbnail extends Nano_View_Helper {
         ), $wrapper );
 
         if ( isset($item->appendix->thumbnail) ){
-            return sprintf('<%s class="%s"><a href="/%s">
+            return sprintf('<%s title="%s" class="%s"><a href="/%s">
                            <img alt="%s" src="/image/original/%d?v=%d" /></a></%s>',
                 $wrapper['tag'],
+                $item->name,
                 $wrapper['class'],
                 $item->slug,
                 $item->name, $item->id,
