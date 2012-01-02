@@ -10,12 +10,7 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
     public function resize( $type ){
         $gd = new Nano_Gd( $this->data, false );
 
-        list( $width, $height ) = $this->_getImageSize( $type );
-        list( $w, $h ) = array_values( $gd->getDimensions() );
-
-        $ratio = min( $width/$w, $height/$h, 1);
-
-        list( $width, $height ) = array( min( $width, $ratio*$w), min( $height, $ratio*$h) );
+        list( $width, $height ) = $this->_getProportionalResize($gd, $type);
 
         $target = $gd->resize( $width, $height );
         $data   = $target->getImageJPEG();
@@ -39,8 +34,52 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
         return $new->store();
     }
 
+    private function _getProportionalResize( $gd, $type ){
+        list( $width, $height ) = $this->_getImageSize( $type );
+        list( $w, $h ) = array_values( $gd->getDimensions() );
+
+        if( $width > $height ){
+            $ratio = $width/$w;
+        }
+        else{
+            $ratio = $height/$h;
+        }
+
+        $dimensions = array( (int) ($ratio*$w) , (int) ($ratio*$h) );
+        return $dimensions;
+    }
+
     private function _getImageSize( $type ){
-        $_defaults = array(
+        $_defaults = $this->_getImageSizeDefaults();
+
+        if( isset( $_defaults[$type] ) ){
+            $size = isset( $_defaults[$type] ) ? $_defaults[$type] : $_defaults['thumbnail'];
+            list( $width, $height ) = explode('x', $size );
+        }
+        else{
+            /**
+             * allow resizing arbitrary sizes.
+             * @todo remove this in favor of a settings dialog!
+             */
+            if( intval($type) ){
+                $width = intval($type);
+                $height = 1;
+            }
+            else if( ($dims = explode('x',$type)) && count($dims) == 2 ){
+                @list( $width, $height ) = $dims;
+                $width = max($width, 1);
+                $height = max($height,1);
+            }
+            else{
+                throw new Exception('Cannot resize image to ' . $type );
+            }
+        }
+
+        return array( $width, $height );
+    }
+
+    private function _getImageSizeDefaults(){
+        return array(
             'thumbnail' => Nano_Gd::IMAGESIZE_THUMBNAIL,
             'icon'      => Nano_Gd::IMAGESIZE_ICON,
             'small'     => Nano_Gd::IMAGESIZE_SMALL,
@@ -48,15 +87,5 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
             'sd'        => Nano_Gd::IMAGESIZE_SD,
             'hd'        => Nano_Gd::IMAGESIZE_HD
         );
-
-        if( preg_match( '/\d+x\d+/', $type, $match) ){
-            list( $__, $width, $height ) = $match;
-        }
-        else{
-            $size = isset( $_defaults[$type] ) ? $_defaults[$type] : $_defaults['thumbnail'];
-            list( $width, $height ) = explode('x', $size );
-        }
-
-        return array( $width, $height );
     }
 }
