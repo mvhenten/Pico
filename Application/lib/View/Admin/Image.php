@@ -193,6 +193,18 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         return $this->template()->render( 'image/bulk');
     }
 
+    public function settings( $request, $config ){
+
+        $this->template()->settings = array(
+            'size'  => array(
+                'portfolio' => array( 'width' => 900, 'height' => 1 ),
+                'xtra-large' => array( 'width' => 900, 'height' => 1 )
+            )
+        );
+
+        return $this->template()->render( 'image/settings');
+    }
+
 
     private function _updateLabels( $image_ids, $label_ids ){
         $this->model('ImageLabel')->delete(array('image_id' => $image_ids));
