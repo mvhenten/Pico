@@ -36,7 +36,10 @@ h6{
 
 iframe.rich-text-editor{
     padding:1em;
+}
 
+td,th{
+    text-align:left;
 }
 
 /*big blue button*/
@@ -140,7 +143,7 @@ iframe.rich-text-editor{
     border-color: #EEE #E0E0E0 #E0E0E0 #EEE;
     padding:0.3em 0.7em;
     text-align:center;
-    line-height:2em;
+    line-height:2.7em;
     cursor:pointer;
     border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -148,6 +151,14 @@ iframe.rich-text-editor{
     color: #444;
     font:inherit;
     margin-right:0.5em;
+/*    height:2.4em;
+*/
+}
+
+input.button{
+    display:inline-block;
+    line-height:2.7em;
+    height:2.7em;
 }
 
 .button:hover, .input-file-wrapper:hover label{
@@ -459,13 +470,17 @@ form.form input, form.form textarea{
     font-family: inherit !important;
 }
 
-form.form input.input-text, form.form textarea{
+input.input-text, textarea{
     border: 1px solid #E0E0E0;
     padding:0.2em 0.5em;
     border-radius: 3px;
     -webkit-border-radius: 3px;
     -moz-border-radius:3px;
     background-color: #fff;
+
+}
+
+form.form input.input-text, form.form textarea{
     display:block;
     width: 60%;
 }
