@@ -1,7 +1,22 @@
 <?php
+/**
+ * Application/lib/View/Image.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Bison
+ */
+
+
 class Pico_View_Image extends Nano_App_View{
-    public function get( Nano_App_Request $request, $config ){
-        list( $_, $type, $id ) = $request->pathParts();
+
+    /**
+     *
+     *
+     * @param object  $request
+     * @param unknown $config
+     */
+    public function get( Nano_App_Request $request, $config ) {
+        list( , $type, $id ) = $request->pathParts();
 
 
 
@@ -11,33 +26,49 @@ class Pico_View_Image extends Nano_App_View{
         $this->_imageOut( $image );
     }
 
-    private function _getImageType( $id, $type ){
+
+    /**
+     *
+     *
+     * @param unknown $id
+     * @param unknown $type
+     * @return unknown
+     */
+    private function _getImageType( $id, $type ) {
         $imagedata = new Pico_Model_ImageData();
 
-        $images = $imagedata->search( array('where' => array(
-            'image_id'  => $id,
-            'type'      => $type
-        )));
+        $image = $imagedata->search( array('where' => array(
+                    'image_id'  => $id,
+                    'type'      => $type
+                )))->fetch();
 
 
-        if( $images->rowCount() == 0 ){
+        if ( false === $image ) {
             return $this->_createImageType( $id, $type );
         }
 
-        return $images->fetch();
+        return $image;
     }
 
-    private function _createImageType( $id, $type ){
+
+    /**
+     *
+     *
+     * @param unknown $id
+     * @param unknown $type
+     * @return unknown
+     */
+    private function _createImageType( $id, $type ) {
         $imagedata = new Pico_Model_ImageData();
 
         $images = $imagedata->search( array('where' => array(
-            'image_id'  => $id,
-            'type'      => 'original'
-        )));
+                    'image_id'  => $id,
+                    'type'      => 'original'
+                )));
 
         $original = $images->fetch();
 
-        if( $original ){
+        if ( $original ) {
             $image = $original->resize( $type );
             return $image;
         }
@@ -46,16 +77,22 @@ class Pico_View_Image extends Nano_App_View{
     }
 
 
-    private function _imageOut( $image, $cache = true ){
+    /**
+     *
+     *
+     * @param unknown $image
+     * @param unknown $cache (optional)
+     */
+    private function _imageOut( $image, $cache = true ) {
         date_default_timezone_set('Europe/Amsterdam');
 
         $inserted = strtotime($image->created);
 
-        if( $cache && isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ){
+        if ( $cache && isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
             $since = strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
 
-            if( $since === $inserted ){
-                header( 'Last-Modified: ' . date('r', $inserted ), true,304 );
+            if ( $since === $inserted ) {
+                header( 'Last-Modified: ' . date('r', $inserted ), true, 304 );
                 header( 'Expires: ' . date( 'r', strtotime('+1 Month', $inserted ) ) );
                 header( 'Cache-Control: max-age=36000, must-revalidate' );
                 exit;
@@ -72,5 +109,6 @@ class Pico_View_Image extends Nano_App_View{
         echo $image->data;
         exit;
     }
+
 
 }
