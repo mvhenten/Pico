@@ -2,3 +2,5 @@
 *.swp
 *.komodoproject
 *.kpf
+.phptidy-cache
+www/public

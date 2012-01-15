@@ -1,4 +1,12 @@
-<?
+<?php
+/**
+ * Application/lib/Schema/ItemContent.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Bison
+ */
+
+
 class Pico_Schema_ItemContent extends Nano_Db_Schema {
     protected $_tableName = 'item_content';
 
@@ -39,6 +47,15 @@ class Pico_Schema_ItemContent extends Nano_Db_Schema {
             'required'  => true,
         ),
 
+        'html' => array(
+            'type'      => 'text',
+            'length'    => 0,
+            'default'   => '',
+            'name'      => 'draft',
+            'extra'     => '',
+            'required'  => true,
+        ),
+
         'updated' => array(
             'type'      => 'timestamp',
             'length'    => 0,
@@ -53,13 +70,18 @@ class Pico_Schema_ItemContent extends Nano_Db_Schema {
         'id'
     );
 
-    private function _get_item(){
-       return $this->has_a(array(
-           'key'         => 'item_id',
-           'table'       => 'item',
-           'foreign_key' => 'id'
-       ));
-   }
+    /**
+     *
+     *
+     * @return unknown
+     */
+    private function _get_item() {
+        return $this->has_a(array(
+                'key'         => 'item_id',
+                'table'       => 'item',
+                'foreign_key' => 'id'
+            ));
+    }
 
 
 }
