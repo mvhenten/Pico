@@ -38,6 +38,12 @@
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border: 1px solid #eee;
+    overflow:hidden;
+    padding-left: -7px;
+}
+
+.thumbnail-holder img {
+    margin: 0 -10px;
 }
 
 .fakefile .button {
