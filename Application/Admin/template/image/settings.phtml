@@ -1,0 +1,44 @@
+<?php $this->wrapper( 'image') ?>
+
+<?php $this->block('titlebar') ?>
+<div class="align-right wrap">
+    <h2 class="float-left">Image settings</h2>
+<!--    <a href="/admin/page/content/<?php echo $item->id ?>" class="button">add content</a>
+    <a class="button" href="/admin/label/delete/<?php echo $item->id ?>">delete</a>
+-->
+    </div>
+<?php $this->endblock('titlebar') ?>
+
+
+<?php $this->block('main') ?>
+    <ul class="itemlist">
+        <?php foreach( $settings['size'] as $name => $size ): ?>
+        <li>
+            <form>
+            <h6><?php echo $name ?></h6>
+            <div class="half">
+                <table>
+                    <tr>
+                        <th><label for="width-<?php echo $name ?>">width:</label></th>
+                        <th><label for="height-<?php echo $name ?>">height:</label></th>
+                    </tr>
+                    <tr>
+                        <td><input class="input-text" name="width[<?php echo $name ?>]" value="<?php echo $size['width'] ?>" /></td>
+                        <td><input class="input-text" name="height[<?php echo $name ?>]" value="<?php echo $size['height'] ?>" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="fifth">
+                <br/>
+                <div class="buttons">
+                    <a href="/admin/image/settings/delete/<?php echo $name ?>" class="button third">delete</a>
+                    <input class="button" type="submit" name="save" value="save" />
+                </div>
+            </div>
+            </form>
+
+        </li>
+        <?php endforeach; ?>
+    </ul>
+<?php $this->endblock('main') ?>
+

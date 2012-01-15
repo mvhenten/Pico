@@ -1,0 +1,15 @@
+
+<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/52?target=<?php echo $request->url ?>" class="form">
+<?php foreach( $item->content() as $content ): ?>
+<div class="item-content-wrapper">
+    <textarea class="rich-text-editor" name="content[<?php echo $content->id ?>][value]" id="content-<?php echo $content->id ?>"><?php
+        echo htmlentities( $content->value );
+    ?></textarea>
+	<div class="toolbar">
+        <input type="submit" value="save" name="content[<?php echo $content->id ?>][save]" id="submit-save-<?php echo $content->id ?>" class="input-submit"/>
+		<input type="submit" value="save draft" name="content[<?php echo $content->id ?>][draft]" id="submit-draft-<?php echo utf8_encode($content->id) ?>" class="input-submit"/>
+		<a class="button" href="/admin/content/delete/<?php echo $content->id ?>?target=<?php echo $request->url ?>">delete</a>
+    </div>
+</div>
+<?php endforeach; ?>
+</form>
