@@ -1,19 +1,63 @@
 <?php
-class Pico_View_Admin_Content extends Pico_View_Admin_Base{
-    public function save( Nano_App_Request $request, $config ){
+/**
+ * Application/lib/View/Admin/Content.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Bison
+ */
 
+
+class Pico_View_Admin_Content extends Pico_View_Admin_Base{
+
+    /**
+     *
+     *
+     * @param object  $request
+     * @param unknown $config
+     */
+    public function save( Nano_App_Request $request, $config ) {
+        @list( , $controller, $action, $id ) = $request->pathParts();
+
+        $post    = $request->post;
+
+        foreach ( $post['content'] as $content_id => $value ) {
+            $content = $this->model('ItemContent', $content_id );
+
+            if ( isset($value['draft'] ) ) {
+                $content->draft = $value['value'];
+            }
+            else {
+                $content->value = $value['value'];
+            }
+
+
+            $content->store(array( 'id' => $content_id) );
+        }
+
+        if ( $request->target ) {
+            $this->response()
+            ->redirect( $request->target );
+        }
     }
 
-    public function delete( Nano_App_Request $request, $config ){
+
+    /**
+     *
+     *
+     * @param object  $request
+     * @param unknown $config
+     */
+    public function delete( Nano_App_Request $request, $config ) {
         @list( , $controller, $action, $id ) = $request->pathParts();
 
         $this->model('ItemContent', $id )->delete();
 
-        if( $request->target ){
+        if ( $request->target ) {
             $this->response()
-                ->redirect( $request->target );
+            ->redirect( $request->target );
         }
     }
+
 
     //public function post( $request, $config ){
     //    $post = $request->post();
