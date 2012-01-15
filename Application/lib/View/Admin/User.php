@@ -75,7 +75,8 @@ class Pico_View_Admin_User extends Nano_App_View{
             $this->response()->redirect( '/admin/' );
         }
 
-        return $this->template()->render( APPLICATION_ROOT . '/Admin/template/user');
+        $this->template()->templatePath = 'Application/Admin/template';
+        return $this->template()->render('user');
     }
 
 
