@@ -2,20 +2,24 @@
 /**
  * Application/plugin/ItemThumbnail/hook.php
  *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
  * @package default
  */
 
 
-@list( , $controller, $action, $item_id ) = $request->pathParts ?>
+@list( , $controller, $action, $item_id ) = $request->pathParts;
+?>
 
 <?php if ( $start ):
-	Nano_Autoloader::registerNamespace( 'ItemThumb', dirname(__FILE__)  );
-$this->router->addRoute( '/admin/plugin/thumb/\w+(/\d+)?', 'ItemThumb_Plugin' );
+
+    Nano_Autoloader::registerNamespace( 'ItemThumb', dirname(__FILE__)  );
+$this->router->prepend( '/admin/plugin/thumb/\w+(/\d+)?', 'ItemThumb_Plugin' );
 
 if ( $action && $action == 'delete' ) {
-	$image_data = new Pico_Model_ImageData();
-	$image_data->delete( array( 'image_id' => $item_id ) );
+    $image_data = new Pico_Model_ImageData();
+    $image_data->delete( array( 'image_id' => $item_id ) );
 }
+
 endif; ?>
 
 <?php if ( $end ): ?>
