@@ -1,5 +1,7 @@
 
-<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/52?target=<?php echo $request->url ?>" class="form">
+<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/52?target=<?php
+    echo $request->url ?>" class="form">
+                                                                                                                
 <?php foreach( $item->content() as $content ): ?>
 <div class="item-content-wrapper">
     <textarea class="rich-text-editor" name="content[<?php echo $content->id ?>][value]" id="content-<?php echo $content->id ?>"><?php

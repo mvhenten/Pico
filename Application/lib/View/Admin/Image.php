@@ -1,15 +1,31 @@
 <?php
+/**
+ * Application/lib/View/Admin/Image.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Bison
+ */
+
+
 class Pico_View_Admin_Image extends Pico_View_Admin_Base{
-    public function get( Nano_App_Request $request, $config ){
+
+    /**
+     *
+     *
+     * @param object  $request
+     * @param unknown $config
+     * @return unknown
+     */
+    public function get( Nano_App_Request $request, $config ) {
         @list( , , , $id ) = $request->pathParts();
         $values = array();
 
-        if( $id && is_numeric( $id ) ){
+        if ( $id && is_numeric( $id ) ) {
             $label = $this->model('Item', $id );
             $pager = $label->pager('images');
         }
-        else{
-            $where = array('type' => 'image','order' => '-inserted');
+        else {
+            $where = array('type' => 'image', 'order' => '-inserted');
             $pager  = $this->model('Item')->pager('search', $where );
         }
 
@@ -24,27 +40,35 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         return $template->render( 'image/list');
     }
 
-    public function upload( $request, $config ){
-        if( ! $request->isPost() ){
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     * @return unknown
+     */
+    public function upload( $request, $config ) {
+        if ( ! $request->isPost() ) {
             return $this->template()->render( 'image/upload');
         }
 
         $file = (object) $_FILES['image'];
 
-        if( $file->error ){
+        if ( $file->error ) {
             $this->response()->redirect('/admin/image?error=' . $file->error );
         }
 
         $post = $request->post();
 
-        if( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))){
+        if ( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))) {
             $item = $this->model('Item', array(
-                'name'     => $file->name,
-                'visible'   => 0,
-                'type'      => 'image',
-                'inserted'  => date('Y-m-d H:i:s'),
-                'slug'      => Nano_Util_String::slugify($file->name)
-            ))->store();
+                    'name'     => $file->name,
+                    'visible'   => 0,
+                    'type'      => 'image',
+                    'inserted'  => date('Y-m-d H:i:s'),
+                    'slug'      => Nano_Util_String::slugify($file->name)
+                ))->store();
 
             $this->_storeImageData( $item, $file );
         }
@@ -53,31 +77,45 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         exit;
     }
 
-    public function postEdit( $request, $config ){
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     */
+    public function postEdit( $request, $config ) {
         @list( , , , $id ) = $request->pathParts();
 
         $post   = (object) $request->post();
         $item   = $this->model('Item', $id );
         $labels = array_keys((array) $post->labels);
 
-        var_dump( $post );
 
         $this->model('ImageLabel')->delete(array(
-            'image_id' => $id
-        ));
+                'image_id' => $id
+            ));
 
-        foreach( $labels as $label_id ){
+        foreach ( $labels as $label_id ) {
             $n = $this->model('ImageLabel', array(
-                'image_id' => $id,
-                'label_id' => $label_id,
-                'priority' => 0
-            ))->store();
+                    'image_id' => $id,
+                    'label_id' => $label_id,
+                    'priority' => 0
+                ))->store();
         }
 
         parent::post( $request, $config );
     }
 
-    protected  function getEdit(  $request, $config ){
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     * @return unknown
+     */
+    protected  function getEdit(  $request, $config ) {
         @list( , , , $id ) = $request->pathParts();
 
         $template = $this->template();
@@ -95,11 +133,11 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
             'type'  => 'fieldset',
             'elements'=>array(),
             'label' => 'labels'
-                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\', true)" href="#all">(select all)</a>'
-                .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\',0)" href="#none">(select none)</a>'
+            .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\', true)" href="#all">(select all)</a>'
+            .' <a onclick="$(this.parentNode.parentNode).find(\'input\').attr(\'checked\',0)" href="#none">(select none)</a>'
         );
 
-        foreach( $labels as $label ){
+        foreach ( $labels as $label ) {
             $fieldset['elements']['labels[' . $label->id . ']'] = array(
                 'type'  => 'checkbox',
                 'value' => (bool) in_array( $label->id, $labels_selected_ids),
@@ -120,7 +158,14 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         return $template;
     }
 
-    public function postOrder( $request, $config ){
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     */
+    public function postOrder( $request, $config ) {
         @list( , , , $label_id ) = $request->pathParts();
         $post = (object) $request->post();
 
@@ -128,55 +173,71 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         $image_ids  = array_keys( $post->priority );
 
         $this->model('ImageLabel')->delete(array(
-            'image_id' => $image_ids,
-            'label_id' => $label_id
-        ));
+                'image_id' => $image_ids,
+                'label_id' => $label_id
+            ));
 
-        foreach( $post->priority as $image_id => $priority ){
+        foreach ( $post->priority as $image_id => $priority ) {
             $this->model('ImageLabel', array(
-                'label_id' => $label_id,
-                'image_id' => $image_id,
-                'priority' => $priority
-            ))->store();
+                    'label_id' => $label_id,
+                    'image_id' => $image_id,
+                    'priority' => $priority
+                ))->store();
         }
 
         $this->response()
-            ->redirect( '/admin/image/list/' . $id );
+        ->redirect( '/admin/image/list/' . $id );
     }
 
-    public function bulk( Nano_App_Request $request, $extra ){
+
+    /**
+     *
+     *
+     * @param object  $request
+     * @param unknown $extra
+     * @return unknown
+     */
+    public function bulk( Nano_App_Request $request, $extra ) {
         @list( , , , $label_id ) = $request->pathParts();
         $post = $request->post;
 
-        if( isset( $post['action-labels'] ) ){
+        if ( isset( $post['action-labels'] ) ) {
             return $this->labels( $request, $extra );
         }
-        else if( isset( $post['apply'] ) ){
-            $image_ids  = (array) json_decode($post['images']);
-            $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();
+        else if ( isset( $post['apply'] ) ) {
+                $image_ids  = (array) json_decode($post['images']);
+                $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();
 
-            $this->_updateLabels( $image_ids, $labels );
-        }
+                $this->_updateLabels( $image_ids, $labels );
+            }
 
         $this->response()
-            ->redirect( '/admin/image/list/' . $label_id );
+        ->redirect( '/admin/image/list/' . $label_id );
     }
 
-    public function labels( $request, $config ){
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     * @return unknown
+     */
+    public function labels( $request, $config ) {
         @list( , , , $label_id ) = $request->pathParts();
         $post   = (object) $request->post();
 
         $selected_query = $this->model('ImageLabel')->search(array(
-            'where' => array( 'image_id' => $post->image ),
-            'group' => 'label_id'
-        ));
+                'where' => array( 'image_id' => $post->image ),
+                'group' => 'label_id'
+            ));
 
         $selected_query->setFetchMode( PDO::FETCH_COLUMN, 1 );
         $selected_labels = $selected_query->fetchAll();
 
         $labels = array();
 
-        foreach( $this->_items('label')  as $label ){
+        foreach ( $this->_items('label')  as $label ) {
             $labels[$label->id] = (object) array(
                 'selected'  => in_array( $label->id, $selected_labels ),
                 'name'      => $label->name,
@@ -193,7 +254,15 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         return $this->template()->render( 'image/bulk');
     }
 
-    public function settings( $request, $config ){
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     * @return unknown
+     */
+    public function settings( $request, $config ) {
 
         $this->template()->settings = array(
             'size'  => array(
@@ -206,60 +275,82 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     }
 
 
-    private function _updateLabels( $image_ids, $label_ids ){
+    /**
+     *
+     *
+     * @param unknown $image_ids
+     * @param unknown $label_ids
+     */
+    private function _updateLabels( $image_ids, $label_ids ) {
         $this->model('ImageLabel')->delete(array('image_id' => $image_ids));
 
-        foreach( $label_ids as $label_id ){
-            foreach( $image_ids as $image_id ){
+        foreach ( $label_ids as $label_id ) {
+            foreach ( $image_ids as $image_id ) {
                 $this->model('ImageLabel', array(
-                    'image_id'  => $image_id,
-                    'label_id'  => $label_id
-                ))->store();
+                        'image_id'  => $image_id,
+                        'label_id'  => $label_id
+                    ))->store();
             }
         }
     }
 
-    private function _storeImageData( $item, $file ){
+
+    /**
+     *
+     *
+     * @param unknown $item
+     * @param unknown $file
+     */
+    private function _storeImageData( $item, $file ) {
         $gd  = new Nano_Gd( $file->tmp_name );
 
         list( $width, $height ) = array_values( $gd->getDimensions() );
         $exif = new Nano_Exif( $file->tmp_name );
 
         $gd   = $this->_rotateImageData( $exif, $gd );
-        $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG();
+        $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG(90);
         $type = ($info[2] != IMAGETYPE_PNG) ? 'image/jpeg' : $file->type;
 
         $this->model('ImageData', array(
-            'image_id'  => $item->id,
-            'size'      => $file->size,
-            'mime'      => $type,
-            'width'     => $width,
-            'height'    => $height,
-            'data'      => $src,
-            'filename'  => $file->name,
-            'type'      => 'original'
-        ))->store();
+                'image_id'  => $item->id,
+                'size'      => $file->size,
+                'mime'      => $type,
+                'width'     => $width,
+                'height'    => $height,
+                'data'      => $src,
+                'filename'  => $file->name,
+                'type'      => 'original'
+            ))->store();
     }
 
-    private function _rotateImageData( Nano_Exif $exif, Nano_Gd $gd ){
-        switch( $exif->orientation() ){
-            case 2:
-                return $gd->flipHorizontal();
-            case 3:
-                return $gd->rotate( 180 );
-            case 4:
-                return $gd->flipVertical();
-            case 5:
-                return $gd->flipVertical()->rotate(90);
-            case 6:
-                return $gd->rotate( -90 );
-            case 7:
-                return $gd->flipHorizontal()->rotate( -90 );
-            case 8:
-                return $gd->rotate( 90 );
+
+    /**
+     *
+     *
+     * @param object  $exif
+     * @param object  $gd
+     * @return unknown
+     */
+    private function _rotateImageData( Nano_Exif $exif, Nano_Gd $gd ) {
+        switch ( $exif->orientation() ) {
+        case 2:
+            return $gd->flipHorizontal();
+        case 3:
+            return $gd->rotate( 180 );
+        case 4:
+            return $gd->flipVertical();
+        case 5:
+            return $gd->flipVertical()->rotate(90);
+        case 6:
+            return $gd->rotate( -90 );
+        case 7:
+            return $gd->flipHorizontal()->rotate( -90 );
+        case 8:
+            return $gd->rotate( 90 );
         }
 
         return $gd;
     }
+
 
 }
