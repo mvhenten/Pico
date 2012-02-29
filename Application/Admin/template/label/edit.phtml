@@ -1,0 +1,30 @@
+<?php $this->wrapper( 'image') ?>
+
+<?php $this->block('head') ?>
+<?php $this->endblock('head') ?>
+
+<?php $this->block('titlebar') ?>
+<div class="align-right wrap">
+    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $item->name ?></span></h2>
+    <a href="/<?php echo $item->slug ?>" class="button">view page</a>
+    <a href="/admin/label/content/<?php echo $item->id ?>" class="button">add content</a>
+    <a class="button" href="/admin/label/delete/<?php echo $item->id ?>">delete</a>
+</div>
+<?php $this->endblock('titlebar') ?>
+
+<?php $this->block('main') ?>
+<div id="vertical-nav" class="fifth">
+    <ul class="verticalnav">
+        <li><h4>Labels</h4></li>
+        <?php foreach( $this->items('label') as $label ): ?>
+        <li><a class="<?php echo $label->id == $item->id ? "active":"" ?>" href="/admin/label/edit/<?php echo $label->id ?>"><?php echo $label->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php $this->block('sidebar') ?>
+    <?php $this->endblock('sidebar') ?>
+</div>
+<div class="three-fifth">
+    <?php echo $this->form ?>
+    <?php $this->process( 'common/content' ); ?>
+</div>
+<?php $this->endblock('main') ?>
