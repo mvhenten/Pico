@@ -308,7 +308,7 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         $exif = new Nano_Exif( $file->tmp_name );
 
         $gd   = $this->_rotateImageData( $exif, $gd );
-        $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG(90);
+        $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG(100);
         $type = ($info[2] != IMAGETYPE_PNG) ? 'image/jpeg' : $file->type;
 
         $this->model('ImageData', array(

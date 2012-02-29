@@ -1,0 +1,1 @@
+ALTER TABLE item ADD priority INT DEFAULT 0 AFTER type;

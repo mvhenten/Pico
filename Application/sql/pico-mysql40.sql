@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.54, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.41, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: pico
 -- ------------------------------------------------------
--- Server version	5.1.54-1ubuntu4
+-- Server version	5.1.41-3ubuntu12.10
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -28,7 +28,7 @@ CREATE TABLE `image_data` (
   `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `item` (`image_id`)
-) TYPE=MyISAM AUTO_INCREMENT=6;
+) TYPE=MyISAM AUTO_INCREMENT=57;
 
 --
 -- Table structure for table `image_label`
@@ -42,7 +42,7 @@ CREATE TABLE `image_label` (
   UNIQUE KEY `image_label` (`image_id`,`label_id`),
   KEY `image` (`image_id`),
   KEY `label` (`label_id`)
-) TYPE=MyISAM;
+) TYPE=InnoDB;
 
 --
 -- Table structure for table `item`
@@ -53,6 +53,7 @@ CREATE TABLE `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `slug` varchar(64) NOT NULL,
   `type` varchar(255) NOT NULL,
+  `priority` int(11) DEFAULT '0',
   `parent` int(10) unsigned zerofill DEFAULT NULL,
   `visible` tinyint(4) unsigned zerofill DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -61,7 +62,7 @@ CREATE TABLE `item` (
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `inserted` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) TYPE=MyISAM AUTO_INCREMENT=4;
+) TYPE=MyISAM AUTO_INCREMENT=69;
 
 --
 -- Table structure for table `item_content`
@@ -73,10 +74,11 @@ CREATE TABLE `item_content` (
   `item_id` int(10) unsigned NOT NULL,
   `value` text,
   `draft` text,
+  `html` text,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `itemk` (`item_id`)
-) TYPE=MyISAM;
+) TYPE=InnoDB;
 
 --
 -- Table structure for table `link`
@@ -104,7 +106,7 @@ CREATE TABLE `link_group` (
   `name` varchar(255) NOT NULL,
   `description` varchar(1024) NOT NULL,
   PRIMARY KEY (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM AUTO_INCREMENT=3;
 
 --
 -- Table structure for table `setting`
@@ -129,4 +131,4 @@ CREATE TABLE `setting` (
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-01-15 15:47:02
+-- Dump completed on 2012-02-29 22:02:40

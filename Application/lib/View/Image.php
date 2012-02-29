@@ -3,26 +3,16 @@
  * Application/lib/View/Image.php
  *
  * @author Matthijs van Henten <matthijs@ischen.nl>
- * @package Bison
+ * @package Nano
  */
 
 
 class Pico_View_Image extends Nano_App_View{
 
-    /**
-     *
-     *
-     * @param object  $request
-     * @param unknown $config
-     */
     public function get( Nano_App_Request $request, $config ) {
         list( , $type, $id ) = $request->pathParts();
 
-
-
         $image = $this->_getImageType( $id, $type );
-
-
         $this->_imageOut( $image );
     }
 
@@ -86,6 +76,8 @@ class Pico_View_Image extends Nano_App_View{
     private function _imageOut( $image, $cache = true ) {
         date_default_timezone_set('Europe/Amsterdam');
 
+        error_log( 'hier dus: ' . $image->type );
+
         $inserted = strtotime($image->created);
 
         if ( $cache && isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
@@ -100,7 +92,7 @@ class Pico_View_Image extends Nano_App_View{
         }
 
         header( 'Content-Type: ' . $image->mime );
-        header( 'Content-length: ' .  $image->size );
+        header( 'Content-length: ' .  strlen($image->data) );
         header( 'Content-Disposition: inline; filename=' . $image->filename );
         header( 'Last-Modified: ' . date('r', $inserted ) );
         header( 'Expires: ' . date( 'r', strtotime('+1 Month', $inserted ) ) );
