@@ -1,4 +1,4 @@
-<?
+<?php
 class Pico_Schema_ImageData extends Nano_Db_Schema {
     protected $_tableName = 'image_data';
 
@@ -105,6 +105,5 @@ class Pico_Schema_ImageData extends Nano_Db_Schema {
            'foreign_key' => 'id'
        ));
    }
-
-
+            
 }

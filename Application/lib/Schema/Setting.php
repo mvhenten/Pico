@@ -1,4 +1,4 @@
-<?
+<?php
 class Pico_Schema_Setting extends Nano_Db_Schema {
     protected $_tableName = 'setting';
 
@@ -79,7 +79,6 @@ class Pico_Schema_Setting extends Nano_Db_Schema {
     protected $_primary_key = array(
         'id'
     );
-
 
 
 }

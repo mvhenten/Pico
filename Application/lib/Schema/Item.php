@@ -1,4 +1,4 @@
-<?
+<?php
 class Pico_Schema_Item extends Nano_Db_Schema {
     protected $_tableName = 'item';
 
@@ -26,6 +26,15 @@ class Pico_Schema_Item extends Nano_Db_Schema {
             'length'    => 255,
             'default'   => '',
             'name'      => 'type',
+            'extra'     => '',
+            'required'  => true,
+        ),
+
+        'priority' => array(
+            'type'      => 'int',
+            'length'    => 11,
+            'default'   => '0',
+            'name'      => 'priority',
             'extra'     => '',
             'required'  => true,
         ),
@@ -97,5 +106,6 @@ class Pico_Schema_Item extends Nano_Db_Schema {
     protected $_primary_key = array(
         'id'
     );
+
 
 }

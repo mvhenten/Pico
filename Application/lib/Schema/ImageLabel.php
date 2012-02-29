@@ -1,4 +1,4 @@
-<?
+<?php
 class Pico_Schema_ImageLabel extends Nano_Db_Schema {
     protected $_tableName = 'image_label';
 
@@ -42,4 +42,6 @@ class Pico_Schema_ImageLabel extends Nano_Db_Schema {
     public function labels( array $args = array() ){
         return $this->belongs_to( 'Pico_Model_Item', array( 'id' => 'label_id' ), $args );
     }
+
+
 }

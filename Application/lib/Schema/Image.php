@@ -1,5 +1,5 @@
-<?php
-class Pico_Schema_ItemContent extends Nano_Db_Schema {
+<?
+class Pico_Schema_Image extends Nano_Db_Schema {
     protected $_tableName = 'item_content';
 
     protected $_schema = array(
@@ -70,4 +70,5 @@ class Pico_Schema_ItemContent extends Nano_Db_Schema {
        ));
    }
             
+
 }

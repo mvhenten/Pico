@@ -1,4 +1,4 @@
-<?
+<?php
 class Pico_Schema_Link extends Nano_Db_Schema {
     protected $_tableName = 'link';
 
@@ -70,7 +70,6 @@ class Pico_Schema_Link extends Nano_Db_Schema {
     protected $_primary_key = array(
         'id'
     );
-
 
 
 }
