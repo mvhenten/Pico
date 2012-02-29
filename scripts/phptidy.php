@@ -1,4 +1,4 @@
-#!/usr/bin/php
+!/usr/bin/php
 <?php
 /**
  * phptidy
@@ -51,7 +51,7 @@ $default_author = "Matthijs van Henten <matthijs@ischen.nl>";
 
 // Name of the automatically added @package doctag in the phpdoc file docblocks
 // Example: "myproject"
-$default_package = "Bison";
+$default_package = "Pico";
 
 // String used for indenting
 // If you indent with spaces you can use as much spaces as you like.

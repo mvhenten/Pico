@@ -24,7 +24,7 @@ class Pico_View_Admin_Label extends Pico_View_Admin_Base{
 
         $this->template()->labels = $labels;
 
-        return $this->template()->render('image/labels');
+        return $this->template()->render('label/list');
     }
 
 
@@ -44,7 +44,7 @@ class Pico_View_Admin_Label extends Pico_View_Admin_Base{
         $this->template()->item = $label;
         $this->template()->form = $form;
 
-        return $this->template()->render('image/label');
+        return $this->template()->render('label/edit');
     }
 
 
