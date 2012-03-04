@@ -25,10 +25,10 @@ CREATE TABLE `image_data` (
   `mime` varchar(255) NOT NULL,
   `filename` varchar(1024) NOT NULL,
   `data` longblob NOT NULL,
-  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created` timestamp NOT NULL,
   PRIMARY KEY (`id`),
   KEY `item` (`image_id`)
-) TYPE=MyISAM AUTO_INCREMENT=57;
+) TYPE=MyISAM AUTO_INCREMENT=272;
 
 --
 -- Table structure for table `image_label`
@@ -53,12 +53,12 @@ CREATE TABLE `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `slug` varchar(64) NOT NULL,
   `type` varchar(255) NOT NULL,
-  `priority` int(11) DEFAULT '0',
-  `parent` int(10) unsigned zerofill DEFAULT NULL,
-  `visible` tinyint(4) unsigned zerofill DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` varchar(2048) DEFAULT NULL,
-  `appendix` longblob,
+  `priority` int(10) unsigned NOT NULL DEFAULT '0',
+  `parent` int(10) unsigned NOT NULL DEFAULT '0',
+  `visible` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` varchar(2048) NOT NULL DEFAULT '',
+  `appendix` longblob NOT NULL,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `inserted` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
@@ -78,7 +78,7 @@ CREATE TABLE `item_content` (
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `itemk` (`item_id`)
-) TYPE=InnoDB;
+) TYPE=InnoDB AUTO_INCREMENT=3;
 
 --
 -- Table structure for table `link`
@@ -131,4 +131,4 @@ CREATE TABLE `setting` (
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-02-29 22:02:40
+-- Dump completed on 2012-03-04 16:07:20

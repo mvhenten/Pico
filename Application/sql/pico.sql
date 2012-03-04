@@ -32,10 +32,10 @@ CREATE TABLE `image_data` (
   `mime` varchar(255) NOT NULL,
   `filename` varchar(1024) NOT NULL,
   `data` longblob NOT NULL,
-  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `item` (`image_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=272 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,12 +66,12 @@ CREATE TABLE `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `slug` varchar(64) NOT NULL,
   `type` varchar(255) NOT NULL,
-  `priority` int(11) DEFAULT '0',
-  `parent` int(10) unsigned zerofill DEFAULT NULL,
-  `visible` tinyint(4) unsigned zerofill DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` varchar(2048) DEFAULT NULL,
-  `appendix` longblob,
+  `priority` int(10) unsigned NOT NULL DEFAULT '0',
+  `parent` int(10) unsigned NOT NULL DEFAULT '0',
+  `visible` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` varchar(2048) NOT NULL DEFAULT '',
+  `appendix` longblob NOT NULL,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `inserted` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
@@ -94,7 +94,7 @@ CREATE TABLE `item_content` (
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `itemk` (`item_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,4 +160,4 @@ CREATE TABLE `setting` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-02-29 22:02:51
+-- Dump completed on 2012-03-04 16:07:56
