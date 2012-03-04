@@ -9,8 +9,25 @@
 
 class Pico_View_Image extends Nano_App_View{
 
+    /**
+     *
+     *
+     * @param object  $request
+     * @param unknown $config
+     */
     public function get( Nano_App_Request $request, $config ) {
         list( , $type, $id ) = $request->pathParts();
+
+        date_default_timezone_set('Europe/Amsterdam');
+
+        if ( isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
+            $since = strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
+
+            header( 'Last-Modified: ' . date('r', $since ), true, 304 );
+            header( 'Expires: ' . date( 'r', strtotime('+1 Month', $since ) ) );
+            header( 'Cache-Control: max-age=36000, must-revalidate' );
+            exit;
+        }
 
         $image = $this->_getImageType( $id, $type );
         $this->_imageOut( $image );
@@ -74,22 +91,7 @@ class Pico_View_Image extends Nano_App_View{
      * @param unknown $cache (optional)
      */
     private function _imageOut( $image, $cache = true ) {
-        date_default_timezone_set('Europe/Amsterdam');
-
-        error_log( 'hier dus: ' . $image->type );
-
-        $inserted = strtotime($image->created);
-
-        if ( $cache && isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
-            $since = strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
-
-            if ( $since === $inserted ) {
-                header( 'Last-Modified: ' . date('r', $inserted ), true, 304 );
-                header( 'Expires: ' . date( 'r', strtotime('+1 Month', $inserted ) ) );
-                header( 'Cache-Control: max-age=36000, must-revalidate' );
-                exit;
-            }
-        }
+        $inserted = strtotime( $image->created );
 
         header( 'Content-Type: ' . $image->mime );
         header( 'Content-length: ' .  strlen($image->data) );

@@ -20,13 +20,17 @@ class Pico_Helper_Items extends Nano_View_Helper{
     function Items( $type = null, array $args = array() ) {
         $model = new Pico_Model_Item();
 
-        return $model->search(array_merge( array(
-                    'where' => array(
-                        'type' => $type,
-                        'visible' => 1
-                    ),
-                    'order' => 'updated'
-                ), $args ));
+        $args = array_merge( array(
+                'where' => array(
+                    'type' => $type,
+                    'visible' => 1
+                ),
+                'order' => 'updated',
+            ), $args );
+
+        warn_dumper( $args );
+
+        return $model->search( $args );
     }
 
 

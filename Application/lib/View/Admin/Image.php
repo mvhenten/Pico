@@ -25,7 +25,7 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
             $pager = $label->pager('images');
         }
         else {
-            $where = array('type' => 'image', 'order' => '-inserted');
+            $where = array('type' => 'image', 'order' => '-inserted', 'limit' => 35 );
             $pager  = $this->model('Item')->pager('search', $where );
         }
 
