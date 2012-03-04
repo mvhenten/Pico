@@ -28,8 +28,6 @@ class Pico_Helper_Items extends Nano_View_Helper{
                 'order' => 'updated',
             ), $args );
 
-        warn_dumper( $args );
-
         return $model->search( $args );
     }
 
