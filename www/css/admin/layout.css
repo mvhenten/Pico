@@ -471,7 +471,7 @@ form.form input, form.form textarea{
     font-family: inherit !important;
 }
 
-input.input-text, textarea{
+input.input-text, .input-number, textarea{
     border: 1px solid #E0E0E0;
     padding:0.2em 0.5em;
     border-radius: 3px;
@@ -479,6 +479,11 @@ input.input-text, textarea{
     -moz-border-radius:3px;
     background-color: #fff;
 
+}
+
+.input-number {
+    margin-top: 0.5em;
+    width: 80px;
 }
 
 form.form input.input-text, form.form textarea{

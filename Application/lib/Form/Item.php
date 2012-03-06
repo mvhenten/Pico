@@ -1,6 +1,20 @@
 <?php
+/**
+ * Application/lib/Form/Item.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Pico
+ */
+
+
 class Pico_Form_Item extends Nano_Form{
-    public function __construct( $item = null ){
+
+    /**
+     *
+     *
+     * @param unknown $item (optional)
+     */
+    public function __construct( $item = null ) {
         parent::__construct();
 
         $item = ( isset($item) ? $item : new Model_Item() );
@@ -13,17 +27,17 @@ class Pico_Form_Item extends Nano_Form{
                 'value'     => 'Save changes'
             ),
             'add content'   => array(
-              'suffix'  => null == $item->id ? '</div>' : '',
-              'wrapper' => false,
-              'type'    => 'submit',
-              'value'   => 'add content item',
+                'suffix'  => null == $item->id ? '</div>' : '',
+                'wrapper' => false,
+                'type'    => 'submit',
+                'value'   => 'add content item',
             ),
             'delete' => ( null !== $item->id ? array(
-                'suffix'    => '</div>',
-                'wrapper'   => false,
-                'type'      => 'submit',
-                'value'     => 'Delete ' . $item->name
-            ):null)
+                    'suffix'    => '</div>',
+                    'wrapper'   => false,
+                    'type'      => 'submit',
+                    'value'     => 'Delete ' . $item->name
+                ):null)
         );
 
         $item_form = array(
@@ -61,6 +75,14 @@ class Pico_Form_Item extends Nano_Form{
                         array('stringLength', array(0, 254), false )
                     ),
                 ),
+                'priority' => array(
+                    'type'  => 'number',
+                    'value' => $item->priority,
+                    'label' => 'priority',
+                    'validators' => array(
+                        array('is_numeric', null, 'priority must be a number'),
+                    ),
+                ),
                 'visible'   => array(
                     'type'  => 'checkbox',
                     'value' => $item->visible,
@@ -76,4 +98,6 @@ class Pico_Form_Item extends Nano_Form{
 
         $this->addElement( 'item', $item_form );
     }
+
+
 }

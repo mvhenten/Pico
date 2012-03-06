@@ -25,7 +25,7 @@ class Pico_Helper_Items extends Nano_View_Helper{
                     'type' => $type,
                     'visible' => 1
                 ),
-                'order' => 'updated',
+                'order' => 'priority',
             ), $args );
 
         return $model->search( $args );
