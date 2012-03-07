@@ -170,9 +170,10 @@ input.button{
 
 
 #container{
-    width: 960px;
     margin: 0 auto;
     overflow:hidden;
+    min-width: 960px;
+    max-width: 1480px;
 }
 
 #user-navigation{

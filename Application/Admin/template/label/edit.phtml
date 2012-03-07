@@ -6,7 +6,7 @@
 <?php $this->block('titlebar') ?>
 <div class="align-right wrap">
     <h2 class="float-left">Editing <span style="color:#000;"><?php echo $item->name ?></span></h2>
-    <a href="/<?php echo $item->slug ?>" class="button">view page</a>
+    <a target="blank" href="/<?php echo $item->slug ?>" class="button">view page</a>
     <a href="/admin/label/content/<?php echo $item->id ?>" class="button">add content</a>
     <a class="button" href="/admin/label/delete/<?php echo $item->id ?>">delete</a>
 </div>
