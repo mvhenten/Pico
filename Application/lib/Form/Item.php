@@ -54,7 +54,7 @@ class Pico_Form_Item extends Nano_Form{
                     'value'         => $item->name,
                     'label'         => 'Title',
                     'validators'    => array(
-                        array('stringLength', array(1, 64), false )
+                        array('stringLength', array(1, 64) )
                     ),
                     'required'      => true
                 ),
@@ -63,7 +63,7 @@ class Pico_Form_Item extends Nano_Form{
                     'value'         => $item->slug,
                     'label'         => 'Slug',
                     'validators'    => array(
-                        array('stringLength', array(1, 64), false )
+                        array('stringLength', array(1, 64) )
                     ),
                     'required'      => true
                 ),
@@ -72,7 +72,7 @@ class Pico_Form_Item extends Nano_Form{
                     'value' => $item->description,
                     'label' => 'Description',
                     'validators'    => array(
-                        array('stringLength', array(0, 254), false )
+                        array('stringLength', array(0, 254) )
                     ),
                 ),
                 'priority' => array(
@@ -80,7 +80,7 @@ class Pico_Form_Item extends Nano_Form{
                     'value' => $item->priority,
                     'label' => 'priority',
                     'validators' => array(
-                        array('is_numeric', null, 'priority must be a number'),
+                        array('is_numeric', array(), array('priority must be a number')),
                     ),
                 ),
                 'visible'   => array(

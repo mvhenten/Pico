@@ -40,18 +40,15 @@ class Pico_View_Admin_Base extends Nano_App_View{
      * @return unknown
      */
     protected function dispatch( Nano_App_Request $request, $extra ) {
-        @list( , , $action, $id ) = $request->pathParts();
+        $method = $this->_getDispatchHandler( $request );
 
-        $method = $request->isPost() ? 'post' : 'get';
-
-        if ( $action && ($handler=$method . ucfirst($action)) && method_exists( $this, $handler )) {
-            return $this->$handler( $request, $extra );
+        if ( null !== $method ) {
+            return $this->$method( $request, $extra );
         }
-        elseif ( method_exists( $this, $action ) ) {
-            return $this->$action( $request, $extra );
+        else {
+            $method = $request->isPost() ? 'post' : 'get';
+            return $this->$method( $request, $extra );
         }
-
-        return $this->$method( $request, $extra );
     }
 
 
@@ -64,8 +61,6 @@ class Pico_View_Admin_Base extends Nano_App_View{
     public function delete( Nano_App_Request $request, $config ) {
         @list( , $controller, $action, $id ) = $request->pathParts();
 
-
-
         $this->model('Item', $id )->delete();
 
         $this->response()
@@ -74,10 +69,11 @@ class Pico_View_Admin_Base extends Nano_App_View{
 
 
     /**
-     *
+     * # todo all posts end here.
      *
      * @param object  $request
      * @param unknown $config
+     * @return unknown
      */
     public function post( Nano_App_Request $request, $config ) {
         @list( , $controller, $action, $id ) = $request->pathParts();
@@ -95,13 +91,35 @@ class Pico_View_Admin_Base extends Nano_App_View{
 
         if ( count($errors) == 0 ) {
             $this->_storeItem( $item, $post );
-        }
-        else {
-            $error_string = '?error=' . urlencode( json_encode( $errors ) );
+            $this->response()
+            ->redirect( '/' . join('/', array( 'admin', $controller, $action, $id )) );
         }
 
-        $this->response()
-        ->redirect( '/' . join('/', array( 'admin', $controller, $action, $id, $error_string )) );
+        $this->template()->form   = $form;
+        $this->template()->item   = $item;
+        $this->template()->errors = $errors;
+
+        return $this->getEdit( $request, $config );
+    }
+
+
+    /**
+     *
+     *
+     * @param object  $request
+     * @return unknown
+     */
+    protected function _getDispatchHandler( Nano_App_Request $request ) {
+        @list( , , $action ) = $request->pathParts();
+
+        $method = $request->isPost() ? 'post' : 'get';
+
+        if ( $action && ($handler=$method . ucfirst($action)) && method_exists( $this, $handler )) {
+            return $handler;
+        }
+        elseif ( method_exists( $this, $action ) ) {
+            return $action;
+        }
     }
 
 
