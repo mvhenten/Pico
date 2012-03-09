@@ -10,7 +10,7 @@
 class Pico_Form_Item extends Nano_Form{
 
     /**
-     *
+     * Basic item form
      *
      * @param unknown $item (optional)
      */
