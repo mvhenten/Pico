@@ -29,12 +29,12 @@ class Pico_Model_Item extends Pico_Schema_Item {
     public function appendix() {
         $appendix = $this->get('appendix');
 
-        if ( null == $appendix ) {
-            $this->__set( 'appendix', new StdClass() );
-        }
-
         if ( is_string( $appendix ) ) {
             $this->__set( 'appendix', json_decode($appendix));
+        }
+
+        if ( empty($appendix) ) {
+            $this->__set( 'appendix', new StdClass() );
         }
 
         return $this->get('appendix');
