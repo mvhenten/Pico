@@ -60,7 +60,7 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
             $image_data = $this->_storeImageData( $item, $file );
         }
 
-        $item->appendix->thumbnail = $image_data->id;
+        $item->appendix()->thumbnail = $image_data->id;
         $item->store(array( 'id' => $item_id ) );
         $this->response()->redirect($url);
     }

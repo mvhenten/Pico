@@ -561,6 +561,19 @@ form .error {
     border-width:2px;
 }
 
+.form-errors {
+    padding: 1em;
+    margin: 0 0 0.5em;
+    border:  1px solid #fcc;
+    background-color:  #fee;
+    border-radius: 5px;
+}
+
+.form-errors ul li {
+    padding-left: 1em;
+    list-style-position:inside;
+}
+
 /** rte **/
 .item-content-wrapper{
     overflow:hidden;
