@@ -12,10 +12,13 @@
 
 <?php
 if ( $start ) {
-    Nano_Autoloader::registerNamespace( 'Builder', dirname(__FILE__)  );
-    $this->router->prepend( '/admin/plugin/thumb/\w+(/\d+)?', 'ItemThumb_Plugin' );
+    Nano_Autoloader::registerNamespace( 'Builder', dirname(__FILE__) . '/lib'  );
+    $this->router->prepend( '/admin/builder(/\w+)?(/\d+)?', 'Builder_View' );
 }
 ?>
 
 <?php if ( $end ): ?>
+    <?php $this->template->block( 'main-navigation' ); ?>
+        <li><a href="/admin/builder">builder</a></li>
+    <?php $this->template->endblock('main-navigation') ?>
 <?php endif; ?>
