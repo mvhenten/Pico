@@ -70,13 +70,7 @@ class Builder_Page extends Builder_Abc {
         $head = new Nano_Element( 'head' );
         $head->setVertile();
 
-        $args = $this->arg('head');
-
-        if ( isset( $args['children'] ) ) {
-            foreach ( $args['children'] as $child ) {
-                $head->addChild( $this->element( $child )) ;
-            }
-        }
+        $this->_parse_arg( $this->arg('head'), $head );
 
         return $head;
     }
@@ -92,7 +86,17 @@ class Builder_Page extends Builder_Abc {
         $body = new Nano_Element( 'body' );
         $body->setVertile();
 
+        $this->_parse_arg( $this->arg('body'), $body );
+
         return $body;
+    }
+
+    protected function _parse_arg( array $args=array(), Nano_Element $parent ){
+        if ( !empty( $args ) && isset( $args['children'] ) ) {
+            foreach ( $args['children'] as $child ) {
+                $parent->addChild( $this->element( $child )) ;
+            }
+        }
     }
 
 

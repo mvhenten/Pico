@@ -17,7 +17,7 @@ abstract class Builder_Abc {
      *
      * @param unknown $args
      */
-    public function __construct( $args ) {
+    public function __construct( array $args = array() ) {
         $this->_constructor_args = $args; //func_get_args();
     }
 
@@ -77,6 +77,10 @@ abstract class Builder_Abc {
      */
     public function element( $args ) {
         $args = array_merge( array( 'type' => 'div', 'attributes' => array() ), $args );
+
+        if( $args['type'] == 'block' ){
+            return new Builder_Block( $args );
+        }
 
         return new Nano_Element( $args['type'], $args['attributes']);
     }
