@@ -1,8 +1,20 @@
 <?php
-require(  dirname(__FILE__) . '/../bootstrap.php' );
+/**
+ * t/Model/Block.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Pico
+ */
+
+
+require dirname(__FILE__) . '/../bootstrap.php';
 
 class Builder_Model_BlockTest extends PHPUnit_Framework_TestCase{
 
+    /**
+     * Create a simple, dumbed down version of the table used
+     * in sqlite sufficient for unit testing.
+     */
     protected function setUp() {
         Nano_Db::setAdapter( array( 'dsn' => 'sqlite::memory:' ) );
 
@@ -20,47 +32,81 @@ class Builder_Model_BlockTest extends PHPUnit_Framework_TestCase{
         ') or die('could not create db');
     }
 
+
+    /**
+     * Test insert
+     */
     public function testCreate() {
+        $expected_data =  (object) array( 'test' => 1 );
+
         $model = new Builder_Model_Block(array(
-            'type'      => 'foo',
-            'data'      => (object) array( 'test' => 1 ),
-            'parent_id' => 0
-        ));
+                'type'      => 'foo',
+                'data'      => $expected_data,
+                'parent_id' => 0
+            ));
 
         $stored = $model->store();
-
         $this->assertType( 'Builder_Model_Block', $stored, 'Successfully stored object' );
+
+        foreach ( array( 'parent_id', 'type', 'data' ) as $key ) {
+            $this->assertEquals( $model->$key, $stored->$key, 'Stored value retrieved');
+        }
     }
 
-    public function testFind() {
-        $model = new Builder_Model_Block(array(
-            'type'      => 'foo',
-            'data'      => (object) array( 'test' => 1 ),
-            'parent_id' => 0
-        ));
 
-        $model->store();
-        $found = $model->find( array( 'id' => 1 ) );
+    /**
+     * Test simple find
+     */
+    public function testFind() {
+        $model =  $this->_createModel();
+        $found = $model->find( array( 'id' => $model->id ) );
 
         $this->assertType( 'Builder_Model_Block', $found, 'Successfully retrieved object' );
     }
 
-    public function testParent(){
+
+    /**
+     * Test update using save
+     */
+    public function testUpdate() {
+        $model =  $this->_createModel();
+
+        $model->type      = 'bar';
+        $model->parent_id = 99;
+        $model->data      = (object) array( 'one' => 90, 'two' => 'test' );
+
+        $model->save();
+        $found = $model->find( array( 'id' => $model->id ) );
+
+        foreach ( array( 'parent_id', 'id', 'type', 'data' ) as $key ) {
+            $this->assertEquals( $model->$key, $found->$key, 'Child parent retrieved');
+        }
+    }
+
+
+    /**
+     * Test $model->parent();
+     */
+    public function testParent() {
         $parent = $this->_createModel();
         $child = $this->_createModel( $parent->id );
 
         $got_parent = $child->parent();
 
-        foreach( array( 'parent_id', 'id', 'type', 'data' ) as $key ){
+        foreach ( array( 'parent_id', 'id', 'type', 'data' ) as $key ) {
             $this->assertEquals( $parent->$key, $got_parent->$key, 'Child parent retrieved');
         }
     }
 
+
+    /**
+     * Test $model->children();
+     */
     public function testChildren() {
         $parent = $this->_createModel();
         $n_children = 10;
 
-        foreach( range( 1, $n_children ) as $i ) {
+        foreach ( range( 1, $n_children ) as $i ) {
             $this->_createModel( $parent->id );
         }
 
@@ -68,12 +114,19 @@ class Builder_Model_BlockTest extends PHPUnit_Framework_TestCase{
         $this->assertEquals( $n_children, count( $children ), 'Sucessfully retrieved children' );
     }
 
-    private function _createModel( $parent_id = 0 ){
+
+    /**
+     * Create a model
+     *
+     * @param unknown $parent_id (optional)
+     * @return unknown
+     */
+    private function _createModel( $parent_id = 0 ) {
         $model = new Builder_Model_Block(array(
-            'type'      => 'foo',
-            'data'      => (object) array( 'test' => 1 ),
-            'parent_id' => $parent_id
-        ));
+                'type'      => 'foo',
+                'data'      => (object) array( 'test' => 1 ),
+                'parent_id' => $parent_id
+            ));
 
         return $model->store();
     }

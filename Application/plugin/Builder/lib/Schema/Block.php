@@ -1,5 +1,14 @@
 <?php
+/**
+ * lib/Schema/Block.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Pico
+ */
+
+
 class Builder_Schema_Block extends Nano_Db_Schema {
+
     protected $_tableName = 'builder_block';
 
     protected $_schema = array(
