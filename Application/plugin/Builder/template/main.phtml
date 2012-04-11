@@ -1,18 +1,67 @@
 <?php $this->wrapper('Admin/template/layout') ?>
 
 <?php $this->block('titlebar') ?>
+<?php $this->integrate('plugin/Builder/template/style'); ?>
+
 <div class="wrap">
     <h2>hier something</h2>
 </div>
 <?php $this->endblock('titlebar') ?>
 
 <?php $this->block('main') ?>
+
 <div style="overflow:auto;" class="itemlist">
+<div class="three-fifth">
+    <div id="builder-box">
+        <?php
+        $demo = array(
+            'id' => 'Foobar',
+            'style' => array(
+                'width' => '800px',
+                'padding' => array(
+                    'bottom' => '10px',
+                    'left' => '5em',
+                    'right' => '2em',
+                    'top'  => '0.5em'
+                ),
+                'margin' => array(
+                    'bottom' => '10px',
+                    'left'  => '0.5em',
+                    'right' => '2em',
+                    'top' => '1em'
+                )
+            ),
+            'children' => array(
+                array(
+                    'id' => 'Child of Foobar',
+                    'style' => array(
+                        'width' => '400px',
+                        'height' => '200px',
+                        'padding' => array(
+                            'bottom' => '10px',
+                            'left' => '1em',
+                            'right' => '2em',
+                            'top'  => '0.5em'
+                        ),
+                        'margin' => array(
+                            'bottom' => '10px',
+                            'left'  => '0.5em',
+                            'right' => '2em',
+                            'top' => '1em'
+                        )
+                    )
+                )
+            )
+        );
+
+        $decorator = new Builder_Editor_Decorator_Block( $demo );
+        echo $decorator;
+        ?>
+
+    </div>
+</div>
 <div id="vertical-nav" class="fifth">
     fifth
-</div>
-<div class="three-fifth">
-    three fifth
 </div>
 </div>
 <?php $this->endblock('main') ?>
