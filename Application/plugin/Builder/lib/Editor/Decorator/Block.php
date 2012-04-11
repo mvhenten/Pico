@@ -1,18 +1,32 @@
 <?php
+/**
+ * Application/plugin/Builder/lib/Editor/Decorator/Block.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Pico
+ */
+
+
 class Builder_Editor_Decorator_Block extends Builder_Abc {
     protected $_style;
     protected $_content;
     protected $_id_title;
 
-    public function as_string(){
+    /**
+     *
+     *
+     * @return unknown
+     */
+    public function as_string() {
         $style   = $this->style;
         $content = $this->content;
 
         ob_start();
+        /// totod use Nano_element here
 
-        ?>
+?>
         <div class="element-block" style="<?php echo $style->width ?>">
-            <div class="margin" style="<?php echo $style->margin ?>">
+            <div class="margin" style="<?php echo $style->display_margin ?>">
             </div>
             <div class="inner">
                 <div class="handle">
@@ -32,21 +46,39 @@ class Builder_Editor_Decorator_Block extends Builder_Abc {
         return ob_get_clean();
     }
 
-    protected function _build__id_title(){
+
+    /**
+     *
+     *
+     * @return unknown
+     */
+    protected function _build__id_title() {
         return '#Element ' . $this->arg('id');
     }
 
-    protected function _build__style(){
+
+    /**
+     *
+     *
+     * @return unknown
+     */
+    protected function _build__style() {
         return new Builder_Editor_Style( $this->arg('style') );
     }
 
-    protected function _build__content(){
+
+    /**
+     *
+     *
+     * @return unknown
+     */
+    protected function _build__content() {
         $children = $this->arg('children');
         error_log( '$children: ' .  print_r($children, true ) );
 
         $html = '';
 
-        foreach( $children as $child ){
+        foreach ( $children as $child ) {
             $block = new Builder_Editor_Decorator_Block( $child );
             $html .= $block;
         }
