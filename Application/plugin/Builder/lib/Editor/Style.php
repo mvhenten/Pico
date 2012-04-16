@@ -14,7 +14,7 @@ class Builder_Editor_Style extends Builder_Abc {
     protected $_height;
 
     /**
-     *
+     * Inline css for editor margin display
      *
      * @return unknown
      */
