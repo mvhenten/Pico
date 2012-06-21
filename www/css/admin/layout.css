@@ -574,135 +574,116 @@ form .error {
     list-style-position:inside;
 }
 
-/** rte **/
-.item-content-wrapper{
-    overflow:hidden;
+/** Rich text editor styles - tinyeditor **/
 
-
-
-/*    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius:3px;
-*/    background:-moz-linear-gradient(center top , #F0F0F0, #ECECEC) repeat scroll 0 0 transparent;
-/*    margin:1em;
-*/}
-
-.rte-toolbar{
-    border: 1px solid #E0E0E0;
-    overflow: hidden;
-    display:block;
-    clear:both;
-
-    background: #eaeaea; /* Old browsers */
-    background: -moz-linear-gradient(top, #eaeaea 0%, #e2e2e2 40%, #bcbcbc 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eaeaea), color-stop(40%,#e2e2e2), color-stop(100%,#bcbcbc)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #eaeaea 0%,#e2e2e2 40%,#bcbcbc 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #eaeaea 0%,#e2e2e2 40%,#bcbcbc 100%); /* Opera11.10+ */
-    background: -ms-linear-gradient(top, #eaeaea 0%,#e2e2e2 40%,#bcbcbc 100%); /* IE10+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#bcbcbc',GradientType=0 ); /* IE6-9 */
-    background: linear-gradient(top, #eaeaea 0%,#e2e2e2 40%,#bcbcbc 100%); /* W3C */
-
-    border-bottom: #E0E0E0;
+.cleditorMain
+{
+	background-color: white;
+	border: 1px solid #999;
+	padding: 0 1px 1px;
 }
-
-.item-content-wrapper textarea.rich-text-editor{
-    background-color: #fff;
-    height: 240px;
-    display:block;
-    width:97%;
-
+.cleditorMain iframe
+{
+	border: none;
+	margin: 0;
+	padding: 0;
 }
-
-iframe.rich-text-editor{
-    background-color: #fff;
-    height: 240px;
-    display:block;
-    width:100%;
+.cleditorMain textarea
+{
+	border: none;
+	font: 10pt Arial,Verdana;
+	margin: 0;
+	outline: none;
+	overflow-y: scroll;
+	padding: 0;
+	resize: none;
 }
-
-.rte-toolbar p {
-    display:inline;
+.cleditorToolbar
+{
+	background: url('images/toolbar.gif') repeat;
 }
-
-.rte-toolbar p select{
-    padding: 0.1em 0.3em;
-    border: 1px solid #E0E0E0;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius:3px;
-    background-color: #fff;
-    overflow:hidden;
-    display:block;
-    float: left;
-    font-family:inherit;
-    font-size:inherit;
+.cleditorGroup
+{
+	float: left;
+	height: 26px;
 }
-
-.rte-toolbar p select option{
-    padding: 0.1em 1.8em;
-    line-height:3em;
-    background-position: center left;
-    background-repeat:no-repeat;
+.cleditorButton
+{
+	background: url('images/buttons.gif');
+	float: left;
+	height: 24px;
+	margin: 1px 0 1px 0;
+	width: 24px;
 }
-
-
-.rte-toolbar p select option:nth-child(1){
-    background-image: url('icons/text_indent.png');
+.cleditorDisabled
+{
+	filter: alpha(opacity=30);
+	opacity: 0.3;
 }
-
-.rte-toolbar p select option:nth-child(2){
-    background-image: url('icons/text_align_left.png');
+.cleditorDivider
+{
+	background: #CCC;
+	float: left;
+	height: 23px;
+	margin: 1px 0 1px 0;
+	width: 1px;
 }
-
-.rte-toolbar p select option:nth-child(3){
-    background-image: url('icons/text_heading_1.png');
+.cleditorPopup
+{
+	background-color: white;
+	border: solid 1px #999;
+	cursor: default;
+	font: 10pt Arial,Verdana;
+	position: absolute;
+	z-index: 10000;
 }
-
-.rte-toolbar p select option:nth-child(4){
-    background-image: url('icons/text_align_right.png');
+.cleditorList div
+{
+	padding: 2px 4px 2px 4px;
 }
-
-
-.rte-toolbar p a{
-    border: 1px solid #E0E0E0;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius:3px;
-    background-color: #fff;
-    overflow:hidden;
-    display:block;
-    float: left;
-    width: 1.8em;
-    height: 1.8em;
-    text-indent: -9999px;
-    background-position: center center;
-    background-repeat:no-repeat;
+.cleditorList p,
+.cleditorList h1,
+.cleditorList h2,
+.cleditorList h3,
+.cleditorList h4,
+.cleditorList h5,
+.cleditorList h6,
+.cleditorList font
+{
+	background-color: Transparent;
+	margin: 0;
+	padding: 0;
 }
-
-.rte-toolbar p a.bold{
-    background-image: url('icons/text_bold.png');
+.cleditorColor
+{
+	padding: 1px 0 0 1px;
+	width: 150px;
 }
-
-.rte-toolbar p a.italic{
-    background-image: url('icons/text_italic.png');
+.cleditorColor div
+{
+	float: left;
+	height: 14px;
+	margin: 0 1px 1px 0;
+	width: 14px;
 }
-
-.rte-toolbar p a.unorderedlist{
-    background-image: url('icons/text_list_bullets.png');
+.cleditorPrompt
+{
+	background-color: #F6F7F9;
+	font-size: 8.5pt;
+	padding: 4px;
 }
-
-.rte-toolbar p a.link{
-    background-image: url('icons/link.png');
+.cleditorPrompt input,
+.cleditorPrompt textarea
+{
+	font: 8.5pt Arial,Verdana;
 }
-
-.rte-toolbar p a.image{
-    background-image: url('icons/image.png');
-}
-
-.rte-toolbar p a.disable{
-    background-image: url('icons/page_code.png');
-}
-
+.cleditorMsg
+{
+	background-color: #FDFCEE;
+	font-size: 8.5pt;
+	padding: 4px;
+	width: 150px;
+}.
 /** ui theme overrides **/
 .ui-dialog .ui-dialog-content{
     padding:0;

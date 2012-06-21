@@ -1,3 +1,6 @@
+<?php $this->block('head') ?>
+<script type="text/javascript" src="/js/jquery.cleditor.js"></script>
+<?php $this->endblock('head') ?>
 
 <form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/52?target=<?php
     echo $request->url ?>" class="form">
@@ -15,3 +18,13 @@
 </div>
 <?php endforeach; ?>
 </form>
+
+<script>
+$('.rich-text-editor').cleditor({
+    width:'95%',
+    height:'100%',
+    controls:  'bold italic underline '
+    + 'bullets numbering alignleft center alignright justify | image link unlink '
+    + 'removeformat pastetext source'
+});
+</script>
