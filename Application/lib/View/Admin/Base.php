@@ -91,6 +91,11 @@ class Pico_View_Admin_Base extends Nano_App_View{
 
         if ( count($errors) == 0 ) {
             $this->_storeItem( $item, $post );
+
+            if ( $request->isAjax() ) {
+                return;
+            }
+
             $this->response()
             ->redirect( '/' . join('/', array( 'admin', $controller, $action, $id )) );
         }

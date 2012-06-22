@@ -34,6 +34,10 @@ class Pico_View_Admin_Content extends Pico_View_Admin_Base{
             $content->store(array( 'id' => $content_id) );
         }
 
+        if ( $request->isAjax() ) {
+            return;
+        }
+
         if ( $request->target ) {
             $this->response()
             ->redirect( $request->target );

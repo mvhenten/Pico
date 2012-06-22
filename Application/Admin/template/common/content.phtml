@@ -30,3 +30,18 @@ $('.rich-text-editor').cleditor({
     + 'removeformat pastetext source'
 });
 </script>
+
+<script>
+$('form.form').bind('submit', function(evt){
+    evt.preventDefault();
+
+    $('form.form').each( function(i,el){
+        var url = $(el).attr('action') || document.location.href;
+        $('body').css({ cursor: 'wait' });    
+
+        $.post( url, $(el).serialize(), function(){
+            $('body').css({ cursor: 'pointer' });    
+        });
+    });
+});        
+</script>
