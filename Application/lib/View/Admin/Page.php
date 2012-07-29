@@ -7,11 +7,13 @@ class Pico_View_Admin_Page extends Pico_View_Admin_Base{
     public function getEdit( $request, $config ){
         @list( , , , $id ) = $request->pathParts();
 
-        $item = $this->model('Item', $id );
+        if ( !$request->isPost() ) {
+            $label = $this->model('Item', $id );
 
-        $form = new Pico_Form_Item( $item );
-        $this->template()->item = $item;
-        $this->template()->form = $form;
+            $form = new Pico_Form_Item( $label );
+            $this->template()->item = $label;
+            $this->template()->form = $form;
+        }
 
         return $this->template()->render('page/edit');
     }

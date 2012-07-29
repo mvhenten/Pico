@@ -1,16 +1,6 @@
 <?php $this->wrapper('layout') ?>
 
 <?php $this->block('head') ?>
-<script type="text/javascript" src="/js/light-rte/jquery.rte.js"></script>
-<script type="text/javascript">
-jQuery(document).ready(function(){
-    $('.rich-text-editor').rte({
-        content_css_url: "/js/light-rte/rte.css",
-        media_url: "",
-    });
-
-});
-</script>
 <?php $this->endblock('head') ?>
 
 <?php $this->block('titlebar') ?>
@@ -24,9 +14,9 @@ jQuery(document).ready(function(){
 <?php $this->block('main') ?>
 <div id="vertical-nav" class="fifth">
     <ul class="verticalnav">
-        <li><h4>pages</h4></li>
+        <li><h4>Pages</h4></li>
         <?php foreach( $this->items('page') as $page ): ?>
-        <li><a class="<?php echo $item->id == $page->id ? "active":"" ?>" href="/admin/page/edit/<?php echo $page->id ?>"><?php echo $page->name ?></a></li>
+        <li><a class="<?php echo $page->id == $item->id ? "active":"" ?>" href="/admin/page/edit/<?php echo $page->id ?>"><?php echo $page->name ?></a></li>
         <?php endforeach; ?>
     </ul>
     <?php $this->block('sidebar') ?>
@@ -34,8 +24,6 @@ jQuery(document).ready(function(){
 </div>
 <div class="three-fifth">
     <?php echo $this->form ?>
-    <?php foreach( $item->content() as $content ): ?>
-        <?php echo new Pico_Form_Content( $content ); ?>
-    <?php endforeach; ?>
+    <?php $this->process( 'common/content' ); ?>
 </div>
 <?php $this->endblock('main') ?>
