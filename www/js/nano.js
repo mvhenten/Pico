@@ -12,7 +12,9 @@ var nano = {
                 context: document.body,
                 success: function( data, status, xhr ){
                     $(data).find(selector).dialog({
-                        modal:true
+                        modal:true,
+                        height: 'auto',
+                        maxHeight: 500
                     });
                 }
             });

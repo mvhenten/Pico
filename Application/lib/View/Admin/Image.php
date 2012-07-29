@@ -198,11 +198,16 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      * @return unknown
      */
     public function bulk( Nano_App_Request $request, $extra ) {
+        if ( isset( $request->post['action-delete'] ) || isset( $request->post['action-delete-confirm'] ) ) {
+            return $this->_bulk_delete( $request );
+        }
+
+
         @list( , , , $label_id ) = $request->pathParts();
         $post = $request->post;
 
         if ( isset( $post['action-labels'] ) ) {
-            return $this->labels( $request, $extra );
+            // return $this->labels( $request, $extra );
         }
         else if ( isset( $post['apply'] ) ) {
                 $image_ids  = (array) json_decode($post['images']);
@@ -213,6 +218,35 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
 
         $this->response()
         ->redirect( '/admin/image/list/' . $label_id );
+    }
+
+
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @return unknown
+     */
+    private function _bulk_delete( $request ) {
+        error_log('bulk delete');
+        @list( , , , $label_id ) = $request->pathParts();
+
+        if ( isset( $request->post['action-delete-confirm'] ) ) {
+            $image_ids = array_keys( $request->post['image'] );
+
+            $this->model('ImageLabel')->delete( array( 'image_id' => $image_ids ) );
+            $this->model('ImageData')->delete( array( 'image_id' => $image_ids ) );
+            $this->model('item')->delete( array( 'id' =>  $image_ids ));
+
+            return $this->response()
+            ->redirect( '/admin/image/list/' . $label_id );
+        }
+
+        $this->template()->label_id = $label_id;
+        $this->template()->images = $this->model('item')->search(array('where' => array( 'id' =>  $request->post['image'] )));
+
+        return $this->template()->render( 'image/bulk/delete');
     }
 
 

@@ -720,3 +720,39 @@ form .error {
 .disabled {
     color: #ccc;
 }
+
+/*** bulk delete icon lists ***/
+
+.icon-select-list {
+}
+
+
+.icon-select-list tr {
+    background-color: #f9f9f9;    
+}
+
+.icon-select-list tr:nth-child(odd){
+    background-color: #fff;
+}
+
+.icon-select-list td{
+    vertical-align: top;
+    height: 64px;
+    padding: 3px;
+    color: #444;
+}
+
+.icon-select-list label.icon {
+    display: block;
+    height: 64px;
+    text-align: center;
+    background-color: #FCFCFC;
+    border: 1px solid #f0f0f0;
+    border-radius: 5px;
+}
+
+.ui-dialog {
+    max-height: 90%;
+    overflow-y: auto;
+}
+

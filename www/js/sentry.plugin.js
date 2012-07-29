@@ -1,0 +1,1 @@
+/home/matthijs/Development/Sentry/sentry.plugin.js

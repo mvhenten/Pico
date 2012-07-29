@@ -62,6 +62,9 @@ class Pico_View_Admin_Base extends Nano_App_View{
         @list( , $controller, $action, $id ) = $request->pathParts();
 
         $this->model('Item', $id )->delete();
+        $this->model('ImageLabel')->delete( array( 'image_id' => $id ) );
+        $this->model('ImageData')->delete( array( 'image_id' => $id ) );
+
 
         $this->response()
         ->redirect( '/' . join('/', array( 'admin', $controller )) );
