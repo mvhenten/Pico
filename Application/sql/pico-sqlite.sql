@@ -1,13 +1,5 @@
--- 
--- C'reated' 'by' SQL::Translator::Producer::SQLite
--- C'reated' 'on' F'ri' A'ug' 10 23:07:59 2012
--- 
-
 BEGIN TRANSACTION;
 
---
--- Table: image_data
---
 CREATE TABLE `image_data` (
   'id' INTEGER PRIMARY KEY NOT NULL,
   'image_id' int(10) NOT NULL,
@@ -23,9 +15,6 @@ CREATE TABLE `image_data` (
 
 CREATE INDEX 'item_index' ON 'image_data' (image_id);
 
---
--- Table: image_label
---
 CREATE TABLE `image_label` (
   'image_id' int(11) NOT NULL,
   'label_id' int(11) NOT NULL,
@@ -38,9 +27,6 @@ CREATE INDEX 'label_index' ON 'image_label' (label_id);
 
 CREATE UNIQUE INDEX 'image_label_index' ON 'image_label' (image_id, label_id);
 
---
--- Table: item
---
 CREATE TABLE `item` (
   'id' INTEGER PRIMARY KEY NOT NULL,
   'slug' varchar(64) NOT NULL,
@@ -55,9 +41,6 @@ CREATE TABLE `item` (
   'inserted' 'timestamp' NOT NULL DEFAULT '0000-00-00 00:00:00'
 );
 
---
--- Table: item_content
---
 CREATE TABLE `item_content` (
   'id' INTEGER PRIMARY KEY NOT NULL,
   'item_id' int(10) NOT NULL,
@@ -69,9 +52,6 @@ CREATE TABLE `item_content` (
 
 CREATE INDEX 'itemk_index' ON 'item_content' (item_id);
 
---
--- Table: link
---
 CREATE TABLE `link` (
   'id' INTEGER PRIMARY KEY NOT NULL,
   'group' varchar(255) NOT NULL,
@@ -82,18 +62,12 @@ CREATE TABLE `link` (
   'description' varchar(4096) DEFAULT NULL
 );
 
---
--- Table: link_group
---
 CREATE TABLE `link_group` (
   'id' INTEGER PRIMARY KEY NOT NULL,
   'name' varchar(255) NOT NULL,
   'description' varchar(1024) NOT NULL
 );
 
---
--- Table: setting
---
 CREATE TABLE `setting` (
   'id' INTEGER PRIMARY KEY NOT NULL,
   'group' varchar(255) NOT NULL,
