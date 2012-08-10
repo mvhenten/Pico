@@ -36,7 +36,7 @@ CREATE TABLE `item` (
   'visible' tinyint(2) NOT NULL DEFAULT 0,
   'name' varchar(255) NOT NULL DEFAULT '',
   'description' varchar(2048) NOT NULL DEFAULT '',
-  'appendix' 'longblob' NOT NULL,
+  'appendix' 'longblob' NOT NULL DEFAULT '',
   'updated' 'timestamp' NOT NULL DEFAULT '0000-00-00 00:00:00',
   'inserted' 'timestamp' NOT NULL DEFAULT '0000-00-00 00:00:00'
 );
