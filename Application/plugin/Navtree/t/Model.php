@@ -23,47 +23,74 @@ class Pico_Test_testNavtree extends PHPUnit_Framework_TestCase{
         require_once  $plugin_base . '/Model/Navtree.php';
 
         $dbh = Nano_Db::getAdapter();
-        $dbh->query( 'INSERT INTO item ( id, slug, type ) VALUES ( 1, "nav", "navigation")');
 
-        $parents = range(2, 4);
+        $top_parent = self::_setupCreateNavitem( 0, 0 );
 
-        foreach ( $parents as $pri => $parent ) {
-            $slug = join('_', array('parent', $pri, $parent) );
-            $item = new Pico_Model_Item(array(
-                    'parent' => 1,
-                    'slug' => $slug,
-                    'type' => 'navigation',
-                    'priority' => $pri,
-                    'id' => $parent
-                ));
 
-            $item->store();
+        foreach ( range(0, 3) as $priority ) {
+            $parent = self::_setupCreateNavitem( $top_parent, $priority+1 );
+
+            foreach ( range(0, 3) as $priority_child ) {
+                $child = self::_setupCreateNavitem( $parent, $priority_child+1 );
+
+                foreach ( range(3, 0) as $priority_sub ) {
+                    $sub = self::_setupCreateNavitem( $child, $priority_sub+1 );
+                }
+            }
         }
+    }
 
-        foreach ( $parents as $pri => $parent ) {
-            $slug = join('_', array('child', $pri, $parent) );
-            $item = new Pico_Model_Item(array(
-                    'parent' => $parent,
-                    'slug' => $slug,
-                    'type' => 'navigation',
-                    'priority' => $pri  ,
-                    'id' => $parent + 10
-                ));
 
-            $item->store();
-        }
+
+    /**
+     *
+     *
+     * @param unknown $parent
+     * @param unknown $priority
+     * @return unknown
+     */
+    public static function _setupCreateNavitem( $parent, $priority ) {
+        $slug = $parent == 0 ? 'nav_parent' : join('_', array('child_of_', $parent, $priority ) );
+        $item = new Pico_Model_Item(array(
+                'parent' => $parent,
+                'slug' => $slug,
+                'type' => 'navigation',
+                'priority' => $priority  ,
+            ));
+
+        $item->store();
+        return $item->id;
     }
 
 
     /**
      *
      */
-    public function test_construct() {
+    public function test_tree_order() {
         $tree = new  Navtree_Model_Navtree(1);
 
-        foreach ( $tree->items() as $item ) {
-            var_dump( $item->slug );
-            $this->assertInstanceOf( 'Pico_Schema_Item', $item );
+        $items = $tree->tree();
+        $stack = $items;
+
+        @list( $last_prio, $last_parent ) = array( 0, 0 );
+
+        while ( $stack ) {
+            $item = array_shift( $stack );
+            $schema_item = $item->item;
+
+            if ( count($item->children) ) {
+                array_splice( $stack, count($stack), 0, $item->children );
+            }
+
+            if ( $schema_item->parent !== $last_parent ) {
+                $last_parent = $schema_item->parent;
+                $last_prio   = 0;
+            }
+
+            $this->assertTrue( $last_prio < $schema_item->priority );
+            $this->assertInstanceOf( 'Pico_Schema_Item', $schema_item );
+
+            $last_prio = $schema_item->priority;
         }
     }
 
