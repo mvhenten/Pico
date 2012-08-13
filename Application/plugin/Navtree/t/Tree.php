@@ -50,6 +50,7 @@ class Pico_Test_testNavtree extends PHPUnit_Framework_TestCase{
      */
     public static function _setupCreateNavitem( $parent, $priority ) {
         $slug = $parent == 0 ? 'nav_parent' : join('_', array('child_of_', $parent, $priority ) );
+        
         $item = new Pico_Model_Item(array(
                 'parent' => $parent,
                 'slug' => $slug,
@@ -115,7 +116,7 @@ class Pico_Test_testNavtree extends PHPUnit_Framework_TestCase{
             }
 
             $this->assertTrue( $last_prio < $schema_item->priority );
-            $this->assertInstanceOf( 'Pico_Schema_Item', $schema_item );
+            $this->assertInstanceOf( 'Navtree_Model_Item', $schema_item );
 
             $last_prio = $schema_item->priority;
         }

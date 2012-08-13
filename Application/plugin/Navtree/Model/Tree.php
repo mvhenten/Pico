@@ -48,25 +48,21 @@ class Navtree_Model_Tree {
      */
     public function tree() {
         if ( $this->_navTree === null ) {
-            $this->_navTree = $this->_build_navTree( $this->_items() );
+            $this->_navTree = $this->_build_navTree( $this->_item()->items() );
         }
 
         return $this->_navTree;
     }
-
-
 
     /**
      *
      *
      * @return unknown
      */
-    private function _items() {
-        if ( null === $this->_items ) {
-            $this->_items = $this->_item()->items();
-        }
-
-        return $this->_items;
+    public function items() {
+        $this->tree();
+        
+        return $this->_navTreeStack;
     }
 
 
