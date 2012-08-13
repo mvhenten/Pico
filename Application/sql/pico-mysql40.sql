@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.41, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.62, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: pico
+-- Host: localhost    Database: mbr
 -- ------------------------------------------------------
--- Server version	5.1.41-3ubuntu12.10
+-- Server version	5.1.62-0ubuntu0.11.04.1
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -131,4 +131,4 @@ CREATE TABLE `setting` (
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-03-04 16:07:20
+-- Dump completed on 2012-08-13 21:25:30
