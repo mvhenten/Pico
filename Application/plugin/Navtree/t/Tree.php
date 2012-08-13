@@ -1,6 +1,6 @@
 <?php
 /**
- * Application/plugin/Navtree/t/Model.php
+ * Application/plugin/Tree/t/Model.php
  *
  * @author Matthijs van Henten <matthijs@ischen.nl>
  * @package Pico
@@ -20,12 +20,11 @@ class Pico_Test_testNavtree extends PHPUnit_Framework_TestCase{
         Pico_Test_Db::load_pico_schema();
 
         $schema = new Pico_Schema_Item();
-        require_once  $plugin_base . '/Model/Navtree.php';
 
+        Nano_Autoloader::registerNamespace( 'Navtree', $plugin_base  );
         $dbh = Nano_Db::getAdapter();
 
         $top_parent = self::_setupCreateNavitem( 0, 0 );
-
 
         foreach ( range(0, 3) as $priority ) {
             $parent = self::_setupCreateNavitem( $top_parent, $priority+1 );
@@ -67,11 +66,39 @@ class Pico_Test_testNavtree extends PHPUnit_Framework_TestCase{
      *
      */
     public function test_tree_order() {
-        $tree = new  Navtree_Model_Navtree(1);
+        $tree = new  Navtree_Model_Tree('nav-parent');
 
         $items = $tree->tree();
         $stack = $items;
 
+        $this->_navTree_ok( $stack );
+    }
+
+
+
+    /**
+     *
+     */
+    public  function test_tree_children() {
+        $tree = new  Navtree_Model_Tree('nav-parent');
+
+        $items = $tree->tree();
+
+        foreach ( $items as $item ) {
+            $children = $tree->children( $item->item );
+            $this->_navTree_ok( array( $children ) );
+        }
+
+    }
+
+
+
+    /**
+     *
+     *
+     * @param array   $stack
+     */
+    private function _navTree_ok( array $stack ) {
         @list( $last_prio, $last_parent ) = array( 0, 0 );
 
         while ( $stack ) {

@@ -7,9 +7,39 @@
  */
 
 
-class Navtree_Model_Navtree extends Pico_Schema_Item {
+class Navtree_Model_Tree {
 
     private $_navTree;
+    private $_navTreeStack;
+    private $_item;
+    private $_items;
+    private $_name;
+
+
+
+    /**
+     *
+     *
+     * @param unknown $name
+     */
+    public function __construct( $name ) {
+        $this->_name = $name;
+    }
+
+
+
+    /**
+     *
+     *
+     * @param unknown $item
+     * @return unknown
+     */
+    public function children( $item ) {
+        $this->tree(); // initialize build
+
+        return $this->_navTreeStack[$item->id];
+    }
+
 
     /**
      *
@@ -18,11 +48,12 @@ class Navtree_Model_Navtree extends Pico_Schema_Item {
      */
     public function tree() {
         if ( $this->_navTree === null ) {
-            $this->_navTree = $this->_build_navTree( $this->_navigationItems() );
+            $this->_navTree = $this->_build_navTree( $this->_items() );
         }
 
         return $this->_navTree;
     }
+
 
 
     /**
@@ -30,17 +61,30 @@ class Navtree_Model_Navtree extends Pico_Schema_Item {
      *
      * @return unknown
      */
-    function _navigationItems() {
-        return $this->has_many( 'Pico_Schema_Item', array(
-                'type' => 'type'
-            ), array(
-                'order' => array( 'parent', 'priority' )
-            ));
+    private function _items() {
+        if ( null === $this->_items ) {
+            $this->_items = $this->_item()->items();
+        }
 
+        return $this->_items;
     }
 
 
 
+    /**
+     *
+     *
+     * @return unknown
+     */
+    private function _item() {
+        if ( null === $this->_item ) {
+            $model = new Navtree_Model_Item();
+            $this->_item = $model->search(array('slug' => $this->_name, 'type' => 'navigation' ))->fetch();
+        }
+
+
+        return $this->_item;
+    }
 
 
     /**
@@ -77,7 +121,7 @@ class Navtree_Model_Navtree extends Pico_Schema_Item {
         $top_level = array();
 
         foreach ( $stack as $value ) {
-            if ( $value->item->parent == $this->id ) {
+            if ( $value->item->parent == $this->_item()->id ) {
                 array_push( $top_level, $value );
             }
         }
@@ -106,6 +150,8 @@ class Navtree_Model_Navtree extends Pico_Schema_Item {
                 'children' => array()
             );
         }
+
+        $this->_navTreeStack = $stack;
 
         return $stack;
     }
