@@ -13,12 +13,13 @@ class Navtree_Test_Tree {
      *
      *
      * @param unknown $tree_name
+     * @param unknown $n_children (optional)
      * @return unknown
      */
-    public static function create( $tree_name  ) {
+    public static function create( $tree_name, $n_children = 3 ) {
         $parent = self::_create_item( $tree_name );
 
-        self::_create_children( $parent );
+        self::_create_children( $parent, $n_children );
         return $parent;
     }
 
@@ -27,16 +28,23 @@ class Navtree_Test_Tree {
      *
      *
      * @param unknown $parent
+     * @param unknown $n_children (optional)
      */
-    public static function _create_children( $parent  ) {
-        foreach ( range(0, 3) as $priority ) {
-            $nav = self::_create_item( "nav_parent_$priority", $parent->id, $priority );
+    public static function _create_children( $parent, $n_children = 3  ) {
+        $max = $n_children - 1;
 
-            foreach ( range(0, 3) as $priority_child ) {
+        foreach ( range(0, $max) as $priority ) {
+            $nav = self::_create_item( "nav_parent_$priority", $parent->id, $priority );
+            // print( "Created item: $nav->name\n" );
+
+            foreach ( range(0, $max) as $priority_child ) {
                 $child = self::_create_item( "nav_{$nav->id}_child_$priority", $nav->id, $priority_child );
 
-                foreach ( range(3, 0) as $priority_sub ) {
+                // print( "    Created item: $child->id, $child->name\n" );
+
+                foreach ( range($max, 0) as $priority_sub ) {
                     $child_sub = self::_create_item( "child_{$child->id}_sub_$priority_sub", $child->id, $priority_sub );
+                    // print( "        Created item: $child_sub->name\n" );
                 }
             }
         }
@@ -57,6 +65,7 @@ class Navtree_Test_Tree {
                 'slug'      => $slug,
                 'type'      => 'navigation',
                 'priority' => $priority  ,
+                'name'     => "Name of $slug",
             ));
 
         $item->appendix = (object) array( 'url' => "/$slug" );

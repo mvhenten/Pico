@@ -27,20 +27,6 @@ class Navtree_Model_Tree {
     }
 
 
-
-    /**
-     *
-     *
-     * @param unknown $item
-     * @return unknown
-     */
-    public function children( $item ) {
-        $this->tree(); // initialize build
-
-        return $this->_navTreeStack[$item->id];
-    }
-
-
     /**
      *
      *
@@ -54,6 +40,7 @@ class Navtree_Model_Tree {
         return $this->_navTree;
     }
 
+
     /**
      *
      *
@@ -61,7 +48,7 @@ class Navtree_Model_Tree {
      */
     public function items() {
         $this->tree();
-        
+
         return $this->_navTreeStack;
     }
 
@@ -99,6 +86,7 @@ class Navtree_Model_Tree {
                 array_push( $stack[$item->parent]->children, $child );
             }
         }
+
 
         return $this->_build_topLevel( $stack );
     }

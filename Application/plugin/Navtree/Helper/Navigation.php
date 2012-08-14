@@ -7,107 +7,124 @@
  */
 
 
+/**
+ * pathparts = 'foo', 'bar'.
+ *
+ * navigation( foo, bar, 2 ) should return
+ * items that are children of the element bar, who is a child of the
+ * element foo. both foo and bar are marked active.
+ *
+ * navigation( foo, bar, 1 ) should return
+ * items taht are children of the element foo. the element bar
+ * is marked as active.
+ *
+ * navigation( foo, bar, biz, 3 ) shold return
+ * items that are children of the element biz.
+ * navigation( foo, bar, biz 2 ) returns children of the element bar.
+ *
+ * the element biz has a property named short url. this is the name and identifier
+ * of biz, and is similar to the path biz. it has a property url, that is a combination
+ * of path parts foo, bar and biz.
+ *
+ * An element is active if it's identifier matches one of the path parts.
+ *
+ *
+ */
 class Navtree_Helper_Navigation extends Nano_View_Helper {
 
-    private $_trees;
-    private $_url_item_cache = array();
+    private $_tree_cache = array();
 
 
     /**
+     * Returns array of navigation items
      *
-     *
-     * @param unknown $name
-     * @param unknown $parent (optional)
-     * @return unknown
+     * @param string  $name       name (slug) of the top level parent
+     * @param array   $path_parts (optional) Path segments of the request url
+     * @param int     $level      (optional) Navigation level, default 0
+     * @return array $nav_items
      */
-    function Navigation( $name, $parent=null  ) {
-        if ( $parent ) {
-            $parent_item = $this->_find_parent( $name, $parent );
+    function Navigation( $name, array $path_parts = array(), $level = null  ) {
+        $level      = is_int( $level ) ? $level : count( $path_parts );
+        $traverse   = array_slice( $path_parts, 0, $level );
+        $children   = $this->get_tree_items( $name );
 
-            if ( null === $parent_item )
-                return null;
+        while ( count( $traverse ) ) {
+            $path_part   = array_shift( $traverse );
+            $parent      = $this->find_parent( $children, $path_part );
 
-            $tree = $parent_item->children;
-        }
-        else {
-            $tree = $this->_model_tree( $name )->tree();
-        }
+            if ( $parent === null )
+                return;
 
-        $items = $this->_plain_items( $tree );
-
-        return ( count($items) > 0 ) ? $items : null;
-    }
-
-
-
-    /**
-     *
-     *
-     * @param unknown $items
-     * @return unknown
-     */
-    private function _plain_items( $items ) {
-        $plain_items = array();
-
-        foreach ( $items as $item ) {
-            $plain_items[] = $item->item;
+            $children = $parent->children;
         }
 
-        return $plain_items;
-
+        $children = $this->normalize_children( $children, $path_parts );
+        return $children;
     }
 
 
     /**
-     *
+     * Retrieves and caches Navtree_Model_Tree items
      *
      * @param unknown $name
-     * @param unknown $path
      * @return unknown
      */
-    private function _find_parent( $name, $path ) {
-        $items = $this->_url_item_cache( $name );
-        $path  = trim( $path, '/' );
+    private function get_tree_items( $name ) {
+        if ( ! isset( $this->_tree_cache[$name] ) ) {
+            $this->_tree_cache[$name] = new Navtree_Model_Tree( $name );
+        }
 
-        return isset($items[$path]) ? $items[$path] : null;
+        // NB can be tree as well.
+        return $this->_tree_cache[$name]->tree();
     }
 
 
     /**
+     * Returns a child who's url resembles $pat_part
      *
-     *
-     * @param unknown $name
-     * @return unknown
+     * @param array   $children
+     * @param string  $path_part
+     * @return object $nav_item
      */
-    private function _url_item_cache( $name ) {
-        if ( !isset( $this->_url_item_cache[$name] ) ) {
-            $cache = array();
+    private function find_parent( array $children, $path_part ) {
+        foreach ( $children as $child ) {
+            $item = $child->item;
 
-            $model = $this->_model_tree( $name );
-
-            foreach ( $model->items() as $item ) {
-                $cache[trim($item->item->url(), '/')] = $item;
+            if ( trim( $item->url(), '/') == $path_part ) {
+                return $child;
             }
-
-            $this->_url_item_cache[$name] = $cache;
         }
-
-        return $this->_url_item_cache[$name];
     }
 
 
-
     /**
+     * Normalizes the $child elements - builds the target url
+     * from $path_parts and sets active child.
      *
-     *
-     * @param unknown $name
+     * @param array   $children
+     * @param array   $path_parts
      * @return unknown
      */
-    private function _model_tree( $name ) {
-        if ( ! isset( $this->_trees[$name] ) ) {
-            $this->_trees[$name] = new Navtree_Model_Tree( $name );
+    private function normalize_children( array $children, array $path_parts ) {
+        $collect = array();
+
+        foreach ( $children as $child ) {
+            $item           = $child->item;
+            $item_path_part = trim( $item->url(), '/' );
+
+            $item_parts = $path_parts;
+            array_push( $item_parts, $item_path_part );
+
+            $collect[] = (object) array(
+                'url'       => '/' . join( '/', $item_parts ),
+                'name'      => $item->name,
+                'short_url' => $item->url(),
+                'active'    => in_array( $item_path_part, $path_parts ),
+            );
+
         }
-        return $this->_trees[$name];
+
+        return $collect;
     }
 
 
