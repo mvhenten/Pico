@@ -20,21 +20,6 @@ class Navtree_Model_Item extends Pico_Model_Item {
         return isset($this->appendix->url) ? $this->appendix->url : '';
     }
 
-
-    /**
-     *
-     *
-     * @param unknown $path
-     * @return unknown
-     */
-    public function isActive( $path ) {
-        $path = trim( $path, '/' );
-        $url  = trim( $this->url(), '/' );
-
-        return $url === $path;
-    }
-
-
     /**
      * Return all items that are children of this item
      *

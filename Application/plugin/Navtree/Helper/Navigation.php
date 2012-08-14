@@ -58,7 +58,7 @@ class Navtree_Helper_Navigation extends Nano_View_Helper {
             $children = $parent->children;
         }
 
-        $children = $this->normalize_children( $children, $path_parts );
+        $children = $this->normalize_children( $children, $path_parts, $level );
         return $children;
     }
 
@@ -105,26 +105,46 @@ class Navtree_Helper_Navigation extends Nano_View_Helper {
      * @param array   $path_parts
      * @return unknown
      */
-    private function normalize_children( array $children, array $path_parts ) {
+    private function normalize_children( array $children, array $path_parts, $level=0 ) {
         $collect = array();
 
         foreach ( $children as $child ) {
             $item           = $child->item;
             $item_path_part = trim( $item->url(), '/' );
 
-            $item_parts = $path_parts;
+            $item_parts = $level == 0 ? array() : array_slice( $path_parts, 0, $level);
             array_push( $item_parts, $item_path_part );
 
             $collect[] = (object) array(
                 'url'       => '/' . join( '/', $item_parts ),
                 'name'      => $item->name,
                 'short_url' => $item->url(),
-                'active'    => in_array( $item_path_part, $path_parts ),
+                'active'    => $this->is_active_item( $path_parts, $item_parts ),
             );
-
         }
 
         return $collect;
+    }
+
+    private function is_active_item( $original_path_parts, $item_parts ){
+        $item_path = join( '/', $item_parts );
+        $original  = substr( join( '/', $original_path_parts ), 0, strlen($item_path) );
+
+        return $item_path == $original;
+
+
+
+        //foreach( $item_parts as $index => $path_part ){
+        //    if( ! $original_path_parts[$index] ==  )
+        //}
+        //
+        //// item is only active if all item_parts are in original_path_parts
+        //foreach( $item_parts as $part ){
+        //    if( ! in_array( $part, $original_path_parts ) ){
+        //        return false;
+        //    }
+        //}
+        //return true;
     }
 
 
