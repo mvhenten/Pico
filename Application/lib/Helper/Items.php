@@ -3,7 +3,7 @@
  * Application/lib/Helper/Items.php
  *
  * @author Matthijs van Henten <matthijs@ischen.nl>
- * @package Bison
+ * @package Pico
  */
 
 

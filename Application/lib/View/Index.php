@@ -60,15 +60,25 @@ class Pico_View_Index extends Nano_App_View{
             return $this->$method( $request, $config, $item );
         }
 
+
         return $this->template()->render('home');
     }
 
+
+    /**
+     *
+     *
+     * @param unknown $request
+     * @param unknown $config
+     * @param unknown $item
+     * @return unknown
+     */
     private function _get_page( $request, $config, $item ) {
         $this->template(array(
-            'item'  => $item
-        ));
-        
-        return $this->template()->render('page');
+                'item'  => $item
+            ));
+
+        return $this->template()->render( $item->slug == 'home' ? 'home' : 'page'   );
     }
 
 

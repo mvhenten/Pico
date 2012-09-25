@@ -3,7 +3,7 @@
  * Application/Bootstrap.php
  *
  * @author Matthijs van Henten <matthijs@ischen.nl>
- * @package Bison
+ * @package Pico
  */
 
 
@@ -14,6 +14,7 @@ ini_set('post_max_size', '16M');
 
 define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
 define( "APPLICATION_PATH", dirname( APPLICATION_ROOT )); //where the application is
+define( 'NANO_DEBUG', true );
 
 require_once dirname(APPLICATION_PATH) . '/Nano/library/Nano/App.php';
 //@TODO FIXME get rid of nano_config_ini
