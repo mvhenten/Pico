@@ -37,11 +37,7 @@ $('form.form').bind('submit', function(evt){
 
     $('form.form').each( function(i,el){
         var url = $(el).attr('action') || document.location.href;
-        $('body').css({ cursor: 'wait' });    
-
-        $.post( url, $(el).serialize(), function(){
-            $('body').css({ cursor: 'pointer' });    
-        });
+        $.post( url, $(el).serialize() );
     });
-});        
+});
 </script>
