@@ -19,7 +19,7 @@ class Pico_View_Admin_Label extends Pico_View_Admin_Base{
     public function get( Nano_App_Request $request, $config ) {
         $labels = $this->model('Item')->search(array(
                 'where' => array('type' => 'label'),
-                'order' => 'updated'
+                'order' => 'priority'
             ));
 
         $this->template()->labels = $labels;

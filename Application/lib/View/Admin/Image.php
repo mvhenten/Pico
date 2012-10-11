@@ -361,6 +361,8 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     /**
      *
      *
+     * @TODO move to model somewhere
+     *
      * @param object  $exif
      * @param object  $gd
      * @return unknown
