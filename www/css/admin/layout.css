@@ -171,6 +171,7 @@ input.button{
 
 #container{
     margin: 0 auto;
+    padding: 0 1em;
     overflow:hidden;
     min-width: 960px;
     max-width: 1480px;
