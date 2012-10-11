@@ -4,7 +4,7 @@
     <title></title>
     <script src="/js/jquery-1.6.4.min.js"></script>
     <script src="/js/jquery-ui-1.8.16.custom.min.js"></script>
-    <script src="/js/nano.js"></script>
+    <script src="/js/sentry.plugin.js"></script>
     <link type="text/css" rel="stylesheet" media="all" href="/css/admin/jquery-ui.css" />
     <link type="text/css" rel="stylesheet" media="all" href="/css/admin/layout.css" />
     <?php $this->block( 'head' ); ?>
@@ -26,7 +26,6 @@
               <ul class="wat-cf">
                 <li><a href="/admin/image">images</a></li>
                 <li><a href="/admin/page">pages</a></li>
-                <li><a href="/admin/image">settings</a></li>
               </ul>
             </div>
         </div>
@@ -56,7 +55,21 @@
                 </div>
             </div>
         </div>
-
     </div>
+    <script>
+        $('form').sentry({ events: 'change keyup' });
+        
+        $(document).ajaxStart( function(){
+            $("input[type='submit']").attr('disabled', true );
+            $('body, iframe').css( { cursor: 'wait' } );
+            console.log('ajax start');
+        });
+
+        $(document).ajaxStop( function(){
+            $("input[type='submit']").attr('disabled', false );
+            $('body, iframe').css( { cursor: 'default' } );
+            console.log('ajax start');
+        });
+    </script>
 </body>
 </html>

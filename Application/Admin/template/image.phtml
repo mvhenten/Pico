@@ -8,6 +8,5 @@
     <?php @list( , $controller, $action, $item_id ) = $request->pathParts ?>
     <li class="<?php echo $action == 'list' ? 'active' :'' ?>"><a href="/admin/image/list">show all images</a></li>
     <li class="<?php echo $action == 'label' ? 'active' :'' ?>"><a href="/admin/label">show labels</a></li>
-    <li class="<?php echo $action == 'settings' ? 'active' :'' ?>"><a href="/admin/image/settings">image settings</a></li>
 </ul>
 <?php $this->endblock('secondary-navigation') ?>
