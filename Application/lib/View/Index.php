@@ -111,7 +111,15 @@ class Pico_View_Index extends Nano_App_View{
      * @return unknown
      */
     private function _get_image( $request, $config, $item ) {
-        list( $image_slug, $label_slug ) = $request->pathParts(2);
+        list( $label_slug, $image_slug ) = $request->pathParts(2);
+        
+        if( $label_slug ){
+            $this->template()->label = $this->model('Item')->search(array(
+                    'where' => array(
+                        'slug' => $label_slug
+                    )
+                ))->fetch();
+        }
 
         $this->template()->image = $item;
         return $this->template()->render('image');
