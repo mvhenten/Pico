@@ -57,7 +57,7 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
         }
 
         if ( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))) {
-            $image_data = $this->_storeImageData( $item, $file );
+            $image_data = $this->_storeImageData( $item, $file, $config );
         }
 
         $item->appendix()->thumbnail = $image_data->id;
@@ -95,14 +95,15 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
      *
      * @param unknown $item
      * @param unknown $file
+     * @param unknown $config
      * @return unknown
      */
-    private function _storeImageData( $item, $file ) {
-        list( $width, $height ) = $this->_thumbnailDimensions;
+    private function _storeImageData( $item, $file, $config ) {
 
         $gd  = new Nano_Gd( $file->tmp_name );
 
         $size = $gd->dimensions;
+        list( $width, $height ) = $this->_getSuitableDimensions( $size, $config );
 
         //if ( $size['width'] < $size['height'] ) {
         //    $gd  = $gd->resize( $width, null );
@@ -136,6 +137,59 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
         $image_data->store();
 
         return $image_data;
+    }
+
+
+
+    /**
+     *
+     *
+     * @param unknown $size
+     * @param unknown $config
+     * @return unknown
+     */
+    private function _getSuitableDimensions( $size, $config ) {
+        $possible_dimensions = $this->_getThumbnailDimensions( $config );
+
+        foreach ( $possible_dimensions as $dimension ) {
+            @list( $width, $height ) = $dimension;
+
+            if ( $width < $height && $size['width'] < $size['height'] ) {
+                return $dimension;
+            }
+            else if ( $width > $height && $size['width'] > $size['height'] ) {
+                    return $dimension;
+                }
+        }
+
+        return $possible_dimensions[0];
+    }
+
+
+
+    /**
+     *
+     *
+     * @param unknown $config
+     * @return unknown
+     */
+    private function _getThumbnailDimensions( $config ) {
+        $config = key_exists( 'thumbnail', $config['config'] )
+            ? $config['config']['thumbnail'] : null;
+
+        if ( null != $config && key_exists( 'dimensions', $config ) ) {
+            $dimensions;
+
+            foreach ( $config['dimensions'] as $value ) {
+                $dim = explode('x', $value );
+                if ( count( $dim ) < 2 ) continue;
+                $dimensions[] = $dim;
+            }
+
+            return $dimensions;
+        }
+
+        return array( $this->_thumbnailDimensions );
     }
 
 

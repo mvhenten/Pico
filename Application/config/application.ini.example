@@ -23,3 +23,8 @@ admin.base      = APPLICATION_PATH
 admin.path      = "modules/Admin/"
 admin.layoutPath    = "layout.phtml"
 admin.structure = "/:view/:action.phtml"
+
+[thumbnail]
+dimensions.0 = 267x176
+dimensions.1 = 133x176
+dimensions.2 = 179x144
