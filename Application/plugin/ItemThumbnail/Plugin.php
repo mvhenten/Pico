@@ -57,10 +57,19 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
         }
 
         if ( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))) {
-            $image_data = $this->_storeImageData( $item, $file, $config );
+            @list( $image_data, $info ) = $this->_storeImageData( $item, $file, $config );
         }
+        
+        @list( $width, $height, $filename ) = $info;
 
-        $item->appendix()->thumbnail = $image_data->id;
+        $item->appendix()->thumbnail      =  $image_data->id;
+        $item->appendix()->thumbnail_data = array(
+            'width'     => $width,
+            'height'    => $height,
+            'filename'  => $filename,
+            'item_id'   => $image_data->id
+        );
+        
         $item->store(array( 'id' => $item_id ) );
         $this->response()->redirect($url);
     }
@@ -136,7 +145,7 @@ class ItemThumb_Plugin extends Pico_View_Admin_Base {
 
         $image_data->store();
 
-        return $image_data;
+        return array( $image_data, array( $width, $height, $file->name ) );
     }
 
 
