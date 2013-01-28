@@ -537,6 +537,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content {
 	color: #333333;
 	background-color: #eee;
+	border-radius:5px;
 
 }
 .ui-widget-content a {
