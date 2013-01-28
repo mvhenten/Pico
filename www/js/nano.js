@@ -1,3 +1,57 @@
+(function($){
+    var formAction = function( modalConfig ){
+        var $form = $( this.form ), formData = $form.serializeArray();
+        
+        formData.push({
+            name: $(this).attr('name'),
+            value: $(this).val()
+        });
+
+        $.ajax({
+            url: $form.attr('action'),
+            type: $form.attr('method'),
+            context: document.body,
+            data: formData,
+            success: function( data, status, xhr ){               
+                if( !data ) return;
+                
+                var html = $(data).find('form');
+                
+                modalConfig = $.extend({
+                    title: 'Select options',
+//                    position: { my: "center", at: "center", of: '#main' },
+                    modal: true,
+                    width: 600,
+                    height: 500,
+                    resizable: false,
+                    buttons: [
+                        { text: "Cancel", click: function() {
+                            $( this ).dialog( "close" );
+                        }},
+                        { text: "Save", click: function() {
+                            $(html).submit();
+                            $( this ).dialog( "close" );
+                        }}
+                    ]
+                }, modalConfig );
+                
+                $(html).dialog( modalConfig );            
+            }
+        });        
+    };
+    
+    $.fn.extend({
+        nanoAhahForm: function( targetSelector, modalConfig ) {
+            $( this ).click( function( evt ){
+                evt.preventDefault();
+                formAction.call( this, targetSelector, modalConfig );
+            });
+
+            return this;
+        }
+    });
+})(jQuery);
+
 var nano = {
     ahah: {
         /**
@@ -15,38 +69,6 @@ var nano = {
                         modal:true,
                         height: 'auto',
                         maxHeight: 500
-                    });
-                }
-            });
-
-            return false;
-        },
-
-        /**
-         * override form submit handler: post the form and display the
-         * results in a dialog
-         */
-        form: function( form, selector, origin ){
-            var url     = $(form).attr('action');
-            var mtd  = $(form).attr('method');
-
-            var form_data = $(form).serializeArray();
-            
-            if( origin ){
-                form_data.push({
-                    name: origin.name,
-                    value: origin.value
-                });
-            }
-
-            $.ajax({
-                url: url,
-                type: mtd,
-                context: document.body,
-                data: form_data,
-                success: function( data, status, xhr ){
-                    $(data).find(selector).dialog({
-                        modal:true
                     });
                 }
             });
@@ -94,22 +116,4 @@ function upload_validate(el){
         $(el.parentNode).find('label').text('Invalid image type: ' + ext)
         $('.input-submit').attr('disabled','disabled');
     }
-}
-
-function ajaxify( link, search ){
-    var url = link.href;
-
-    $.ajax({
-        url: url,
-        context: document.body,
-        type: "GET",
-        success: function( data, status, xhr ){
-            $(data).find(search).dialog({
-                title: '',
-                modal:true
-            });
-        }
-    });
-    return false;
-
 }

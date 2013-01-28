@@ -207,9 +207,9 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         $post = $request->post;
 
         if ( isset( $post['action-labels'] ) ) {
-            // return $this->labels( $request, $extra );
+            return $this->labels( $request, $extra );
         }
-        else if ( isset( $post['apply'] ) ) {
+        else if ( ! isset( $post['cancel'] ) ) {
                 $image_ids  = (array) json_decode($post['images']);
                 $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();
 
@@ -260,6 +260,10 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     public function labels( $request, $config ) {
         @list( , , , $label_id ) = $request->pathParts();
         $post   = (object) $request->post();
+        
+        if( ! isset( $post->image ) ) {
+            return '';
+        }
 
         $selected_query = $this->model('ImageLabel')->search(array(
                 'where' => array( 'image_id' => $post->image ),

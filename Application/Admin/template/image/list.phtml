@@ -50,9 +50,11 @@ $(function(){
                 <a href="#select-all" onclick="$('ul.thumbnails').find('input').attr('checked', true)">all</a>,
                 <a href="#select-none" onclick="$('ul.thumbnails').find('input').attr('checked', false)">none</a>
             </div>
-            <button onclick="nano.ahah.form(this.form, 'form', this); return false;" id="action-labels" class="button" value="labels" name="action-labels">edit labels</button>
-            <button onclick="nano.ahah.form(this.form, 'form', this); return false;" id="action-delete" class="button" value="labels" name="action-delete">delete</button>
+            <button id="action-labels" class="button" value="labels" name="action-labels">edit labels</button>
         </div>
+        <script>
+            $( '#action-labels' ).nanoAhahForm({ title: 'Select labels' });
+        </script>
         <?php if( $pager->total > 1 ): ?>
         <div class="pager">
             <ul class="pager">
