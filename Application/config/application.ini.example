@@ -12,6 +12,7 @@ password = pico
 
 [plugins]
 ItemThumbnail = 1
+CustomField = 1
 
 [layout]
 default.base        = APPLICATION_PATH
@@ -28,3 +29,6 @@ admin.structure = "/:view/:action.phtml"
 dimensions.0 = 267x176
 dimensions.1 = 133x176
 dimensions.2 = 179x144
+
+[custom_field]
+fields.category = 'Category'
