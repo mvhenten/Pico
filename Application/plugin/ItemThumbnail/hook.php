@@ -23,7 +23,7 @@ if ( $action && $action == 'delete' ) {
 endif; ?>
 
 <?php if ( $end ): ?>
-    <?php if ( $action == 'edit' && in_array( $controller, array('page', 'label')) ): ?>
+    <?php if ( $action == 'edit' && in_array( $controller, array('page', 'label', 'video')) ): ?>
     <?php $this->template->block( 'head' ); ?>
     <style>
     <?php readfile( dirname(__FILE__) .  '/style.css' ); ?>
