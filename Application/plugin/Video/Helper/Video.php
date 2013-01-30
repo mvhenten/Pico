@@ -48,7 +48,12 @@ class Video_Helper_Video extends Nano_View_Helper {
             <p><a href="%s">%s</a>';
 
         return sprintf( $template,
-            $matches[1], $video['width'], $video['height'], $video['url'], $item->name );
+            htmlentities( $matches[1] ),
+            htmlentities( $video['width'] ),
+            htmlentities( $video['height'] ),
+            htmlentities( $video['url'] ),
+            htmlentities( $item->name )
+        );
     }
 
 
