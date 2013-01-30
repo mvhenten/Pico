@@ -86,7 +86,7 @@ class Pico_View_Admin_Base extends Nano_App_View{
         }
 
         $item = $this->model('Item', $id );
-        $post = (object) array_merge( array('visible' => 1), $request->post);
+        $post = (object) $request->post;
 
         $form   = new Pico_Form_Item( $item );
         $errors = $form->validate( $post );
@@ -145,9 +145,11 @@ class Pico_View_Admin_Base extends Nano_App_View{
             $item->slug = $post->slug;
         }
 
+        $visible = isset( $post->visible ) && $post->visible;
+
         $item->name         = $post->name;
         $item->description  = $post->description;
-        $item->visible      = (bool) $post->visible;
+        $item->visible      = $visible;
         $item->priority     = intval( $post->priority );
         $item->store(array( 'id' => $item->id ) );
 

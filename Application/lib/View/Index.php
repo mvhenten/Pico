@@ -59,6 +59,12 @@ class Pico_View_Index extends Nano_App_View{
             $method = "_get_$type";
             return $this->$method( $request, $config, $item );
         }
+        else if ( $item ) {
+                $this->template(array(
+                        'item'  => $item
+                    ));
+                return $this->template()->render( $item->type );
+            }
 
 
         return $this->template()->render('home');
@@ -112,8 +118,8 @@ class Pico_View_Index extends Nano_App_View{
      */
     private function _get_image( $request, $config, $item ) {
         list( $label_slug, $image_slug ) = $request->pathParts(2);
-        
-        if( $label_slug ){
+
+        if ( $label_slug ) {
             $this->template()->label = $this->model('Item')->search(array(
                     'where' => array(
                         'slug' => $label_slug
