@@ -15,7 +15,7 @@
 <div id="vertical-nav" class="fifth">
     <ul class="verticalnav">
         <li><h4>Pages</h4></li>
-        <?php foreach( $this->items('page') as $page ): ?>
+        <?php foreach( $this->items('page', array(), false ) as $page ): ?>
         <li><a class="<?php echo $page->id == $item->id ? "active":"" ?>" href="/admin/page/edit/<?php echo $page->id ?>"><?php echo $page->name ?></a></li>
         <?php endforeach; ?>
     </ul>

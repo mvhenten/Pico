@@ -21,22 +21,23 @@
 
 <script>
     $(document).ready( function(){
-	$('.rich-text-editor').cleditor({
-	    width:'95%',
-	    height:'300px',
-	    bodyStyle: {},
-	    useCSS: false,
-	    controls:  'bold italic underline '
-	    + 'bullets numbering alignleft center alignright justify | image link unlink '
-	    + 'removeformat pastetext source'
-	});
-	$('form.form').bind('submit', function(evt){
-	    evt.preventDefault();
-	
-	    $('form.form').each( function(i,el){
-		var url = $(el).attr('action') || document.location.href;
-		$.post( url, $(el).serialize() );
-	    });
-	});	
+        $('.rich-text-editor').cleditor({
+            width:'95%',
+            height:'300px',
+            bodyStyle: {},
+            useCSS: false,
+            controls:  'bold italic underline '
+            + 'bullets numbering alignleft center alignright justify | image link unlink '
+            + 'removeformat pastetext source'
+        });
+
+    	$('form.form').bind('submit', function(evt){
+            evt.preventDefault();
+        
+            $('form.form').each( function(i,el){
+            var url = $(el).attr('action') || document.location.href;
+            $.post( url, $(el).serialize() );
+            });
+        });	
     })
 </script>

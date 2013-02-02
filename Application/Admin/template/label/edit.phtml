@@ -16,7 +16,7 @@
 <div id="vertical-nav" class="fifth">
     <ul class="verticalnav">
         <li><h4>Labels</h4></li>
-        <?php foreach( $this->items('label') as $label ): ?>
+        <?php foreach( $this->items('label', array(), false ) as $label ): ?>
         <li><a class="<?php echo $label->id == $item->id ? "active":"" ?>" href="/admin/label/edit/<?php echo $label->id ?>"><?php echo $label->name ?></a></li>
         <?php endforeach; ?>
     </ul>
