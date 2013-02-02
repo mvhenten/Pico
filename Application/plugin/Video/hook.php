@@ -15,10 +15,9 @@
     Nano_Autoloader::registerNamespace( 'Video', dirname(__FILE__)  );
 $this->router->prepend( '/admin/video(/\w+)?(/\d+)?', 'Video_Plugin' );
 
-
 endif; ?>
 
-<?php if ( $end ): ?>
+<?php if ( $end && ! $request->isPost() ): ?>
     <?php $this->template->block('module-navigation') ?>
 	<li><a href="/admin/video">video</a></li>
     <?php $this->template->endblock('module-navigation') ?>

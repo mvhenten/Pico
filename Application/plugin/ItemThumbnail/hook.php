@@ -22,7 +22,7 @@ if ( $action && $action == 'delete' ) {
 
 endif; ?>
 
-<?php if ( $end ): ?>
+<?php if ( $end && ! $request->isPost() ): ?>
     <?php if ( $action == 'edit' && in_array( $controller, array('page', 'label', 'video')) ): ?>
     <?php $this->template->block( 'head' ); ?>
     <style>
@@ -31,12 +31,14 @@ endif; ?>
     <?php $this->template->endBlock( 'head' ); ?>
     <?php $this->template->block('sidebar'); ?>
     <?php $item = $this->template->item ?>
+    <?php $appendix  = $item->appendix ?>
+    <?php $thumbnail = isset( $appendix->thumbnail ) ? $appendix->thumbnail : null ?>
     <ul class="verticalnav">
     <li><h4><?php echo ucfirst($controller) ?> thumbnail</h4></li>
         <li>
             <div class="thumbnail-holder">
-                <?php if ( isset($item->appendix->thumbnail) ): ?>
-                <img src="/image/original/<?php echo $item->id ?>?v=<?php echo $item->appendix->thumbnail ?>" />
+                <?php if ( $thumbnail ): ?>
+                <img src="/image/original/<?php echo $item->id ?>?v=<?php echo $thumbnail ?>" />
                 <?php else: ?>
                     <em>no image found</em>
                 <?php endif; ?>
@@ -45,7 +47,7 @@ endif; ?>
         <li>
             <form action="/admin/plugin/thumb/upload/<?php echo $item->id ?>" method="post" enctype="multipart/form-data">
                 <div class="fakefile">
-                    <?php if ( isset($item->appendix->thumbnail) ): ?>
+                    <?php if ( $thumbnail ): ?>
                     <a class="button" href="/admin/plugin/thumb/delete/<?php echo $item->id ?>" title="delete thumbnail">delete</a>
                     <label for="thumbnail-file"><span>upload...</span>
                     <?php else: ?>

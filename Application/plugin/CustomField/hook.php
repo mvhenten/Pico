@@ -21,7 +21,7 @@ if ( $action && $action == 'delete' ) {
 
 endif; ?>
 
-<?php if ( $end ): ?>
+<?php if ( $end && ! $request->isPost() ): ?>
     <?php if ( $action == 'edit' && in_array( $controller, array( 'label', 'video' ) ) ): ?>
     <?php $this->template->block( 'head' ); ?>
     <?php $this->template->endBlock( 'head' ); ?>

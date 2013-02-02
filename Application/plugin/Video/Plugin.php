@@ -107,7 +107,11 @@ class Video_Plugin extends Pico_View_Admin_Base {
      * @return unknown
      */
     private function _videoFieldset( $item ) {
-        $video =  (array) $item->appendix->video;
+        $video = array();
+
+        if ( $item->appendix && isset( $item->appendix->video ) ) {
+            $video =  (array) $item->appendix->video;
+        }
 
         $fieldset = array(
             'type'  => 'fieldset',
