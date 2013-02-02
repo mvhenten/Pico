@@ -102,7 +102,6 @@ class Pico_View_Admin_Base extends Nano_App_View{
             $this->response()
             ->redirect( '/' . join('/', array( 'admin', $controller, $action, $id )) );
         }
-
         $this->template()->form   = $form;
         $this->template()->item   = $item;
         $this->template()->errors = $errors;
@@ -145,7 +144,7 @@ class Pico_View_Admin_Base extends Nano_App_View{
             $item->slug = $post->slug;
         }
 
-        $visible = isset( $post->visible ) && $post->visible;
+        $visible = isset( $post->visible ) ? 1 : 0;
 
         $item->name         = $post->name;
         $item->description  = $post->description;

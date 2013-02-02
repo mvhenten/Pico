@@ -19,8 +19,9 @@ class Pico_View_Admin_Content extends Pico_View_Admin_Base{
         @list( , $controller, $action, $id ) = $request->pathParts();
 
         $post    = $request->post;
+        $content = isset( $post['content'] ) ? $post['content'] : array();
 
-        foreach ( $post['content'] as $content_id => $value ) {
+        foreach ( $content as $content_id => $value ) {
             $content = $this->model('ItemContent', $content_id );
 
             if ( isset($value['draft'] ) ) {
