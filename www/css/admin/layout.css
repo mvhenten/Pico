@@ -556,10 +556,23 @@ input.input-submit:hover{
     color: #fff;
 }
 
+.upload-preview {
+    background-color: whiteSmoke;
+    margin: 1em;
+    padding: 1em;
+}
 
-form .error {
-    border-color: #f99;
-    border-width:2px;
+.upload-preview img {
+    border: 1px solid #666;
+    margin-right: 0.5em;
+}
+
+.error {
+    padding: 1em;
+    list-style: inside;
+    margin: 1em;
+    border: 1px solid #E99292;
+    background-color: #FFE4E4;
 }
 
 .form-errors {
