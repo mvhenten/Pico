@@ -1,0 +1,55 @@
+<form class="form disable-autosave" action="/admin/image/upload" enctype="multipart/form-data" method="POST" id="image-add">
+    <div class="toolbar" style="text-align:left;">Upload one or more images</div>
+        <p>
+            <em>Select one or more images from your computer. The allowed image types jpeg or png.</em>
+        </p>
+        <ul class="error"></ul>
+        <p>
+            <input type="file" class="input-file" multiple="multiple" id="file-element-0" name="images[]" value="">            
+        </p>
+        <div class="upload-preview">
+        </div>
+        <div class="toolbar">
+            <input type="submit" class="input-submit" name="cancel" value="Cancel">
+            <input type="submit" disabled="disabled" class="input-submit" id="submit-element-1" name="upload" value="Upload image">
+        </div>
+</form>
+<script>
+// TODO refactor sometime
+$('.error, .upload-preview').html('').hide();
+$('#file-element-0').change(function(evt){
+    var $label = $(this.form).find('#upload-file-label'),
+        $buttons = $(this.form).find('input[type="submit"]'),
+        files  = [],
+        errors = [];
+        
+    $('.error').html('').hide();
+    
+    for( var i = 0, len = this.files.length; i < len; i++ ){
+        var file = this.files[i];
+        
+        if( ! file.type.match( /image\/(png|jpeg|jpg)/ ) ){
+            $('.error').append('<li>File ' + file.name + ' is not a valid image</li>');
+            $('.error').show();
+            this.value = null;
+            continue;
+        }
+        else {
+            files.push( file.name );
+            $('.upload-preview').show();
+        }
+
+        var img = document.createElement('img');
+        img.src = window.URL.createObjectURL(file);
+        img.width = "64";
+        img.height = "64";
+        img.title = file.name + '(' + ( file.size/(1024*1024)).toFixed(2) + 'MB )';
+        
+        $('.upload-preview').append( img );
+    }
+    
+    if( files.length !== 0 ){
+        $buttons.removeAttr('disabled');        
+    }
+});
+</script>

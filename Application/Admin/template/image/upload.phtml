@@ -8,20 +8,6 @@
 
 <?php $this->block('main') ?>
 <div class="half">
-    <form class="form" action="/admin/image/upload" enctype="multipart/form-data" method="POST" id="image-add">
-            <p>
-                <em>Select an image from your computer. The allowed image types jpeg or png.</em>
-            </p>
-			<div class="input-file-wrapper">
-                <label id="upload-file-label" class="button" for="file-element-0" style="cursor:pointer;" onclick="document.getElementById('file-element-0').select()">
-                    select a file to upload
-                </label>
-                <input style="opacity:0;" onchange="nano.validate.upload(this, ['png', 'jpg'], '#upload-file-label','#submit-element-1');" type="file" class="input-file" id="file-element-0" name="image" value="">
-			</div>
-            <div class="toolbar">
-                <input type="submit" class="input-submit" name="cancel" value="Cancel">
-                <input type="submit" disabled="disabled" class="input-submit" id="submit-element-1" name="upload" value="Upload image">
-            </div>
-	</form>
+    <?php $this->process( 'image/block/upload' ); ?>
 </div>
 <?php $this->endblock('main') ?>

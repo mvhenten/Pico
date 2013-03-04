@@ -27,7 +27,7 @@ $(function(){
 
 <?php $this->block('titlebar') ?>
 <h2 class="title">images</h2>
-<a href="/admin/image/upload" onclick="return nano.ahah.link(this, 'form')" class="context-button">upload image</a>
+<a href="/admin/image/upload" id="context-activate-upload" class="context-button">upload image</a>
 
 <?php $this->endblock('titlebar') ?>
 
@@ -43,6 +43,10 @@ $(function(){
     </ul>
 </div>
 <div class="three-fifth">
+    <div id="upload-form-container" style="display:none;">
+        <?php $this->process( 'image/block/upload' ); ?>        
+    </div>
+
     <form id="images" class="form" method="post" action="/admin/image/bulk/<?php echo $id ?>">
         <div class="toolbar" style="text-align:right;">
             <div class="fifth">
@@ -50,11 +54,9 @@ $(function(){
                 <a href="#select-all" onclick="$('ul.thumbnails').find('input').attr('checked', true)">all</a>,
                 <a href="#select-none" onclick="$('ul.thumbnails').find('input').attr('checked', false)">none</a>
             </div>
+            <button id="action-delete" class="button" value="delete" name="action-delete">delete images</button>
             <button id="action-labels" class="button" value="labels" name="action-labels">edit labels</button>
         </div>
-        <script>
-            $( '#action-labels' ).nanoAhahForm({ title: 'Select labels' });
-        </script>
         <?php if( $pager->total > 1 ): ?>
         <div class="pager">
             <ul class="pager">
@@ -128,4 +130,14 @@ $(function(){
         </div>
         <?php endif; ?>
     </form>
+
+<script>
+    $( '#context-activate-upload' ).click(function(evt){
+        $( '#upload-form-container' ).slideDown();
+        evt.preventDefault();
+    });
+    
+    $( '#action-labels' ).nanoAhahForm({ title: 'Select labels' });
+</script>
+
 <?php $this->endblock('main') ?>
