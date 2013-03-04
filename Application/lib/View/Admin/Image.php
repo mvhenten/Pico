@@ -52,27 +52,32 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         if ( ! $request->isPost() ) {
             return $this->template()->render( 'image/upload');
         }
+        
+        $images = $_FILES['images'];
+        
+        foreach( $images['error'] as $index => $error ) {
+            if( $error !== 0 ) continue;
 
-        $file = (object) $_FILES['image'];
+            $mime = $images['type'][$index];
+            if( ! preg_match( '/image\/(jpeg|jpg|png|gif)/', $mime ) ) continue;
 
-        if ( $file->error ) {
-            $this->response()->redirect('/admin/image?error=' . $file->error );
-        }
-
-        $post = $request->post();
-
-        if ( null !== ($info = Nano_Gd::getInfo( $file->tmp_name ))) {
+            $size       = $images['size'][$index];
+            $tmp_name   = $images['tmp_name'][$index];
+            $name       = $images['name'][$index];
+            
+            var_dump( array( $size, $tmp_name, $name ) );
+            
             $item = $this->model('Item', array(
-                    'name'     => $file->name,
+                    'name'      => $images['name'][$index],
                     'visible'   => 0,
                     'type'      => 'image',
                     'inserted'  => date('Y-m-d H:i:s'),
-                    'slug'      => Nano_Util_String::slugify($file->name)
+                    'slug'      => Nano_Util_String::slugify($name)
                 ))->store();
-
-            $this->_storeImageData( $item, $file );
+        
+            $this->_storeImageData( $item, $tmp_name, $name, $size );                    
         }
-
+        
         $this->response()->redirect('/admin/image' );
         exit;
     }
@@ -339,24 +344,22 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      * @param unknown $item
      * @param unknown $file
      */
-    private function _storeImageData( $item, $file ) {
-        $gd  = new Nano_Gd( $file->tmp_name );
+    private function _storeImageData( $item, $path, $filename, $size ) {
+        $gd  = new Nano_Gd( $path );
 
         list( $width, $height ) = array_values( $gd->getDimensions() );
-        $exif = new Nano_Exif( $file->tmp_name );
+        $exif = new Nano_Exif( $path );
 
         $gd   = $this->_rotateImageData( $exif, $gd );
-        $src  = ($info[2] == IMAGETYPE_PNG) ?  $gd->getImagePNG() : $gd->getImageJPEG(100);
-        $type = ($info[2] != IMAGETYPE_PNG) ? 'image/jpeg' : $file->type;
-
+        $src  = $gd->getImageJPEG(100); 
         $this->model('ImageData', array(
                 'image_id'  => $item->id,
-                'size'      => $file->size,
-                'mime'      => $type,
+                'size'      => $size,
+                'mime'      => 'image/jpeg',
                 'width'     => $width,
                 'height'    => $height,
                 'data'      => $src,
-                'filename'  => $file->name,
+                'filename'  => $filename,
                 'type'      => 'original'
             ))->store();
     }
