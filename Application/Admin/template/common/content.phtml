@@ -2,7 +2,7 @@
 <script type="text/javascript" src="/js/jquery.cleditor.js"></script>
 <?php $this->endblock('head') ?>
 
-<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/52?target=<?php
+<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/<?php echo $content->id ?>?target=<?php
     echo $request->url ?>" class="form">
                                                                                                                 
 <?php foreach( $item->content() as $content ): ?>
