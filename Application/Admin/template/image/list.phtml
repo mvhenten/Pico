@@ -42,7 +42,7 @@ $(function(){
         <?php endforeach; ?>
     </ul>
 </div>
-<div class="three-fifth">
+<div id="main-left" class="three-fifth">
     <div id="upload-form-container" style="display:none;">
         <?php $this->process( 'image/block/upload' ); ?>        
     </div>
@@ -133,11 +133,17 @@ $(function(){
 
 <script>
     $( '#context-activate-upload' ).click(function(evt){
+        $('.ahah-generated').slideUp(function(){ $(this).remove() });
         $( '#upload-form-container' ).slideDown();
         evt.preventDefault();
     });
     
-    $( '#action-labels' ).nanoAhahForm({ title: 'Select labels' });
+    $('#images').nanoAhahForm(function( html ){
+        $(html).hide();
+        $( '#upload-form-container' ).slideUp();
+        $(html).slideDown('medium');
+    });
+
 </script>
 
 <?php $this->endblock('main') ?>
