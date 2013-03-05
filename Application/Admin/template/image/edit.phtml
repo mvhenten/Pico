@@ -1,6 +1,7 @@
 <?php $this->wrapper( 'image') ?>
 
 <?php $this->block('head') ?>
+    <script src="/js/vpscroll.plugin.js"></script>
 <?php $this->endblock('head') ?>
 
 <?php $this->block('titlebar') ?>
@@ -18,8 +19,11 @@
     <?php $this->process( 'common/content', array( 'item' => $image ) ); ?>
 </div>
 <div class="right-pane">
-    <div id="imagecrop">
+    <div id="imagecrop" style="overflow:hidden;">
         <img onload="this.parentNode.scrollTop=(this.height/8);this.parentNode.scrollLeft=(this.width/5);" align="center" src="/image/sd/<?php echo $image->id ?>" />
     </div>
 </div>
+<script>
+    $('#imagecrop').vpscroll();
+</script>
 <?php $this->endblock('main') ?>
