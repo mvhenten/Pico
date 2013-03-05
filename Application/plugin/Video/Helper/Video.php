@@ -27,7 +27,15 @@ class Video_Helper_Video extends Nano_View_Helper {
             return null;
         }
 
-        return $this->_getVimeoEmbed( $item );
+        $url = new Nano_Url( $appendix->video->url );
+
+        if ( $url->host == 'vimeo.com' ) {
+            return $this->_getVimeoEmbed( $item );
+        }
+
+        if ( $url->host == 'www.youtube.com' ) {
+            return $this->_getYoutubeEmbed( $item );
+        }
     }
 
 
@@ -53,6 +61,29 @@ class Video_Helper_Video extends Nano_View_Helper {
             htmlentities( $video['height'] ),
             htmlentities( $video['url'] ),
             htmlentities( $item->name )
+        );
+    }
+
+
+
+    /**
+     *
+     *
+     * @param unknown $item
+     * @return unknown
+     */
+    private function _getYoutubeEmbed( $item ) {
+        $video = (array) $item->appendix->video;
+
+        preg_match(  '/.+?v=(\w+)/', $video['url'], $matches );
+
+        $template = '<iframe src="http://www.youtube.com/embed/%s?feature=player_detailpage"
+            width="%d" height="%d" frameborder="0" allowfullscreen></iframe>';
+
+        return sprintf( $template,
+            htmlentities( $matches[1] ),
+            htmlentities( $video['width'] ),
+            htmlentities( $video['height'] )
         );
     }
 
