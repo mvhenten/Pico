@@ -15,14 +15,17 @@
 <?php $this->block('main') ?>
 <div class="third">
     <form method="post" class="form" action="/admin/image/bulk/<?php echo $label_id ?>">
-        <div class="toolbar">
-            select:
-            <a href="#select-all" onclick="$('ul.itemlist').find('input').attr('checked', true)">all</a>,
-            <a href="#select-none" onclick="$('ul.itemlist').find('input').attr('checked', false)">none</a>
+        <div class="toolbar wrap">
+            <div class="half" style="text-align:left;">Select labels for the selected images</div>
+            <div class="half">
+                <a href="#select-all" onclick="$('ul.itemlist').find('input').attr('checked', true)">all</a>,
+                <a href="#select-none" onclick="$('ul.itemlist').find('input').attr('checked', false)">none</a>
+                <input type="submit" class="input-submit" name="cancel" value="Close">                
+            </div>
         </div>
-        <ul class="itemlist">
+        <ul class="wrap no-bullet">
         <?php foreach( $labels as $label ): ?>
-            <li>
+            <li class="third">
                 <input id="checkbox-<?php echo $label->id ?>" type="checkbox" <?php echo $label->selected ? 'checked="checked"':'' ?> name="labels[<?php echo $label->id ?>]" value="true" />
                 <label for="checkbox-<?php echo $label->id ?>"><?php echo $label->name ?></label>
             </li>

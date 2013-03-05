@@ -3,10 +3,8 @@
 <head>
     <title></title>
     <script src="/js/jquery-1.9.0.js"></script>
-    <script src="/js/jquery-ui-1.10.0.custom.min.js"></script>
     <script src="/js/sentry.plugin.js"></script>
     <script src="/js/nano.js"></script>
-    <link type="text/css" rel="stylesheet" media="all" href="/css/jquery-ui-pico-theme/jquery-ui-1.10.0.custom.css" />
     <link type="text/css" rel="stylesheet" media="all" href="/css/admin/layout.css" />
     <?php $this->block( 'head' ); ?>
     <?php $this->endBlock( 'head' ); ?>
@@ -61,7 +59,7 @@
         </div>
     </div>
     <script>
-        $('form').not('.disable-autosave').sentry({ events: 'change keyup' });
+//        $('form').not('.disable-autosave').sentry({ events: 'change keyup' });
         
         $(document).ajaxStart( function(){
             $("input[type='submit']").attr('disabled', true );

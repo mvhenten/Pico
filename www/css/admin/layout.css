@@ -42,6 +42,14 @@ td,th{
     text-align:left;
 }
 
+ul {
+  padding-left: 2em;  
+}
+
+ul.no-bullet {
+    list-style: none;
+}
+
 /*big blue button*/
 .context-button,
 .context-button:hover,
@@ -119,6 +127,16 @@ td,th{
     float:left;
     width: 20%;
     text-align: left;
+}
+
+.tenth {
+    float: left;
+    width: 10%;
+}
+
+.twentieth {
+    float: left;
+    width: 5%;
 }
 
 /** itemlist **/
@@ -736,38 +754,17 @@ input.input-submit:hover{
     color: #ccc;
 }
 
-/*** bulk delete icon lists ***/
-
-.icon-select-list {
-}
-
-
-.icon-select-list tr {
-    background-color: #f9f9f9;    
-}
-
-.icon-select-list tr:nth-child(odd){
-    background-color: #fff;
-}
-
-.icon-select-list td{
-    vertical-align: top;
-    height: 64px;
-    padding: 3px;
-    color: #444;
-}
-
-.icon-select-list label.icon {
-    display: block;
-    height: 64px;
+.icon {
+    display: inline-block;
     text-align: center;
-    background-color: #FCFCFC;
-    border: 1px solid #f0f0f0;
-    border-radius: 5px;
+    background-color: #505050;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 0.5em;
+    margin: 0.2em 0.5em;
 }
-/*
-.ui-dialog {
-    max-height: 90%;
-    overflow-y: auto;
+
+.icon img {
+    height: 32px;
+    border: 1px solid #ccc;
 }
-*/

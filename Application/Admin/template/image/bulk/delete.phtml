@@ -1,29 +1,32 @@
 <?php $this->block('main') ?>
 <div class="third">
     <form method="post" class="form image-bulk" action="/admin/image/bulk/<?php echo $label_id ?>">
-        <table class="icon-select-list" cellpadding="0" cellspacing="0" border="0">
-        <?php foreach( $images as $image ): ?>
-            <tr>
-                <td>
-                    <input checked="yes" type="checkbox" id="image-<?php echo $image->id ?>" name="image[<?php echo $image->id ?>]" />                                    
-                </td>
-                <td>
-                    <label for="image-<?php echo $image->id ?>">
-                        <strong><?php echo $image->name ?></strong><br/>
-                        <?php echo $image->description ?>
-                    </label>                                    
-                </td>
-                <td>
+        <div class="toolbar" style="text-align:left;">
+            <span>Are you sure?</span>
+            <input type="submit" class="input-submit" name="action-delete-confirm" value="Confirm delete">
+            <input type="submit" class="input-submit" name="cancel" value="Cancel">
+        </div>
+        <ul class="no-bullet wrap">
+            <?php foreach( $images as $image ): ?>
+            <li class="half">
+                <div class="twentieth">
+                    <input checked="yes" type="checkbox" id="image-<?php echo $image->id ?>" name="image[<?php echo $image->id ?>]" />                                                        
+                </div>
+                <div class="fifth">
                     <label class="icon" for="image-<?php echo $image->id ?>">
                         <img alt="<?php echo $image->name ?>" src="/image/icon/<?php echo $image->id ?>" />
-                    </label>                                    
-                </td>
-            </tr>
-        <?php endforeach; ?>            
-        </table>
-        <div class="toolbar">
+                    </label>                                                                                                            
+                </div>
+                <label class="half" for="image-<?php echo $image->id ?>">
+                    <strong><?php echo $image->name ?></strong><br/>
+                    <?php echo $image->description ?>
+                </label>                                    
+            </li>
             
-            <input type="submit" class="input-submit" name="action-delete-confirm" value="Delete">
+            <?php endforeach; ?>
+        </ul>
+        <div class="toolbar">        
+            <input type="submit" class="input-submit" name="action-delete-confirm" value="Confirm delete">
             <input type="submit" class="input-submit" name="cancel" value="Cancel">
         </div>
     </form>

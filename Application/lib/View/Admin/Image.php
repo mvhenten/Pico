@@ -203,10 +203,10 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      * @return unknown
      */
     public function bulk( Nano_App_Request $request, $extra ) {
+
         if ( isset( $request->post['action-delete'] ) || isset( $request->post['action-delete-confirm'] ) ) {
             return $this->_bulk_delete( $request );
         }
-
 
         @list( , , , $label_id ) = $request->pathParts();
         $post = $request->post;
@@ -214,12 +214,12 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         if ( isset( $post['action-labels'] ) ) {
             return $this->labels( $request, $extra );
         }
-        else if ( ! isset( $post['cancel'] ) ) {
-                $image_ids  = (array) json_decode($post['images']);
-                $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();
-
-                $this->_updateLabels( $image_ids, $labels );
-            }
+        
+        if ( ! isset( $post['cancel'] ) ) {
+            $image_ids  = (array) json_decode($post['images']);
+            $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();            
+            $this->_updateLabels( $image_ids, $labels );                
+        }
 
         $this->response()
         ->redirect( '/admin/image/list/' . $label_id );
@@ -325,6 +325,8 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      * @param unknown $label_ids
      */
     private function _updateLabels( $image_ids, $label_ids ) {
+        if( count( $image_ids ) < 1 ) return;
+                
         $this->model('ImageLabel')->delete(array('image_id' => $image_ids));
 
         foreach ( $label_ids as $label_id ) {
