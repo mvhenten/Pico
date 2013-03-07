@@ -341,37 +341,6 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     /**
      *
      *
-     * @param unknown $item
-     * @param unknown $path
-     * @param unknown $filename
-     * @param unknown $size
-     */
-    private function _storeImageData( $item, $path, $filename, $size ) {
-        $gd  = new Nano_Gd( $path );
-
-            * * * * /** TODO SCALE IMAGE USING IM AND THEN COMPRESS **/
-        list( $width, $height ) = array_values( $gd->getDimensions() );
-        $exif = new Nano_Exif( $path );
-
-        $gd   = $this->_rotateImageData( $exif, $gd );
-        $src  = $gd->getImageJPEG(93);
-
-        $this->model('ImageData', array(
-                'image_id'  => $item->id,
-                'size'      => $size,
-                'mime'      => 'image/jpeg',
-                'width'     => $width,
-                'height'    => $height,
-                'data'      => $src,
-                'filename'  => $filename,
-                'type'      => 'original'
-            ))->store();
-    }
-
-
-    /**
-     *
-     *
      * @TODO move to model somewhere
      *
      * @param object  $exif
