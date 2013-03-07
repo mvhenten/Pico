@@ -59,7 +59,7 @@
         </div>
     </div>
     <script>
-//        $('form').not('.disable-autosave').sentry({ events: 'change keyup' });
+        $('form.autosave').sentry({ events: 'change keyup' });
         
         $(document).ajaxStart( function(){
             $("input[type='submit']").attr('disabled', true );

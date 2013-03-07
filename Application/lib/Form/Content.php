@@ -1,14 +1,30 @@
 <?php
+/**
+ * Application/lib/Form/Content.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Pico
+ */
+
+
 class Pico_Form_Content extends Nano_Form{
-    public function __construct( $content, $item = null ){
-        parent::__construct();
+
+    /**
+     *
+     *
+     * @param unknown $content
+     * @param unknown $item    (optional)
+     */
+    public function __construct( $content, $item = null ) {
+
+        parent::__construct( null, array( 'class' => 'form content-form autosave' ) );
 
         $item = ( isset($item) ? $item : $content->item() );
 
         $target = urlencode(join( '/', array('/admin', $item->type, 'edit',  $item->id )));
 
         $this->addElements(array(
-            'content[' . $content->id . '][value]' => array(
+                'content[' . $content->id . '][value]' => array(
                     'wrapper'   => false,
                     'class'     => 'rich-text-editor',
                     'prefix'    => '<div class="item-content-wrapper">',
@@ -31,8 +47,10 @@ class Pico_Form_Content extends Nano_Form{
                     . $target
                     . '">delete</a></div></div>'
                 )
-        ));
+            ));
 
         $this->setAttribute('action', '/admin/content/save/' . $content->id );
     }
+
+
 }

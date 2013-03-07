@@ -15,34 +15,33 @@ class Pico_Form_Item extends Nano_Form{
      * @param unknown $item (optional)
      */
     public function __construct( $item = null ) {
-        parent::__construct();
+        parent::__construct( null, array( 'class' => 'form content-form autosave' ) );
 
         $item = ( isset($item) ? $item : new Model_Item() );
 
-        $toolbar = array(
-            'save'  => array(
-                'prefix'    => '<div class="toolbar">',
-                'wrapper'   => false,
-                'type'      => 'submit',
-                'value'     => 'Save changes'
-            ),
-            'add content'   => array(
-                'suffix'  => null == $item->id ? '</div>' : '',
-                'wrapper' => false,
-                'type'    => 'submit',
-                'value'   => 'add content item',
-            ),
-            'delete' => ( null !== $item->id ? array(
-                    'suffix'    => '</div>',
-                    'wrapper'   => false,
-                    'type'      => 'submit',
-                    'value'     => 'Delete ' . $item->name
-                ):null)
-        );
+        //$toolbar = array(
+        //    'save'  => array(
+        //        'prefix'    => '<div class="toolbar">',
+        //        'wrapper'   => false,
+        //        'type'      => 'submit',
+        //        'value'     => 'Save changes'
+        //    ),
+        //    'add content'   => array(
+        //        'suffix'  => null == $item->id ? '</div>' : '',
+        //        'wrapper' => false,
+        //        'type'    => 'submit',
+        //        'value'   => 'add content item',
+        //    ),
+        //    'delete' => ( null !== $item->id ? array(
+        //            'suffix'    => '</div>',
+        //            'wrapper'   => false,
+        //            'type'      => 'submit',
+        //            'value'     => 'Delete ' . $item->name
+        //        ):null)
+        //);
 
         $item_form = array(
             'type' => 'fieldset',
-            'class' => 'item-form',
             'id'    => 'item-values',
             'elements' => array(
                 'type'  => array(

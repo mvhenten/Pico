@@ -17,6 +17,85 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
         'hd'          => '960x720'
     );
 
+
+
+    /**
+     *
+     *
+     * @param unknown $path
+     * @param unknown $name
+     * @param unknown $item
+     * @return unknown
+     */
+    public static function createFromPath( $path, $name, $item ) {
+        $original   = file_get_contents( $path );
+        $info       = getimagesize( $path );
+
+        @list( $width, $height ) = $info;
+
+        $gd   = new Nano_Gd( $path );
+        $exif = new Nano_Exif( $path );
+        $gd   = self::_rotateImageData( $exif, $gd );
+
+        $width  = $width > 1024 ? 1024 : $width;
+        $height = $height > 1024 ? 1024 : $height;
+
+        $im = new Nano_IM_Resize( $gd->getImageJPEG(100), array(
+                'width' => $width,
+                'height' => $height
+            ));
+
+        $data = $im->asString();
+
+        error_log(sprintf("Got imagesize: %0.2f $width x $height ", ( strlen($data) / (1024*1024))));
+
+        $image_data = new Pico_Model_ImageData(array(
+                'image_id'  => $item->id,
+                'size'      => strlen($data),
+                'mime'      => 'image/jpeg',
+                'width'     => $width,
+                'height'    => $height,
+                'data'      => $data,
+                'filename'  => $name,
+                'type'      => 'original'
+            ));
+
+        $image_data->store();
+
+        return $image_data;
+    }
+
+
+
+    /**
+     *
+     *
+     * @param object  $exif
+     * @param object  $gd
+     * @return unknown
+     */
+    public static function _rotateImageData( Nano_Exif $exif, Nano_Gd $gd ) {
+        switch ( $exif->orientation() ) {
+        case 2:
+            return $gd->flipHorizontal();
+        case 3:
+            return $gd->rotate( 180 );
+        case 4:
+            return $gd->flipVertical();
+        case 5:
+            return $gd->flipVertical()->rotate(90);
+        case 6:
+            return $gd->rotate( -90 );
+        case 7:
+            return $gd->flipHorizontal()->rotate( -90 );
+        case 8:
+            return $gd->rotate( 90 );
+        }
+
+        return $gd;
+    }
+
+
     /**
      *
      *

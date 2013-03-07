@@ -52,21 +52,19 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         if ( ! $request->isPost() ) {
             return $this->template()->render( 'image/upload');
         }
-        
+
         $images = $_FILES['images'];
-        
-        foreach( $images['error'] as $index => $error ) {
-            if( $error !== 0 ) continue;
+
+        foreach ( $images['error'] as $index => $error ) {
+            if ( $error !== 0 ) continue;
 
             $mime = $images['type'][$index];
-            if( ! preg_match( '/image\/(jpeg|jpg|png|gif)/', $mime ) ) continue;
+            if ( ! preg_match( '/image\/(jpeg|jpg|png|gif)/', $mime ) ) continue;
 
             $size       = $images['size'][$index];
             $tmp_name   = $images['tmp_name'][$index];
             $name       = $images['name'][$index];
-            
-            var_dump( array( $size, $tmp_name, $name ) );
-            
+
             $item = $this->model('Item', array(
                     'name'      => $images['name'][$index],
                     'visible'   => 0,
@@ -74,10 +72,10 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
                     'inserted'  => date('Y-m-d H:i:s'),
                     'slug'      => Nano_Util_String::slugify($name)
                 ))->store();
-        
-            $this->_storeImageData( $item, $tmp_name, $name, $size );                    
+
+            $image_data = Pico_Model_ImageData::createFromPath( $tmp_name, $name, $item );
         }
-        
+
         $this->response()->redirect('/admin/image' );
         exit;
     }
@@ -214,11 +212,11 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         if ( isset( $post['action-labels'] ) ) {
             return $this->labels( $request, $extra );
         }
-        
+
         if ( ! isset( $post['cancel'] ) ) {
             $image_ids  = (array) json_decode($post['images']);
-            $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();            
-            $this->_updateLabels( $image_ids, $labels );                
+            $labels     = isset($post['labels']) ?array_keys($post['labels']) : array();
+            $this->_updateLabels( $image_ids, $labels );
         }
 
         $this->response()
@@ -265,8 +263,8 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
     public function labels( $request, $config ) {
         @list( , , , $label_id ) = $request->pathParts();
         $post   = (object) $request->post();
-        
-        if( ! isset( $post->image ) ) {
+
+        if ( ! isset( $post->image ) ) {
             return '';
         }
 
@@ -325,8 +323,8 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      * @param unknown $label_ids
      */
     private function _updateLabels( $image_ids, $label_ids ) {
-        if( count( $image_ids ) < 1 ) return;
-                
+        if ( count( $image_ids ) < 1 ) return;
+
         $this->model('ImageLabel')->delete(array('image_id' => $image_ids));
 
         foreach ( $label_ids as $label_id ) {
@@ -344,16 +342,20 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      *
      *
      * @param unknown $item
-     * @param unknown $file
+     * @param unknown $path
+     * @param unknown $filename
+     * @param unknown $size
      */
     private function _storeImageData( $item, $path, $filename, $size ) {
         $gd  = new Nano_Gd( $path );
 
+            * * * * /** TODO SCALE IMAGE USING IM AND THEN COMPRESS **/
         list( $width, $height ) = array_values( $gd->getDimensions() );
         $exif = new Nano_Exif( $path );
 
         $gd   = $this->_rotateImageData( $exif, $gd );
-        $src  = $gd->getImageJPEG(100); 
+        $src  = $gd->getImageJPEG(93);
+
         $this->model('ImageData', array(
                 'image_id'  => $item->id,
                 'size'      => $size,

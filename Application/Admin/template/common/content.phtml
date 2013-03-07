@@ -2,8 +2,8 @@
 <script type="text/javascript" src="/js/jquery.cleditor.js"></script>
 <?php $this->endblock('head') ?>
 
-<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/<?php echo $content->id ?>?target=<?php
-    echo $request->url ?>" class="form">
+<form id="form-element-1" method="post" enctype="multipart/form-data" action="/admin/content/save/<?php echo $item->id ?>?target=<?php
+    echo $request->url ?>" class="form autosave">
                                                                                                                 
 <?php foreach( $item->content() as $content ): ?>
 <div class="item-content-wrapper">
@@ -35,8 +35,9 @@
             evt.preventDefault();
         
             $('form.form').each( function(i,el){
-            var url = $(el).attr('action') || document.location.href;
-            $.post( url, $(el).serialize() );
+                console.log(el);
+                var url = $(el).attr('action') || document.location.href;
+                $.post( url, $(el).serialize() );
             });
         });	
     })
