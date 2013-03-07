@@ -33,14 +33,14 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
 
         @list( $width, $height ) = $info;
 
-        $gd   = new Nano_Gd( $path );
-        $exif = new Nano_Exif( $path );
-        $gd   = self::_rotateImageData( $exif, $gd );
+        //        $gd   = new Nano_Gd( $path );
+        // $exif = new Nano_Exif( $path );
+        // $gd   = self::_rotateImageData( $exif, $gd );
 
         $width  = $width > 1024 ? 1024 : $width;
         $height = $height > 1024 ? 1024 : $height;
 
-        $im = new Nano_IM_Resize( $gd->getImageJPEG(100), array(
+        $im = new Nano_IM_Resize( file_get_contents($path), array(
                 'width' => $width,
                 'height' => $height
             ));
