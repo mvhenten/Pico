@@ -9,7 +9,7 @@
 
 define( "APPLICATION_ROOT", dirname(__FILE__) ); // the root of the application
 define( "APPLICATION_PATH", dirname(APPLICATION_ROOT)); //where the application is
-ini_set('memory_limit', '16M');
+ini_set('memory_limit', '100M');
 
 require_once APPLICATION_PATH . '/../Nano/library/Nano/Autoloader.php';
 Nano_Autoloader::register();
@@ -19,35 +19,6 @@ $config  = new Nano_Config_Ini( APPLICATION_PATH . '/Application/config/applicat
 
 Nano_Db::setAdapter( $config->database );
 Nano_Autoloader::registerNamespace( 'Model', APPLICATION_PATH . '/Application/Model' );
-
-
-/**
- *
- *
- * @param object  $exif
- * @param object  $gd
- * @return unknown
- */
-function rotate_img( Nano_Exif $exif, Nano_Gd $gd ) {
-    switch ( $exif->orientation() ) {
-    case 2:
-        return $gd->flipHorizontal();
-    case 3:
-        return $gd->rotate( 180 );
-    case 4:
-        return $gd->flipVertical();
-    case 5:
-        return $gd->flipVertical()->rotate(90);
-    case 6:
-        return $gd->rotate( -90 );
-    case 7:
-        return $gd->flipHorizontal()->rotate( -90 );
-    case 8:
-        return $gd->rotate( 90 );
-    }
-
-    return $gd;
-}
 
 
 /**

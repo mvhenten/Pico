@@ -337,36 +337,4 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
         }
     }
 
-
-    /**
-     *
-     *
-     * @TODO move to model somewhere
-     *
-     * @param object  $exif
-     * @param object  $gd
-     * @return unknown
-     */
-    private function _rotateImageData( Nano_Exif $exif, Nano_Gd $gd ) {
-        switch ( $exif->orientation() ) {
-        case 2:
-            return $gd->flipHorizontal();
-        case 3:
-            return $gd->rotate( 180 );
-        case 4:
-            return $gd->flipVertical();
-        case 5:
-            return $gd->flipVertical()->rotate(90);
-        case 6:
-            return $gd->rotate( -90 );
-        case 7:
-            return $gd->flipHorizontal()->rotate( -90 );
-        case 8:
-            return $gd->rotate( 90 );
-        }
-
-        return $gd;
-    }
-
-
 }
