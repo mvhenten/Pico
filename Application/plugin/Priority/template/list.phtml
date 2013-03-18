@@ -1,0 +1,63 @@
+<?php $this->wrapper('layout') ?>
+
+<?php $this->block( 'head' ); ?>
+<style>
+.sortable {
+    cursor: move;
+}
+</style>
+<?php $this->endBlock('head'); ?>
+
+<?php $this->block('titlebar') ?>
+<h2 class="title">priority</h2>
+<?php $this->endblock('titlebar') ?>
+
+<?php $this->block('main') ?>
+<ul class="itemlist">
+    <form method="post">
+    <li>
+        <strong class="fifth">Title</strong>
+        <strong class="half">Description</strong>
+    </li>
+    <?php foreach( $items as $item ): ?>
+    <li class="sortable">
+        <div class="fifth">
+            <h6><?php echo $item->name ?></h6>
+            <div class="buttons">
+                <input class="input-number" type="number" name="priority[<?php echo $item->id ?>]" value="<?php echo $item->priority ?>" />
+            </div>
+        </div>
+        <p class="third"><?php echo $this->ellipsize((string)$item->description) ?>&nbsp;</p>
+        <p class="fifth"><strong>updated:</strong><br/><?php echo $item->updated ?></p>
+        <p class="fifth">
+        <?php if( $thumbnail = $this->thumbnail($item, 'icon', array( 'tag' => 'span')) ):?>
+            <?php echo $thumbnail ?>
+        <?php endif; ?>
+        </p>
+    </li>
+    <?php endforeach; ?>
+    </form>
+</ul>
+<script>
+$(function(){
+    $(".itemlist").sortable({
+        axis: 'y',
+        items: 'li.sortable',
+        update: function(evt, ui){
+        $(".input-number").each(function(i,el){
+            el.value = i
+        });
+
+        $.ajax({
+            url: '/admin/priority/',
+            type: 'POST',
+            data: $('.input-number').serialize(),
+        })
+    }});
+
+    $( ".itemlist" ).disableSelection();
+});
+</script>
+
+
+<?php $this->endblock('main') ?>
