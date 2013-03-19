@@ -13,6 +13,7 @@ password = pico
 [plugins]
 ItemThumbnail = 1
 CustomField = 1
+Priority   = 1
 
 [layout]
 default.base        = APPLICATION_PATH
@@ -31,4 +32,8 @@ dimensions.1 = 133x176
 dimensions.2 = 179x144
 
 [custom_field]
-fields.category = 'Category'
+fields.category = "Category"
+
+[priority]
+items.0 = "label"
+items.1 = "video"
