@@ -26,8 +26,6 @@ class Priority_Plugin extends Pico_View_Admin_Base {
 
             $item->store(array( 'id' => $item->id ) );
         }
-
-        //parent::post( $request, $config );
     }
 
 
@@ -43,7 +41,7 @@ class Priority_Plugin extends Pico_View_Admin_Base {
             ? $config['config']['priority'] : null;
 
         $items = $this->model('Item')->search(array(
-                'where' => array('type' =>  $config['items'] ),
+                'where' => array('type' =>  $config['items'], 'visible' => 1 ),
                 'order' => 'priority'
             ));
 
