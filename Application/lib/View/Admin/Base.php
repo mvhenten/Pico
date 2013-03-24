@@ -136,7 +136,7 @@ class Pico_View_Admin_Base extends Nano_App_View{
      * @param unknown $item
      * @param unknown $post
      */
-    private function _storeItem( $item, $post ) {
+    protected function _storeItem( $item, $post ) {
         if ( preg_match( '/^untitled/',  $post->slug ) ) {
             $item->slug = Nano_Util_String::slugify( $post->name );
         }
