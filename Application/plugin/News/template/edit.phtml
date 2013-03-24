@@ -1,0 +1,101 @@
+<?php $this->wrapper('layout') ?>
+
+<?php $this->block('head') ?>
+<script type="text/javascript" src="/js/jquery.cleditor.js"></script>
+<?php $this->endblock('head') ?>
+
+<?php $this->block('titlebar') ?>
+<div class="align-right wrap">
+    <h2 class="float-left">Editing <span style="color:#000;"><?php echo $item->name ?></span></h2>
+</div>
+<?php $this->endblock('titlebar') ?>
+
+<?php $this->block('main') ?>
+<div id="vertical-nav" class="fifth">
+    <ul class="verticalnav">
+        <li><h4>news</h4></li>
+        <?php foreach( $this->items('news', array(), false ) as $news ): ?>
+        <li><a class="<?php echo $news->id == $item->id ? "active":"" ?>" href="/admin/news/edit/<?php echo $news->id ?>"><?php echo $news->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php $this->block('sidebar') ?>
+    <?php $this->endblock('sidebar') ?>
+</div>
+<div class="three-fifth">
+    <?php echo $this->form ?>
+    <br/>
+    <div class="align-right wrap">
+        <a href="/admin/news/item/<?php echo $item->id ?>" class="context-button">create news item</a>
+        <a href="/admin/news/delete/<?php echo $item->id ?>" class="context-button">delete page</a>
+    </div>    
+    <br/>
+    <ul class="itemlist">
+        <?php foreach( $items as $item ): ?>
+        <li>
+            <form class="news-item" method="post" action="/admin/news/item/<?php echo $item->id ?>">                
+                <div class="three-fifth">
+                    <div>
+                        <label for="title-<?php echo $item->id ?>"><strong>Title</strong></label>
+                        <input id="title-<?php echo $item->id ?>" type="text" class="input-text" name="name" value="<?php echo $item->name ?>" />                    
+                    </div>
+                    <div>
+                        <textarea name="description" class="rich-text-editor"><?php echo htmlentities( $item->description ) ?></textarea>                    
+                    </div>
+                </div>
+                <div class="fifth">
+                    <strong>updated:</strong><br/><?php echo $item->updated ?>
+                    <div>
+                        <strong>priority</strong>
+                        <input width="2" style="width:2em" type="number" class="input-number" value="<?php echo $item->priority ?>" name="priority" />                        
+                    </div>
+                    <div>
+                        <label for="visible-<?php echo $item->id ?>">
+                            <input id="visible-<?php echo $item->id ?>" type="checkbox" name="visible"
+                                value="<?php echo $item->visible ?>"
+                                <?php if( $item->visible ): ?>checked="checked"<?php endif; ?> />
+                            <strong>visible</strong>
+                        </label>                        
+                    </div>
+                    <div class="buttons">
+                        <a href="/admin/news/delete/<?php echo $item->id ?>" class="button third">delete</a>
+                        <input class="button third" type="submit" value="save" />
+                    </div>                
+                </div>
+                <input type="hidden" name="slug" value="<?php echo $item->slug ?>" />
+            </form>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<script>
+    $(document).ready( function(){
+        $('.rich-text-editor').cleditor({
+            width:'95%',
+            height:'120px',
+            bodyStyle: {},
+            useCSS: false,
+            controls:  'bold italic underline '
+            + 'bullets numbering | image link unlink '
+            + 'removeformat pastetext source'
+        });
+
+    	$('form.news-item').bind('submit', function(evt){
+            evt.preventDefault();
+            
+            var nForms = $('form.news-item').length - 1;
+        
+            $('form.news-item').each( function(i,el){
+                var url = $(el).attr('action') || document.location.href,
+                    last = nForms == i;
+                    
+                $.post( url, $(el).serialize(), function(){
+                    if( last ){
+                        // refresh the page after last form submit
+                        document.location.href = document.location.href;
+                    }
+                });
+            });
+        });	
+    })
+</script>
+<?php $this->endblock('main') ?>

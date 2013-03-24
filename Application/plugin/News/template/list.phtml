@@ -1,0 +1,41 @@
+<?php $this->wrapper('layout') ?>
+
+<?php $this->block( 'head' ); ?>
+<style>
+.sortable {
+    cursor: move;
+}
+.ui-sortable-helper {
+    background-color: #fefefe;
+    opacity: 0.8;
+}
+</style>
+<?php $this->endBlock('head'); ?>
+
+<?php $this->block('titlebar') ?>
+    <h2 class="title">news</h2>
+    <a href="/admin/news/create" class="context-button">create news page</a>
+<?php $this->endblock('titlebar') ?>
+
+<?php $this->block('main') ?>
+<ul class="itemlist">
+    <?php foreach( $items as $item ): ?>
+    <li>
+        <div class="fifth">
+            <h6><?php echo $item->name ?></h6>
+            <div class="buttons">
+                <a href="/admin/news/edit/<?php echo $item->id ?>" class="button third">edit</a>
+                <a href="/admin/item/delete/<?php echo $item->id ?>" class="button third">delete</a>
+            </div>
+        </div>
+        <p class="third"><?php echo $this->ellipsize((string)$item->description) ?>&nbsp;</p>
+        <p class="fifth"><strong>updated:</strong><br/><?php echo $item->updated ?></p>
+        <p class="fifth">
+        <?php if( $thumbnail = $this->thumbnail($item, 'icon', array( 'tag' => 'span')) ):?>
+            <?php echo $thumbnail ?>
+        <?php endif; ?>
+        </p>
+    </li>
+    <?php endforeach; ?>
+</ul>
+<?php $this->endblock('main') ?>
