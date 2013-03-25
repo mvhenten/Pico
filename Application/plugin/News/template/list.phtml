@@ -25,10 +25,9 @@
             <h6><?php echo $item->name ?></h6>
             <div class="buttons">
                 <a href="/admin/news/edit/<?php echo $item->id ?>" class="button third">edit</a>
-                <a href="/admin/item/delete/<?php echo $item->id ?>" class="button third">delete</a>
+                <a href="/admin/news/delete/<?php echo $item->id ?>" class="button third">delete</a>
             </div>
         </div>
-        <p class="third"><?php echo $this->ellipsize((string)$item->description) ?>&nbsp;</p>
         <p class="fifth"><strong>updated:</strong><br/><?php echo $item->updated ?></p>
         <p class="fifth">
         <?php if( $thumbnail = $this->thumbnail($item, 'icon', array( 'tag' => 'span')) ):?>

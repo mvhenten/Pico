@@ -77,7 +77,7 @@ class News_Plugin extends Pico_View_Admin_Base {
         }
 
         $item = $this->model('Item', $id );
-        $post = (object) array_merge( $request->post, array( 'priority' => 0 ) );
+        $post = (object) array_merge( $request->post, array( 'priority' => 0, 'description' => '' ) );
 
         $form   = $this->_getForm( $item );
         $errors = $form->validate( $post );
