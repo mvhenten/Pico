@@ -146,6 +146,7 @@ class Pico_View_Admin_Base extends Nano_App_View{
 
         $visible = isset( $post->visible ) ? 1 : 0;
 
+        $item->updated      = strftime('%m-%d-%Y %H:%M:%S');
         $item->name         = $post->name;
         $item->description  = $post->description;
         $item->visible      = $visible;

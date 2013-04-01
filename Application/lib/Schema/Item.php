@@ -1,4 +1,12 @@
 <?php
+/**
+ * Application/lib/Schema/Item.php
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package Pico
+ */
+
+
 class Pico_Schema_Item extends Nano_Db_Schema {
     protected $_tableName = 'item';
 
@@ -87,7 +95,6 @@ class Pico_Schema_Item extends Nano_Db_Schema {
         'updated' => array(
             'type'      => 'timestamp',
             'length'    => 0,
-            'default'   => '0000-00-00 00:00:00',
             'name'      => 'updated',
             'extra'     => 'on update CURRENT_TIMESTAMP',
             'required'  => true,

@@ -232,7 +232,6 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
      * @return unknown
      */
     private function _bulk_delete( $request ) {
-        error_log('bulk delete');
         @list( , , , $label_id ) = $request->pathParts();
 
         if ( isset( $request->post['action-delete-confirm'] ) ) {
@@ -336,5 +335,6 @@ class Pico_View_Admin_Image extends Pico_View_Admin_Base{
             }
         }
     }
+
 
 }

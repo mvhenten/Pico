@@ -47,7 +47,7 @@ class Pico_Model_ImageData extends Pico_Schema_ImageData {
 
         $data = $im->asString();
 
-        error_log(sprintf("Got imagesize: %0.2f $width x $height ", ( strlen($data) / (1024*1024))));
+        // error_log(sprintf("Got imagesize: %0.2f $width x $height ", ( strlen($data) / (1024*1024))));
 
         $image_data = new Pico_Model_ImageData(array(
                 'image_id'  => $item->id,

@@ -15,10 +15,6 @@
     Nano_Autoloader::registerNamespace( 'CustomField', dirname(__FILE__)  );
 $this->router->prepend( '/admin/plugin/customfield/\w+/\d+?', 'CustomField_Plugin' );
 
-if ( $action && $action == 'delete' ) {
-
-}
-
 endif; ?>
 
 <?php if ( $end && ! $request->isPost() ): ?>

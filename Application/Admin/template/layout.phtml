@@ -15,9 +15,16 @@
         <div id="header">
             <div id="user-navigation">
               <ul class="wat-cf">
-                <!-- <li><a href="#">Profile</a></li> !-->
-                <!-- <li><a href="#">Settings</a></li> !-->
-                <li><a target="blank" href="/">View website</a></li>
+                <?php
+                    $link_title = 'View website';
+                    $link_path  = '/';
+                    
+                    if( isset( $item ) ){
+                        $link_title = 'View page';
+                        $link_path  = '/' . $item->slug;                        
+                    }
+                ?>
+                <li><a target="blank" href="<?php echo $link_path ?>"><?php echo $link_title ?></a></li>
                 <li><a href="/admin/user/logout" class="logout">Logout</a></li>
               </ul>
             </div>

@@ -39,7 +39,7 @@
                         <input id="title-<?php echo $item->id ?>" type="text" class="input-text" name="name" value="<?php echo $item->name ?>" />                    
                     </div>
                     <div>
-                        <textarea name="description" class="rich-text-editor"><?php echo htmlentities( $item->description ) ?></textarea>                    
+                        <textarea name="description" class="rich-text-editor"><?php echo htmlentities( $item->description, null, 'UTF-8' ) ?></textarea>                    
                     </div>
                 </div>
                 <div class="fifth">
@@ -69,7 +69,7 @@
 </div>
 <script>
     $(document).ready( function(){
-        $('.rich-text-editor').cleditor({
+        $('#textarea-element-0, .rich-text-editor').cleditor({
             width:'95%',
             height:'120px',
             bodyStyle: {},

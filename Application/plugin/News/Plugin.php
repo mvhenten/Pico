@@ -2,14 +2,15 @@
 /**
  * Application/plugin/News/Plugin.php
  *
- * @author Matthijs van Henten <matthijs@ischen.nl>
- * @package default
  *
  * This plugin represents a simple "news" feature - the parent page
  * is an item of type 'news'. it's children are set trough the 'parent' column.
  *
  * News pages don't have content items themselves. instead, the news-item children
  * are their content.
+ *
+ * @author Matthijs van Henten <matthijs@ischen.nl>
+ * @package default
  */
 
 
@@ -77,7 +78,7 @@ class News_Plugin extends Pico_View_Admin_Base {
         }
 
         $item = $this->model('Item', $id );
-        $post = (object) array_merge( $request->post, array( 'priority' => 0, 'description' => '' ) );
+        $post = (object) array_merge( $request->post, array( 'priority' => 0 ) );
 
         $form   = $this->_getForm( $item );
         $errors = $form->validate( $post );
@@ -230,7 +231,6 @@ class News_Plugin extends Pico_View_Admin_Base {
     private function _getForm( $page ) {
         $form = new Pico_Form_Item( $page );
 
-        $form->removeChildren( array('description') );
         $form->removeChildren( array('priority') );
 
         return $form;
