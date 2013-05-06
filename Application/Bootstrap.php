@@ -27,7 +27,7 @@ Nano_App::Bootstrap(array(
         'plugins'     => isset($ini_config['plugins']) ? $ini_config['plugins'] : array(),
         'nano_db'     => $ini_config['database'],
         'router'   => array (
-            '/image/\w+/\d+'               => 'Pico_View_Image',
+            '/image/\w+/\d+(.+)?'               => 'Pico_View_Image',
             '/admin/image(/\w+)?(/\d+)?'   => 'Pico_View_Admin_Image',
             '/admin/label(/\w+)?(/\d+)?'   => 'Pico_View_Admin_Label',
             '/admin/page(/\w+)?(/\d+)?'    => 'Pico_View_Admin_Page',
