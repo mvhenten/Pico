@@ -31,6 +31,18 @@ class Pico_View_Image extends Nano_App_View{
 
         $image = $this->_getImageType( $id, $type );
         $this->_imageOut( $image );
+        // TODO enable this in future
+        // $this->_writeImageFile( $request, $image, $type );
+    }
+
+    private function _writeImageFile( $request, $image, $type ) {
+        echo( is_writable( is_writable( $request->documentRoot() . '/image' ) ) );
+        if( is_writable( $request->documentRoot() . '/image' ) ){
+            $path = sprintf( '%s/image/%s', $request->documentRoot(), $type );
+            mkdir( $path );
+            echo( 'Writing to ' . $path );
+            file_put_contents( sprintf( '%s/%s.jpg', $path, $image->image_id ), $image->data );
+        }
     }
 
 
